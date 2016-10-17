@@ -1,0 +1,136 @@
+{
+  "cwd": {
+    "isowner": false,
+    "ts": 1458457196,
+    "mime": "directory",
+    "read": 1,
+    "write": 1,
+    "size": "36864",
+    "hash": "l2_Lw",
+    "name": "Test here",
+    "csscls": "elfinder-navbar-root-local",
+    "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/2.1/files/.tmb/",
+    "uiCmdMap": [],
+    "disabled": [
+      "chmod"
+    ],
+    "volumeid": "l2_",
+    "locked": 1,
+    "dirs": 1
+  },
+  "options": {
+    "path": "Test here",
+    "url": "http://hypweb.net/elFinder-nightly/demo/2.1/files/",
+    "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/2.1/files/.tmb/",
+    "disabled": [
+      "chmod"
+    ],
+    "separator": "/",
+    "copyOverwrite": 1,
+    "uploadOverwrite": 1,
+    "uploadMaxSize": 1073741824,
+    "dispInlineRegex": "^(?:image|text/plain$)",
+    "jpgQuality": 100,
+    "archivers": {
+      "create": [
+        "application/x-tar",
+        "application/x-gzip",
+        "application/x-bzip2",
+        "application/x-xz",
+        "application/zip",
+        "application/x-7z-compressed"
+      ],
+      "extract": [
+        "application/x-tar",
+        "application/x-gzip",
+        "application/x-bzip2",
+        "application/x-xz",
+        "application/zip",
+        "application/x-7z-compressed"
+      ],
+      "createext": {
+        "application/x-tar": "tar",
+        "application/x-gzip": "tgz",
+        "application/x-bzip2": "tbz",
+        "application/x-xz": "xz",
+        "application/zip": "zip",
+        "application/x-7z-compressed": "7z"
+      }
+    },
+    "uiCmdMap": [],
+    "syncChkAsTs": 1,
+    "syncMinMs": 30000
+  },
+  "files": [
+    {
+      "isowner": false,
+      "mime": "image/jpeg",
+      "ts": 1458431024,
+      "read": 1,
+      "write": 1,
+      "size": "109471",
+      "hash": "l2_aGZtLWltZzAyLmpwZw",
+      "name": "hfm-img02.jpg",
+      "phash": "l2_Lw",
+      "tmb": "l2_aGZtLWltZzAyLmpwZw1458431024.png"
+    },
+    {
+      "isowner": false,
+      "mime": "text/javascript",
+      "ts": 1458419156,
+      "read": 1,
+      "write": 1,
+      "size": "5263",
+      "hash": "l2_YXBwLnBsdWdpbi5qcw",
+      "name": "app.plugin.js",
+      "phash": "l2_Lw"
+    },
+    {
+      "isowner": false,
+      "mime": "directory",
+      "ts": 1458402007,
+      "read": 1,
+      "write": 0,
+      "size": "4096",
+      "hash": "l2_Zm9yRGVtb1VzZXI",
+      "name": "forDemoUser",
+      "phash": "l2_Lw",
+      "volumeid": "l2_",
+      "locked": 1
+    }
+  ],
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 0.051192045211792,
+    "memory": "4521Kb / 3272Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "fls4_",
+        "name": "flysystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}

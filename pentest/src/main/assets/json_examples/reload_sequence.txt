@@ -1,0 +1,357 @@
+Use "Reload" command from the elFinder UI
+
+http://hypweb.net/elFinder-nightly/demo/2.1/php/connector.minimal.php
+?cmd=open
+&reload=1
+&target=l2_c3NkZmZzZA
+&tree=1
+&compare=
+&_=1460671445772
+
+
+{
+    "cwd": {
+        "isowner": false,
+        "ts": 1460804122,
+        "mime": "directory",
+        "read": 1,
+        "write": 1,
+        "size": 0,
+        "hash": "l2_c3NkZmZzZA",
+        "name": "ssdffsd",
+        "phash": "l2_Lw",
+        "volumeid": "l2_",
+        "dirs": 1
+    },
+    "options": {
+        "path": "Test here/ssdffsd",
+        "url": "http://hypweb.net/elFinder-nightly/demo/2.1/files/",
+        "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/2.1/files/.tmb/",
+        "disabled": [
+            "chmod"
+        ],
+        "separator": "/",
+        "copyOverwrite": 1,
+        "uploadOverwrite": 1,
+        "uploadMaxSize": 1073741824,
+        "dispInlineRegex": "^(?:image|text/plain$)",
+        "jpgQuality": 100,
+        "archivers": {
+            "create": [
+                "application/x-tar",
+                "application/x-gzip",
+                "application/x-bzip2",
+                "application/x-xz",
+                "application/zip",
+                "application/x-7z-compressed"
+            ],
+            "extract": [
+                "application/x-tar",
+                "application/x-gzip",
+                "application/x-bzip2",
+                "application/x-xz",
+                "application/zip",
+                "application/x-7z-compressed"
+            ],
+            "createext": {
+                "application/x-tar": "tar",
+                "application/x-gzip": "tgz",
+                "application/x-bzip2": "tbz",
+                "application/x-xz": "xz",
+                "application/zip": "zip",
+                "application/x-7z-compressed": "7z"
+            }
+        },
+        "uiCmdMap": [],
+        "syncChkAsTs": 1,
+        "syncMinMs": 30000
+    },
+    "files": [
+        {
+            "isowner": false,
+            "ts": 1453299075,
+            "mime": "directory",
+            "read": 1,
+            "write": 0,
+            "size": 0,
+            "hash": "l1_Lw",
+            "name": "Demo",
+            "csscls": "elfinder-navbar-root-local",
+            "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/Demo/.tmb/",
+            "uiCmdMap": [],
+            "disabled": [
+                "chmod"
+            ],
+            "volumeid": "l1_",
+            "locked": 1,
+            "dirs": 1
+        },
+        {
+            "isowner": false,
+            "ts": 1460816826,
+            "mime": "directory",
+            "read": 1,
+            "write": 1,
+            "size": 0,
+            "hash": "l2_Lw",
+            "name": "Test here",
+            "csscls": "elfinder-navbar-root-local",
+            "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/2.1/files/.tmb/",
+            "uiCmdMap": [],
+            "disabled": [
+                "chmod"
+            ],
+            "volumeid": "l2_",
+            "locked": 1,
+            "dirs": 1
+        },
+        {
+            "isowner": false,
+            "ts": 1460667471,
+            "mime": "directory",
+            "read": 1,
+            "write": 1,
+            "size": 0,
+            "hash": "l3_Lw",
+            "name": "Img+Txt Only",
+            "csscls": "elfinder-navbar-root-local",
+            "uiCmdMap": [],
+            "disabled": [
+                "chmod"
+            ],
+            "volumeid": "l3_",
+            "locked": 1,
+            "dirs": 1,
+            "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/2.1/files1/.tmb/"
+        },
+        {
+            "isowner": false,
+            "mime": "image/png",
+            "ts": 1460706624,
+            "read": 1,
+            "write": 1,
+            "size": "2040",
+            "hash": "l2_c3NkZmZzZC9tZW51MDEucG5n",
+            "name": "menu01.png",
+            "phash": "l2_c3NkZmZzZA",
+            "tmb": "l2_c3NkZmZzZC9tZW51MDEucG5n1460706624.png"
+        },
+        {
+            "isowner": false,
+            "mime": "image/png",
+            "ts": 1460356136,
+            "read": 1,
+            "write": 1,
+            "size": "301173",
+            "hash": "l2_c3NkZmZzZC8xMjMucG5n",
+            "name": "123.png",
+            "phash": "l2_c3NkZmZzZA",
+            "tmb": "l2_c3NkZmZzZC8xMjMucG5n1460356136.png"
+        },
+        {
+            "isowner": false,
+            "mime": "directory",
+            "ts": 1460744897,
+            "read": 1,
+            "write": 1,
+            "size": 0,
+            "hash": "l2_c3NkZmZzZC9OZXdGb2xkZXI",
+            "name": "NewFolder",
+            "phash": "l2_c3NkZmZzZA",
+            "volumeid": "l2_"
+        },
+        {
+            "isowner": false,
+            "mime": "text/html",
+            "ts": 1460726136,
+            "read": 1,
+            "write": 1,
+            "size": "49199",
+            "hash": "l2_c3NkZmZzZC9BIENhdGVnb3J5IE5hbWVzIExpc3QuaHRt",
+            "name": "A Category Names List.htm",
+            "phash": "l2_c3NkZmZzZA"
+        },
+        {
+            "isowner": false,
+            "mime": "text/plain",
+            "ts": 1460726136,
+            "read": 1,
+            "write": 1,
+            "size": "50",
+            "hash": "l2_c3NkZmZzZC9OZXcgVGV4dCBEb2N1bWVudC50eHQ",
+            "name": "New Text Document.txt",
+            "phash": "l2_c3NkZmZzZA"
+        }
+    ],
+    "debug": {
+        "connector": "php",
+        "phpver": "5.5.33",
+        "time": 0.047513961791992,
+        "memory": "3556Kb / 2324Kb / 256M",
+        "upload": "",
+        "volumes": [
+            {
+                "id": "l1_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l2_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l3_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            }
+        ],
+        "mountErrors": []
+    }
+}
+
+
+http://hypweb.net/elFinder-nightly/demo/2.1/php/connector.minimal.php
+?cmd=parents
+&target=l2_c3NkZmZzZA
+&_=1460671445773
+
+{
+    "tree": [
+        {
+            "isowner": false,
+            "ts": 1460816826,
+            "mime": "directory",
+            "read": 1,
+            "write": 1,
+            "size": 0,
+            "hash": "l2_Lw",
+            "name": "Test here",
+            "csscls": "elfinder-navbar-root-local",
+            "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/2.1/files/.tmb/",
+            "uiCmdMap": [],
+            "disabled": [
+                "chmod"
+            ],
+            "volumeid": "l2_",
+            "locked": 1,
+            "dirs": 1
+        },
+        {
+            "isowner": false,
+            "mime": "directory",
+            "ts": 1460714197,
+            "read": 1,
+            "write": 0,
+            "size": 0,
+            "hash": "l2_Zm9yRGVtb1VzZXI",
+            "name": "forDemoUser",
+            "phash": "l2_Lw",
+            "volumeid": "l2_",
+            "locked": 1
+        },
+        {
+            "isowner": false,
+            "mime": "directory",
+            "ts": 1460804122,
+            "read": 1,
+            "write": 1,
+            "size": 0,
+            "hash": "l2_c3NkZmZzZA",
+            "name": "ssdffsd",
+            "phash": "l2_Lw",
+            "volumeid": "l2_",
+            "dirs": 1
+        }
+    ],
+    "debug": {
+        "connector": "php",
+        "phpver": "5.5.33",
+        "time": 0.1002721786499,
+        "memory": "3717Kb / 2320Kb / 256M",
+        "upload": "",
+        "volumes": [
+            {
+                "id": "l1_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l2_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l3_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            }
+        ],
+        "mountErrors": []
+    }
+}
+
+
+http://hypweb.net/elFinder-nightly/demo/2.1/php/connector.minimal.php
+?cmd=info
+&targets%5B%5D=l1_Lw
+&_=1460671445774
+
+{
+    "files": [
+        {
+            "isowner": false,
+            "ts": 1453299075,
+            "mime": "directory",
+            "read": 1,
+            "write": 0,
+            "size": 0,
+            "hash": "l1_Lw",
+            "name": "Demo",
+            "csscls": "elfinder-navbar-root-local",
+            "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/Demo/.tmb/",
+            "uiCmdMap": [],
+            "disabled": [
+                "chmod"
+            ],
+            "volumeid": "l1_",
+            "locked": 1,
+            "dirs": 1,
+            "path": "Demo"
+        }
+    ],
+    "debug": {
+        "connector": "php",
+        "phpver": "5.5.33",
+        "time": 0.033154010772705,
+        "memory": "3555Kb / 2265Kb / 256M",
+        "upload": "",
+        "volumes": [
+            {
+                "id": "l1_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l2_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l3_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            }
+        ],
+        "mountErrors": []
+    }
+}

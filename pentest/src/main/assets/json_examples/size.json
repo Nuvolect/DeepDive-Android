@@ -1,0 +1,39 @@
+// http://hypweb.net/elFinder-nightly/demo/2.1/php/connector.minimal.php?cmd=size&targets%5B%5D=l1_RG93bmxvYWRzL0luc3RhbGxlcg&targets%5B%5D=l1_RG93bmxvYWRzL0xhdGVzdCBOaWdodGx5cw&_=1458402178366
+
+{
+  "size": 1266337,
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 0.04755687713623,
+    "memory": "4522Kb / 3276Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "fls4_",
+        "name": "flysystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}

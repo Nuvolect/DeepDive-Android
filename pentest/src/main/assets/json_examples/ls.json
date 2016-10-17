@@ -1,0 +1,32 @@
+{
+  "list": [],
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 0.038918972015381,
+    "memory": "3556Kb / 2270Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}
+

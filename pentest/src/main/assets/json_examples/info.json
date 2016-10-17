@@ -1,0 +1,52 @@
+{
+  "files": [
+    {
+      "isowner": false,
+      "ts": 1457952005,
+      "mime": "directory",
+      "read": 1,
+      "write": 0,
+      "size": "4096",
+      "hash": "l2_Zm9yRGVtb1VzZXI",
+      "name": "forDemoUser",
+      "phash": "l2_Lw",
+      "volumeid": "l2_",
+      "locked": 1,
+      "path": "Test here/forDemoUser"
+    }
+  ],
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 0.041814088821411,
+    "memory": "4521Kb / 3255Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "fls4_",
+        "name": "flysystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "added": [
+    {
+      "isowner": false,
+      "ts": 1458656194,
+      "mime": "text/plain",
+      "read": 1,
+      "write": 1,
+      "size": "26",
+      "hash": "l2_dGVzdCBjb3B5IDEudHh0",
+      "name": "test copy 1.txt",
+      "phash": "l2_Lw"
+    }
+  ],
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 0.094380140304565,
+    "memory": "4732Kb / 3503Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "fls4_",
+        "name": "flysystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}

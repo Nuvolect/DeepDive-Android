@@ -1,0 +1,72 @@
+{
+  "cwd": {
+    "hash": "c0_Ly50bWI",
+    "isowner": false,
+    "locked": 0,
+    "volumeid": "c0_",
+    "name": ".tmb",
+    "mime": "directory",
+    "phash": "c0_Lw",
+    "read": 1,
+    "size": 0,
+    "ts": -554779412000,
+    "write": 1,
+    "dirs": 0,
+    "root": "c0_Ly50bWI"
+  },
+  "files": [
+    {
+      "hash": "c0_Ly50bWIvYzBfTDJGc1ltVnlkR2xmWTJsd2FHVnlYMlJwYzJzdWNHNW4",
+      "isowner": false,
+      "locked": 0,
+      "name": "c0_L2FsYmVydGlfY2lwaGVyX2Rpc2sucG5n",
+      "mime": "",
+      "phash": "c0_Ly50bWI",
+      "read": 1,
+      "size": 4713,
+      "ts": -554779500000,
+      "write": 1
+    }
+  ],
+  "options": {
+    "path": "/.tmb",
+    "tmbUrl": "http://10.0.1.25:8218/",
+    "url": "http://10.0.1.25:8218/c0_Ly50bWI",
+    "separator": "/",
+    "dispInlineRegex": "^(?:image|text/plain$)",
+    "disabled": [],
+    "copyOverwrite": 1,
+    "uploadOverwrite": 1,
+    "uploadMaxSize": 2000000000,
+    "jpgQuality": 100,
+    "archivers": {
+      "create": [
+        "application/x-tar",
+        "application/x-gzip",
+        "application/x-bzip2",
+        "application/x-xz",
+        "application/zip",
+        "application/x-7z-compressed"
+      ],
+      "extract": [
+        "application/x-tar",
+        "application/x-gzip",
+        "application/x-bzip2",
+        "application/x-xz",
+        "application/zip",
+        "application/x-7z-compressed"
+      ]
+    },
+    "createext": {
+      "application/x-tar": "tar",
+      "application/x-gzip": "tgz",
+      "application/x-bzip2": "tbz",
+      "application/x-xz": "xz",
+      "application/zip": "zip",
+      "application/x-7z-compressed": "7z"
+    },
+    "uiCmdMap": [],
+    "syncChkAsTs": 1,
+    "syncMinMs": 30000
+  }
+}

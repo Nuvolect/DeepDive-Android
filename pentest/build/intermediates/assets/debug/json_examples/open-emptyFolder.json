@@ -1,0 +1,92 @@
+{
+  "cwd": {
+    "hash": "l2_ZW1wdHkgZm9sZGVy",
+    "isowner": false,
+    "mime": "directory",
+    "name": "empty folder",
+    "phash": "l2_Lw",
+    "read": 1,
+    "size": "4096",
+    "ts": 1458474055,
+    "volumeid": "l2_",
+    "write": 1
+  },
+  "options": {
+    "path": "Test here/empty folder",
+    "url": "http://hypweb.net/elFinder-nightly/demo/2.1/files/",
+    "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/2.1/files/.tmb/",
+    "disabled": [
+      "chmod"
+    ],
+    "separator": "/",
+    "copyOverwrite": 1,
+    "uploadOverwrite": 1,
+    "uploadMaxSize": 1073741824,
+    "dispInlineRegex": "^(?:image|text/plain$)",
+    "jpgQuality": 100,
+    "archivers": {
+      "create": [
+        "application/x-tar",
+        "application/x-gzip",
+        "application/x-bzip2",
+        "application/x-xz",
+        "application/zip",
+        "application/x-7z-compressed"
+      ],
+      "extract": [
+        "application/x-tar",
+        "application/x-gzip",
+        "application/x-bzip2",
+        "application/x-xz",
+        "application/zip",
+        "application/x-7z-compressed"
+      ],
+      "createext": {
+        "application/x-tar": "tar",
+        "application/x-gzip": "tgz",
+        "application/x-bzip2": "tbz",
+        "application/x-xz": "xz",
+        "application/zip": "zip",
+        "application/x-7z-compressed": "7z"
+      }
+    },
+    "uiCmdMap": [],
+    "syncChkAsTs": 1,
+    "syncMinMs": 30000
+  },
+  "files": [],
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 0.043566942214966,
+    "memory": "4521Kb / 3260Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "fls4_",
+        "name": "flysystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "files": [
+    {
+      "volumeid": "e0_",
+      "isowner": false,
+      "name": "Camera",
+      "hash": "e0_L0RDSU0vQ2FtZXJh",
+      "phash": "e0_L0RDSU0",
+      "mime": "directory",
+      "ts": 1457452707000,
+      "date": "",
+      "size": 4096,
+      "read": 1,
+      "write": 1,
+      "locked": 0,
+      "uiCmdMap": []
+    },
+    {
+      "volumeid": "e0_",
+      "isowner": false,
+      "name": ".thumbnails",
+      "hash": "e0_L0RDSU0vLnRodW1ibmFpbHM",
+      "phash": "e0_L0RDSU0",
+      "mime": "directory",
+      "ts": 1456326254000,
+      "date": "",
+      "size": 4096,
+      "read": 1,
+      "write": 1,
+      "locked": 0,
+      "uiCmdMap": []
+    }
+  ],
+  "cwd": {
+    "volumeid": "e0_",
+    "isowner": false,
+    "name": "DCIM",
+    "hash": "e0_L0RDSU0",
+    "phash": "e0_Lw",
+    "mime": "directory",
+    "ts": 1453825508000,
+    "date": "",
+    "size": 4096,
+    "read": 1,
+    "write": 1,
+    "locked": 0,
+    "uiCmdMap": [],
+    "dirs": 1
+  }
+}

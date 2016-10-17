@@ -1,0 +1,51 @@
+{
+  "added": [
+    {
+      "isowner": false,
+      "ts": 1459355312,
+      "mime": "text/plain",
+      "read": 1,
+      "write": 1,
+      "size": "18",
+      "hash": "l2_VmVyeSBOaWNlLnR4dA",
+      "name": "Very Nice.txt",
+      "phash": "l2_Lw",
+      "url": "http://hypweb.net/elFinder-nightly/demo/2.1/files/Very Nice.txt"
+    }
+  ],
+  "removed": [],
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 0.12230396270752,
+    "memory": "4743Kb / 3680Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "flsgd_",
+        "name": "flysystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "images": {
+    "l2_MTQ1OTUxODgyNzg5MDQ0MDA3ODQ2MiBjb3B5IDEuanBn": "l2_MTQ1OTUxODgyNzg5MDQ0MDA3ODQ2MiBjb3B5IDEuanBn1459542185.png"
+  },
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 1.206337928772,
+    "memory": "4712Kb / 3431Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "flsgd_",
+        "name": "flysystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}

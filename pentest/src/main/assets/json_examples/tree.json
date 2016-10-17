@@ -1,0 +1,118 @@
+{
+  "tree": [
+    {
+      "isowner": false,
+      "ts": 1458092194,
+      "icon": "http://hypweb.net/elFinder-nightly/demo/Demo/Downloads/.diricon.png",
+      "mime": "directory",
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_RG93bmxvYWRz",
+      "name": "Downloads",
+      "phash": "l1_Lw",
+      "volumeid": "l1_",
+      "locked": 1,
+      "dirs": 1
+    },
+    {
+      "isowner": false,
+      "mime": "directory",
+      "ts": 1453299075,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_RG93bmxvYWRzL0luc3RhbGxlcg",
+      "name": "Installer",
+      "phash": "l1_RG93bmxvYWRz",
+      "volumeid": "l1_",
+      "locked": 1
+    },
+    {
+      "isowner": false,
+      "mime": "directory",
+      "ts": 1457794944,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_RG93bmxvYWRzL09sZGVy",
+      "name": "Older",
+      "phash": "l1_RG93bmxvYWRz",
+      "volumeid": "l1_",
+      "locked": 1
+    },
+    {
+      "isowner": false,
+      "mime": "directory",
+      "ts": 1453298938,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_RG93bmxvYWRzL0V4YW1wbGU",
+      "name": "Example",
+      "phash": "l1_RG93bmxvYWRz",
+      "volumeid": "l1_",
+      "locked": 1
+    },
+    {
+      "isowner": false,
+      "mime": "directory",
+      "ts": 1457958785,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_RG93bmxvYWRzL0ZvckRlYnVn",
+      "name": "ForDebug",
+      "phash": "l1_RG93bmxvYWRz",
+      "volumeid": "l1_",
+      "locked": 1
+    },
+    {
+      "isowner": false,
+      "mime": "directory",
+      "ts": 1457794944,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_RG93bmxvYWRzL0xhdGVzdCBOaWdodGx5cw",
+      "name": "Latest Nightlys",
+      "phash": "l1_RG93bmxvYWRz",
+      "volumeid": "l1_",
+      "locked": 1
+    }
+  ],
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 0.055253028869629,
+    "memory": "4688Kb / 3450Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "flsgd_",
+        "name": "flysystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/showTipsLl"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="460dp"
+    android:minHeight="250dp"
+    android:background="@drawable/rounded_box" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Did you know... ?"
+        android:textColor="@color/navy"
+        android:id="@+id/textView99"
+        android:paddingLeft="5dp" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@color/linen"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp">
+
+        <TextView
+            android:id="@+id/tipTextTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/navy"
+            android:text="Tip text"
+            android:clickable="true"
+            android:padding="5dp"
+            android:maxLines="50" />
+    </ScrollView>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <CheckBox
+            android:id="@+id/showTipsCb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Tips"
+            android:textColor="@color/navy"
+            android:checked="true" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="20px"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/closeTipsButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Close"
+            android:textColor="@color/navy"
+            />
+
+        <Button
+            android:id="@+id/previousTipButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Previous Tip"
+            android:textColor="@color/navy"
+            />
+
+        <Button
+            android:id="@+id/nextTipButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next Tip"
+            android:textColor="@color/navy"
+            />
+
+    </LinearLayout>
+</LinearLayout>

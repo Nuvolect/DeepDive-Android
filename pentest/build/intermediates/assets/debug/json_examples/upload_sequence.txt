@@ -1,0 +1,189 @@
+Sequence of events when uploading an image file
+1. Create a new folder "test"
+2. Right click, select file upload
+3. Drag a file over the upload box
+
+
+GET
+http://hypweb.net/elFinder-nightly/demo/2.1/php/connector.minimal.php?cmd=ls
+&target=l2_dGVzdA
+&intersect%5B%5D=IMG_20130525_072642.jpg
+&_=1460671445696
+
+{
+    "list": [],
+    "debug": {
+        "connector": "php",
+        "phpver": "5.5.33",
+        "time": 0.038918972015381,
+        "memory": "3556Kb / 2270Kb / 256M",
+        "upload": "",
+        "volumes": [
+            {
+                "id": "l1_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l2_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l3_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            }
+        ],
+        "mountErrors": []
+    }
+}
+
+POST message
+http://hypweb.net/elFinder-nightly/demo/2.1/php/connector.minimal.php
+
+{
+    "added": [
+        {
+            "isowner": false,
+            "ts": 1460813621,
+            "mime": "image/jpeg",
+            "read": 1,
+            "write": 1,
+            "size": "3984375",
+            "hash": "l2_dGVzdC9JTUdfMjAxMzA1MjVfMDcyNjQyLmpwZw",
+            "name": "IMG_20130525_072642.jpg",
+            "phash": "l2_dGVzdA",
+            "tmb": 1,
+            "url": "http://hypweb.net/elFinder-nightly/demo/2.1/files/test/IMG_20130525_072642.jpg"
+        }
+    ],
+    "removed": [],
+    "debug": {
+        "connector": "php",
+        "phpver": "5.5.33",
+        "time": 0.52233910560608,
+        "memory": "3592Kb / 2515Kb / 256M",
+        "upload": "",
+        "volumes": [
+            {
+                "id": "l1_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l2_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l3_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            }
+        ],
+        "mountErrors": []
+    }
+}
+
+GET
+http://hypweb.net/elFinder-nightly/demo/2.1/php/connector.minimal.php?cmd=info
+&targets%5B%5D=l2_dGVzdA
+&compare=1460813571
+&reload=1
+&_=1460671445697
+
+{
+    "files": [],
+    "compare": "1460813621",
+    "debug": {
+        "connector": "php",
+        "phpver": "5.5.33",
+        "time": 17.629601955414,
+        "memory": "3556Kb / 2269Kb / 256M",
+        "upload": "",
+        "volumes": [
+            {
+                "id": "l1_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l2_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l3_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            }
+        ],
+        "mountErrors": []
+    }
+}
+
+
+GET
+http://hypweb.net/elFinder-nightly/demo/2.1/php/connector.minimal.php?cmd=open
+&reload=1
+&target=l2_dGVzdA
+&tree=0
+&compare=
+&_=1460671445698
+
+reset by peer
+
+
+GET
+http://hypweb.net/elFinder-nightly/demo/2.1/php/connector.minimal.php?cmd=tmb
+&targets%5B%5D=l2_dGVzdC9JTUdfMjAxMzA1MjVfMDcyNjQyLmpwZw
+&_=1460671445699
+
+{
+    "images": {
+        "l2_dGVzdC9JTUdfMjAxMzA1MjVfMDcyNjQyLmpwZw": "l2_dGVzdC9JTUdfMjAxMzA1MjVfMDcyNjQyLmpwZw1460813621.png"
+    },
+    "debug": {
+        "connector": "php",
+        "phpver": "5.5.33",
+        "time": 0.62642693519592,
+        "memory": "3555Kb / 2270Kb / 256M",
+        "upload": "",
+        "volumes": [
+            {
+                "id": "l1_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l2_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            },
+            {
+                "id": "l3_",
+                "name": "localfilesystem",
+                "mimeDetect": "finfo",
+                "imgLib": "imagick"
+            }
+        ],
+        "mountErrors": []
+    }
+}
+
+
+// Finally it gets the thumbnail
+GET
+http://hypweb.net/elFinder-nightly/demo/2.1/files/.tmb/l2_dGVzdC9JTUdfMjAxMzA1MjVfMDcyNjQyLmpwZw1460813621.png

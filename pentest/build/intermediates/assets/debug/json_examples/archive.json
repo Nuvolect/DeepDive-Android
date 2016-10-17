@@ -1,0 +1,54 @@
+//http://hypweb.net/elFinder-nightly/demo/2.1/php/connector.minimal.php?
+//  cmd=archive
+//  &name=Archive.zip
+//  &target=l2_TmV3Rm9sZGVyL3Rlc3Q
+//  &targets%5B%5D=l2_TmV3Rm9sZGVyL3Rlc3QvZW1wdHkgZm9sZGVy
+//  &targets%5B%5D=l2_TmV3Rm9sZGVyL3Rlc3QvY29sb3Vyc29mZmFsbC5qcGc
+//  &targets%5B%5D=l2_TmV3Rm9sZGVyL3Rlc3Qv0YLQtdGB0YIuanBn
+//  &type=application%2Fzip
+//  &_=1460671443521
+
+
+{
+  "added": [
+    {
+      "isowner": false,
+      "ts": 1460671597,
+      "mime": "application/zip",
+      "read": 1,
+      "write": 1,
+      "size": "455956",
+      "hash": "l2_TmV3Rm9sZGVyL3Rlc3QvQXJjaGl2ZS56aXA",
+      "name": "Archive.zip",
+      "phash": "l2_TmV3Rm9sZGVyL3Rlc3Q"
+    }
+  ],
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 0.14942908287048,
+    "memory": "3576Kb / 2335Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}

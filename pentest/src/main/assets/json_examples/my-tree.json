@@ -1,0 +1,60 @@
+{
+  "tree": [
+    {
+      "hash": "l0_L3N0b3JhZ2UvZW11bGF0ZWQvMC9Nb3ZpZXM",
+      "isowner": false,
+      "locked": 0,
+      "volumeid": "l0_",
+      "name": "Movies",
+      "mime": "directory",
+      "phash": "l0_L3N0b3JhZ2UvZW11bGF0ZWQvMA",
+      "read": 1,
+      "size": 4096,
+      "ts": 1459280218000,
+      "write": 1,
+      "dirs": "1"
+    },
+    {
+      "hash": "l0_L3N0b3JhZ2UvZW11bGF0ZWQvMC9Nb3ZpZXMvd2VzdGVybnM",
+      "isowner": false,
+      "locked": 0,
+      "volumeid": "l0_",
+      "name": "westerns",
+      "mime": "directory",
+      "phash": "l0_L3N0b3JhZ2UvZW11bGF0ZWQvMC9Nb3ZpZXM",
+      "read": 1,
+      "size": 4096,
+      "ts": 1459280188000,
+      "write": 1,
+      "dirs": 0
+    },
+    {
+      "hash": "l0_L3N0b3JhZ2UvZW11bGF0ZWQvMC9Nb3ZpZXMvc2NpLWZp",
+      "isowner": false,
+      "locked": 0,
+      "volumeid": "l0_",
+      "name": "sci-fi",
+      "mime": "directory",
+      "phash": "l0_L3N0b3JhZ2UvZW11bGF0ZWQvMC9Nb3ZpZXM",
+      "read": 1,
+      "size": 4096,
+      "ts": 1459280201000,
+      "write": 1,
+      "dirs": 0
+    },
+    {
+      "hash": "l0_L3N0b3JhZ2UvZW11bGF0ZWQvMC9Nb3ZpZXMvY29tZWR5",
+      "isowner": false,
+      "locked": 0,
+      "volumeid": "l0_",
+      "name": "comedy",
+      "mime": "directory",
+      "phash": "l0_L3N0b3JhZ2UvZW11bGF0ZWQvMC9Nb3ZpZXM",
+      "read": 1,
+      "size": 4096,
+      "ts": 1459280218000,
+      "write": 1,
+      "dirs": 0
+    }
+  ]
+}

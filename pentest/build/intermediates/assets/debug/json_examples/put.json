@@ -1,0 +1,49 @@
+{
+  "changed": [
+    {
+      "isowner": false,
+      "ts": 1459345137,
+      "mime": "text/plain",
+      "read": 1,
+      "write": 1,
+      "size": "17",
+      "hash": "l3_VEVTVC50eHQ",
+      "name": "TEST.txt",
+      "phash": "l3_Lw"
+    }
+  ],
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 0.056270837783813,
+    "memory": "4704Kb / 3645Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "flsgd_",
+        "name": "flysystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}

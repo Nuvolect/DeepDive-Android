@@ -1,0 +1,308 @@
+//http://hypweb.net/elFinder-nightly/demo/2.1/php/connector.minimal.php?cmd=open&target=l1_Lw&init=1&tree=1&_=1458338618356
+{
+  "cwd": {
+    "csscls": "elfinder-navbar-root-local",
+    "dirs": 1,
+    "disabled": [ "chmod" ],
+    "hash": "l1_Lw",
+    "isowner": false,
+    "locked": 1,
+    "mime": "directory",
+    "name": "Demo",
+    "read": 1,
+    "root": "l1_Lw",
+    "size": 0,
+    "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/Demo/.tmb/",
+    "ts": 1453299075,
+    "uiCmdMap": [],
+    "volumeid": "l1_",
+    "write": 0
+  },
+  "options": {
+    "path": "Demo",
+    "url": "http://hypweb.net/elFinder-nightly/demo/Demo/",
+    "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/Demo/.tmb/",
+    "disabled": [
+      "chmod"
+    ],
+    "separator": "/",
+    "copyOverwrite": 1,
+    "uploadOverwrite": 1,
+    "uploadMaxSize": 9223372036854776000,
+    "dispInlineRegex": "^(?:(?:image|text)|application/x-shockwave-flash$)",
+    "jpgQuality": 100,
+    "archivers": {
+      "create": [
+        "application/x-tar",
+        "application/x-gzip",
+        "application/x-bzip2",
+        "application/x-xz",
+        "application/zip",
+        "application/x-7z-compressed"
+      ],
+      "extract": [
+        "application/x-tar",
+        "application/x-gzip",
+        "application/x-bzip2",
+        "application/x-xz",
+        "application/zip",
+        "application/x-7z-compressed"
+      ],
+      "createext": {
+        "application/x-tar": "tar",
+        "application/x-gzip": "tgz",
+        "application/x-bzip2": "tbz",
+        "application/x-xz": "xz",
+        "application/zip": "zip",
+        "application/x-7z-compressed": "7z"
+      }
+    },
+    "uiCmdMap": [],
+    "syncChkAsTs": 1,
+    "syncMinMs": 30000
+  },
+  "files": [
+    {
+      "isowner": false,
+      "ts": 1453299075,
+      "mime": "directory",
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_Lw",
+      "name": "Demo",
+      "csscls": "elfinder-navbar-root-local",
+      "uiCmdMap": [],
+      "disabled": [
+        "chmod"
+      ],
+      "volumeid": "l1_",
+      "locked": 1,
+      "dirs": 1,
+      "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/Demo/.tmb/"
+    },
+    {
+      "isowner": false,
+      "ts": 1458302635,
+      "mime": "directory",
+      "read": 1,
+      "write": 1,
+      "size": "36864",
+      "hash": "l2_Lw",
+      "name": "Test here",
+      "csscls": "elfinder-navbar-root-local",
+      "uiCmdMap": [],
+      "disabled": [
+        "chmod"
+      ],
+      "volumeid": "l2_",
+      "locked": 1,
+      "dirs": 1,
+      "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/2.1/files/.tmb/"
+    },
+    {
+      "isowner": false,
+      "ts": 1458293924,
+      "mime": "directory",
+      "read": 1,
+      "write": 1,
+      "size": "4096",
+      "hash": "l3_Lw",
+      "name": "Img+Txt Only",
+      "csscls": "elfinder-navbar-root-local",
+      "uiCmdMap": [],
+      "disabled": [
+        "chmod"
+      ],
+      "volumeid": "l3_",
+      "locked": 1,
+      "dirs": 1,
+      "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/2.1/files1/.tmb/"
+    },
+    {
+      "size": 0,
+      "ts": 1458338580,
+      "read": 1,
+      "write": 1,
+      "locked": 1,
+      "mime": "directory",
+      "name": "GoogleDrive flysystem",
+      "hash": "fls4_Lw",
+      "icon": "http://hypweb.net/elFinder-nightly/demo/Demo/Images/volume_icon_google-drive.png",
+      "uiCmdMap": [],
+      "disabled": [
+        "archive",
+        "extract",
+        "chmod"
+      ],
+      "volumeid": "fls4_",
+      "dirs": 1,
+      "tmbUrl": "http://hypweb.net/elFinder-nightly/demo/Demo/.tmb/"
+    },
+    {
+      "isowner": false,
+      "mime": "directory",
+      "ts": 1436147830,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_YV9sb3Rfc2FtcGxl",
+      "name": "a_lot_sample",
+      "phash": "l1_Lw",
+      "volumeid": "l1_",
+      "locked": 1,
+      "dirs": 1
+    },
+    {
+      "isowner": false,
+      "icon": "http://hypweb.net/elFinder-nightly/demo/Demo/Images/.diricon.png",
+      "mime": "directory",
+      "ts": 1458092177,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_SW1hZ2Vz",
+      "name": "Images",
+      "phash": "l1_Lw",
+      "volumeid": "l1_",
+      "locked": 1
+    },
+    {
+      "isowner": false,
+      "mime": "directory",
+      "ts": 1450613602,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_QmFzaWNBdXRoRXhhbXBsZQ",
+      "name": "BasicAuthExample",
+      "phash": "l1_Lw",
+      "volumeid": "l1_",
+      "locked": 1,
+      "dirs": 1
+    },
+    {
+      "dirs": 1,
+      "hash": "l1_V2VsY29tZQ",
+      "icon": "http://hypweb.net/elFinder-nightly/demo/Demo/Welcome/.diricon.png",
+      "isowner": false,
+      "locked": 1,
+      "mime": "directory",
+      "name": "Welcome",
+      "phash": "l1_Lw",
+      "read": 1,
+      "size": 0,
+      "ts": 1458097231,
+      "volumeid": "l1_",
+      "write": 0
+    },
+    {
+      "isowner": false,
+      "icon": "http://hypweb.net/elFinder-nightly/demo/Demo/LargeVideos/.diricon.png",
+      "mime": "directory",
+      "ts": 1458092163,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_TGFyZ2VWaWRlb3M",
+      "name": "LargeVideos",
+      "phash": "l1_Lw",
+      "volumeid": "l1_",
+      "locked": 1
+    },
+    {
+      "isowner": false,
+      "mime": "directory",
+      "ts": 1448205248,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_TUlNRS10eXBlcw",
+      "name": "MIME-types",
+      "phash": "l1_Lw",
+      "volumeid": "l1_",
+      "locked": 1
+    },
+    {
+      "isowner": false,
+      "mime": "directory",
+      "ts": 1453299072,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_c2V0dXBfd2l0aF9jb21wb3Nlcg",
+      "name": "setup_with_composer",
+      "phash": "l1_Lw",
+      "volumeid": "l1_",
+      "locked": 1
+    },
+    {
+      "isowner": false,
+      "icon": "http://hypweb.net/elFinder-nightly/demo/Demo/Downloads/.diricon.png",
+      "mime": "directory",
+      "ts": 1458092194,
+      "read": 1,
+      "write": 0,
+      "size": 0,
+      "hash": "l1_RG93bmxvYWRz",
+      "name": "Downloads",
+      "phash": "l1_Lw",
+      "volumeid": "l1_",
+      "locked": 1,
+      "dirs": 1
+    },
+    {
+      "hash": "l1_UkVBRE1FLm1k",
+      "isowner": false,
+      "locked": 1,
+      "mime": "text/x-markdown",
+      "name": "README.md",
+      "phash": "l1_Lw",
+      "read": 1,
+      "size": "3683",
+      "ts": 1418091234,
+      "write": 0
+    }
+  ],
+  "api": "2.1",
+  "uplMaxSize": "20M",
+  "uplMaxFile": "20",
+  "netDrivers": [
+    "ftp",
+    "dropbox"
+  ],
+  "debug": {
+    "connector": "php",
+    "phpver": "5.5.33",
+    "time": 0.052273988723755,
+    "memory": "4521Kb / 3301Kb / 256M",
+    "upload": "",
+    "volumes": [
+      {
+        "id": "l1_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l2_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "l3_",
+        "name": "localfilesystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      },
+      {
+        "id": "fls4_",
+        "name": "flysystem",
+        "mimeDetect": "finfo",
+        "imgLib": "imagick"
+      }
+    ],
+    "mountErrors": []
+  }
+}
