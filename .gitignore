@@ -1,10 +1,10 @@
 *.iml
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
 .DS_Store
+.gradle
+/.idea/libraries
+/.idea/workspace.xml
 /build
-/pentest/build
-/pentest/apk
 /captures
+/local.properties
+/pentest/apk
+/pentest/build
