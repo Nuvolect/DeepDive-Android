@@ -3,17 +3,16 @@
 ** Tune search to work with java source files, exact search match
 ** Update ? help with working examples
 
+* Expose Intent Filters, https://github.com/jaredrummler/APKParser
+
 * Decompile DEX
 * Fix problem killing process
-* Lobby link to Search
-** List hyperlinks to currently indexed pages
-*** Delete button
 * Decompile process status
 ** Schedule polling when a task is active and responding
 ** Disable "running" STOP when task is not active 
 
-* CFR
-** Integrate 
+# Explore
+* ClassyShark https://github.com/google/android-classyshark
 
 # Sprint NEXT Release  
 * Add app icon to Apps, App and Decompile pages
