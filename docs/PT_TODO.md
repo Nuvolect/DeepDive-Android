@@ -11,6 +11,9 @@
 ** Schedule polling when a task is active and responding
 ** Disable "running" STOP when task is not active 
 
+** Uncaught exception: java.lang.OutOfMemoryError: Failed to allocate a 8204 byte allocation with 3227784 free bytes and 3MB until OOM; failed due to fragmentation (required continguous free 12288 bytes where largest contiguous free 8192 bytes)
+** Uncaught exception: PenTest Thread Group
+
 # Explore
 * ClassyShark https://github.com/google/android-classyshark
 
