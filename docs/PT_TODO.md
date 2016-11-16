@@ -3,7 +3,16 @@
 ** Tune search to work with java source files, exact search match
 ** Update ? help with working examples
 
-* Expose Intent Filters, https://github.com/jaredrummler/APKParser
+# Extract a backup from an app
+adb backup com.packagename.android
+java -jar abe.jar unpack backup.ab
+tar -xvf backup.tar
+
+# Extract the public and private keys used by an app
+Android Keystore public and private keys are stored in the /data/misc/keystore/user_0 directory.  
+The private key is stored in a file that has <app_id>_USRCERT_<key_alias>.  
+On a rooted phone you can copy the file to another <app_id_malicious>_USRCERT_<key_alias> 
+and then import it from your malicious app, allowing you to recover the password.
 
 * Decompile DEX
 * Fix problem killing process
