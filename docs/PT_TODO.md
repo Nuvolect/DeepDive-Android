@@ -3,6 +3,10 @@
 ** Tune search to work with java source files, exact search match
 ** Update ? help with working examples
 
+* Show timing on decompile.html page. Update backend to send timing status with each update.
+* Document multi-browser decompilier conflicts
+* Is there a better way to organize processess to monitor progress and kill-all
+
 # Extract a backup from an app
 adb backup com.packagename.android
 java -jar abe.jar unpack backup.ab
