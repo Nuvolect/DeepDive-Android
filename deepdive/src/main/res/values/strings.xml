@@ -1,0 +1,5 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">DeepDive</string>
+    <string name="default_port">8020</string>
+    <string name="APP_PUBLIC_FOLDER_RELATIVE_PATH">/DeepDive</string>
+</resources>

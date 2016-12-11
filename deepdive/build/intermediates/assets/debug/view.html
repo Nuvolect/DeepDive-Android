@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="myController">
+<head>
+    <title>{{file_name}}</title>
+
+    <script src="/js/angular.min.js"></script>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/test.css" rel="stylesheet">
+
+</head>
+
+<body>
+<!-- Bootstrap core JavaScript -->
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<div class="container">
+
+<br>
+<br>
+<div align="center">
+<a href="/"><img src="/img/icon_64.png"></a>
+<h1>{{file_name}}</h1>
+</div>
+<br>
+
+<div>
+<pre>
+{{file_content}}
+</pre>
+</div>
+<div align="center">
+{{file_relative_path}}
+</div>
+
+</div><!-- /card-container -->
+
+<br>
+<br>
+<br>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+    <p>
+        &copy;
+        <script>
+			var d = new Date();
+			document.write(d.getFullYear());
+		</script>
+        Nuvolect LLC -
+        <a href="https://nuvolect.com/deepdive_terms/" target="_blank">Terms</a>
+        -
+        <a href="https://nuvolect.com/privacy/" target="_blank">Privacy</a>
+        -
+        <a href="https://nuvolect.com/deepdive_help/" target="_blank">Help</a>
+    </p>
+</div>
+
+<script>
+
+var app = angular.module('myApp', []);
+app.controller('myController', function($scope, $http, $parse) {
+
+    function getURLParameter(name) {
+      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+    }
+
+    var file_path = getURLParameter('path');
+
+     $http.get("/connector/?cmd=deepdive&test_id=get_text&path="+file_path)
+       .then(function (response) {
+
+        // Returned data is currently a string, convert it to JSON
+        var result = $.parseJSON( response.data.result );
+
+        $scope.file_name = result.file_name;
+        $scope.file_content = result.file_content;
+        $scope.file_relative_path = result.file_relative_path;
+     });
+});
+
+</script>
+</body>
+</html>

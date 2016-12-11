@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="myController">
+<head>
+    <title>Decompile: {{ appName }}</title>
+
+    <script src="/js/angular.min.js"></script>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/test.css" rel="stylesheet">
+
+</head>
+
+<body>
+<!-- Bootstrap core JavaScript -->
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<div class="container">
+
+    <br>
+    <br>
+    <div align="center">
+        <a href="/"><img src="/img/icon_64.png"></a>
+        <h1>Decompile: {{ appName }}</h1>
+    </div>
+    <br>
+
+    <div align="center">
+
+        <table class="card">
+            <tr>
+                <td title="Run steps in order 1, 2, 3, 4"><strong>Step(i)</strong></td>
+                <td><strong>Action</strong></td>
+                <td><strong>Status</strong></td>
+                <td><strong>Finder</strong></td>
+                <td><strong>Search</strong></td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>
+                    <button ng-click="copyApk()">Copy APK</button>
+                </td>
+                <td align="center">
+                    {{ copy_apk_status | checkmark }}
+                </td>
+                <td align="center">
+                    <a href={{copy_apk_url}} target="_blank">
+                        <span class="glyphicon glyphicon-folder-open" style="font-size:1.5em"></span>
+                    </a>
+                </td>
+                <td align="center">
+                    <a href="/search.html?search_path={{app_folder_path}}" target="_blank">
+                        <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>
+                    <button ng-click="unpackApk()">Unpack APK</button>
+                </td>
+                <td align="center">
+                    {{ unpack_apk_thread }}
+                    <button ng-show="unpack_apk_show_button" ng-click="stopThread('unpack_apk')">Stop</button>
+                </td>
+            </tr>
+            <tr ng-show="unpack_apk_show_time">
+                <td></td>
+                <td></td>
+                <td>
+                    {{ unpack_apk_time }}
+                </td>
+            </tr>
+            <tr>
+                <td>3.1 CFR</td>
+                <td>
+                    <button ng-click="optimizeDex()">Optimize DEX (optional)</button>
+                </td>
+                <td align="center">
+                    {{ optimize_dex_thread }}
+                    <button ng-show="optimize_dex_show_button" ng-click="stopThread('optimize_dex')">Stop</button>
+                </td>
+            </tr>
+            <tr ng-show="optimize_dex_show_time">
+                <td></td>
+                <td></td>
+                <td>
+                    {{ optimize_dex_time }}
+                </td>
+            </tr>
+            <tr>
+                <td>3.2 CFR</td>
+                <td>
+                    <button ng-click="dex2jar()">DEX to JAR</button>
+                </td>
+                <td align="center">
+                    {{ dex2jar_thread }}
+                    <button ng-show="dex2jar_show_button" ng-click="stopThread('dex2jar')">Stop</button>
+                </td>
+            </tr>
+            <tr ng-show="dex2jar_show_time">
+                <td></td>
+                <td></td>
+                <td>
+                    {{ dex2jar_time }}
+                </td>
+            </tr>
+            <tr>
+                <td>3.3 CFR</td>
+                <td>
+                    <button ng-click="startCfr()">Decompile with CFR 0.119</button>
+                </td>
+                <td align="center">
+                    {{ cfr_thread }}
+                    <button ng-show="cfr_show_button" ng-click="stopThread('cfr')">Stop</button>
+                </td>
+                <td align="center">
+                    <a href={{cfr_url}} target="_blank">
+                        <span class="glyphicon glyphicon-folder-open" style="font-size:1.5em"></span>
+                    </a>
+                </td>
+                <td align="center">
+                    <a href="/search.html?search_path={{app_folder_path}}/srcCfr" target="_blank">
+                        <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
+                    </a>
+                </td>
+            </tr>
+            <tr ng-show="cfr_show_time">
+                <td></td>
+                <td></td>
+                <td>
+                    {{ cfr_time }}
+                </td>
+            </tr>
+            <tr>
+                <td>3 Jadx</td>
+                <td>
+                    <button ng-click="startJadx()">Decompile with Jadx 0.6.1</button>
+                </td>
+                <td align="center">
+                    {{ jadx_thread }}
+                    <button ng-show="jadx_show_button" ng-click="stopThread('jadx')">Stop</button>
+                </td>
+                <td align="center">
+                    <a href={{jadx_url}} target="_blank">
+                        <span class="glyphicon glyphicon-folder-open" style="font-size:1.5em"></span>
+                    </a>
+                </td>
+                <td align="center">
+                    <a href="/search.html?search_path={{app_folder_path}}/srcJadx" target="_blank">
+                        <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
+                    </a>
+                </td>
+            </tr>
+            <tr ng-show="jadx_show_time">
+                <td></td>
+                <td></td>
+                <td>
+                    {{ jadx_time }}
+                </td>
+            </tr>
+            <tr>
+                <td>3 FernFlower</td>
+                <td>
+                    <button ng-click="startFernFlower()">Decompile with FernFlower</button>
+                </td>
+                <td align="center">
+                    {{ fern_thread }}
+                    <button ng-show="fern_show_button" ng-click="stopThread('fern')">Stop</button>
+                </td>
+                <td align="center">
+                    <a href={{fern_url}} target="_blank">
+                        <span class="glyphicon glyphicon-folder-open" style="font-size:1.5em"></span>
+                    </a>
+                </td>
+                <td align="center">
+                    <a href="/search.html?search_path={{app_folder_path}}/srcFern" target="_blank">
+                        <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
+                    </a>
+                </td>
+            </tr>
+            <tr ng-show="fern_show_time">
+                <td></td>
+                <td></td>
+                <td>
+                    {{ fern_time }}
+                </td>
+            </tr>
+        </table>
+        <br>
+
+        <table class="card">
+            <tr>
+                <td>
+                    <input placeholder="Search" size="45" type="text" ng-model="search"> # {{ (log_array|filter:search).length }}
+                    <button ng-click="refreshLog()">
+                        <span class="glyphicon glyphicon-refresh" style="font-size:1.5em"></span></button>
+                    <button ng-click="clearLog()"><span class="glyphicon glyphicon-remove" style="font-size:1.5em"></span></button>
+                    <br>
+                </td>
+            </tr>
+
+            <tr ng-repeat="line in log_array | filter : search track by $index">
+                <td style="padding: 2px 0;"> {{ line }} </td>
+            </tr>
+        </table>
+    </div>
+
+
+</div><!-- /card-container -->
+
+<br>
+<br>
+<br>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+    <p>
+        &copy;
+        <script>
+			var d = new Date();
+			document.write(d.getFullYear());
+		</script>
+        Nuvolect LLC -
+        <a href="https://nuvolect.com/deepdive_terms/" target="_blank">Terms</a>
+        -
+        <a href="https://nuvolect.com/privacy/" target="_blank">Privacy</a>
+        -
+        <a href="https://nuvolect.com/deepdive_help/" target="_blank">Help</a>
+    </p>
+</div>
+
+<script>
+
+var app = angular.module('myApp', []);
+app.controller('myController', function($scope, $http, $parse, $interval, $timeout, $sce) {
+
+    function getURLParameter(name) {
+      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+    }
+
+    // Add an array or simple variable entry to the top of the log
+    function putLogTop( logEntry ){
+
+        var arrayEntries = logEntry;
+
+        if( ! Array.isArray( logEntry ))
+            arrayEntries = [ logEntry ];
+
+        $scope.log_array = arrayEntries.concat( $scope.log_array );
+    }
+
+    function getProcessState( state ){
+
+        if( state == "null")
+            return '-';
+        if( state == "stopped")
+            return '\u2713';
+
+        return state;
+    }
+
+    function updateStatus( status ){
+
+        $scope.app_folder_path  = status.app_folder_path;
+        $scope.copy_apk_url  = status.copy_apk_url;
+        $scope.unpack_apk_url = status.unpack_apk_url;
+        $scope.dex2jar_url   = status.dex2jar_url;
+
+        $scope.cfr_url  = status.cfr_url;
+        $scope.jadx_url = status.jadx_url;
+        $scope.fern_url = status.fern_url;
+
+        $scope.copy_apk_status = status.copy_apk_status;
+        $scope.optimize_dex_status = status.optimize_dex_status;
+
+        $scope.unpack_apk_thread   = getProcessState( status.unpack_apk_thread);
+        $scope.optimize_dex_thread = getProcessState( status.optimize_dex_thread);
+        $scope.dex2jar_thread      = getProcessState( status.dex2jar_thread);
+        $scope.cfr_thread          = getProcessState( status.cfr_thread);
+        $scope.jadx_thread         = getProcessState( status.jadx_thread);
+        $scope.fern_thread         = getProcessState( status.fern_thread);
+
+        $scope.unpack_apk_time     = status.unpack_apk_time;
+        $scope.optimize_dex_time   = status.optimize_dex_time;
+        $scope.dex2jar_time        = status.dex2jar_time;
+        $scope.cfr_time            = status.cfr_time;
+        $scope.jadx_time           = status.jadx_time;
+        $scope.fern_time           = status.fern_time;
+
+        $scope.unpack_apk_show_time   = ( status.unpack_apk_time.length > 0 )
+        $scope.optimize_dex_show_time = ( status.optimize_dex_time.length > 0 )
+        $scope.dex2jar_show_time      = ( status.dex2jar_time.length > 0 )
+        $scope.cfr_show_time          = ( status.cfr_time.length > 0 )
+        $scope.jadx_show_time         = ( status.jadx_time.length > 0 )
+        $scope.fern_show_time         = ( status.fern_time.length > 0 )
+
+        $scope.unpack_apk_show_button   = ( status.unpack_apk_thread == "running")
+        $scope.dex2jar_show_button      = ( status.dex2jar_thread == "running")
+        $scope.optimize_dex_show_button = ( status.optimize_dex_thread == "running")
+        $scope.cfr_show_button          = ( status.cfr_thread == "running")
+        $scope.jadx_show_button         = ( status.jadx_thread == "running")
+        $scope.fern_show_button         = ( status.fern_thread == "running")
+    }
+
+    $scope.stopThread = function(myMethod){
+
+         $http.get("/connector/?cmd=deepdive&test_id=stop_thread&method="+myMethod+"&package_name="+$scope.packageName)
+           .then(function (response) {
+        });
+    };
+
+    $scope.packageName = getURLParameter('packageName');
+    $scope.appName = getURLParameter('appName');
+
+     $http.get("/connector/?cmd=deepdive&test_id=decompile_init&package_name="+$scope.packageName)
+       .then(function (response) {
+
+        // Object is currently a string, convert it to JSON
+        var status = $.parseJSON( response.data.status );
+
+            updateStatus( status );
+
+            $scope.log_array = [];// array of log items
+     });
+
+     $interval(function () {
+
+         $http.get("/connector/?cmd=deepdive&test_id=get_status&package_name="+$scope.packageName)
+           .then(function (response) {
+
+            // Object is currently a string, convert it to JSON
+            var status = $.parseJSON( response.data.status );
+
+            updateStatus( status );
+         });
+
+     }, 2000);
+
+     $timeout( function() {
+
+         $interval(function () {
+
+             $scope.refreshLog();
+
+         }, 2000);
+
+     }, 1000);
+
+     $scope.copyApk = function(){
+
+         $http.get("/connector/?cmd=deepdive&test_id=copy_apk&package_name="+$scope.packageName)
+           .then(function (response) {
+
+            // Object is currently a string, convert it to JSON
+            var status = $.parseJSON( response.data.status );
+
+            $scope.copy_apk_status = status.copy_apk_status;
+            $scope.copy_apk_url    = status.copy_apk_url;
+         });
+     };
+     $scope.unpackApk = function(){
+
+         $http.get("/connector/?cmd=deepdive&test_id=unpack_apk&package_name="+$scope.packageName)
+           .then(function (response) {
+
+            // Object is currently a string, convert it to JSON
+            var status = $.parseJSON( response.data.status );
+
+            $scope.unpack_apk_thread = status.unpack_apk_thread;
+            $scope.unpack_apk_url    = status.unpack_apk_url;
+         });
+     };
+     $scope.optimizeDex = function(){
+
+         $http.get("/connector/?cmd=deepdive&test_id=optimize_dex")
+           .then(function (response) {
+
+            // Object is currently a string, convert it to JSON
+            var status = $.parseJSON( response.data.status );
+
+         });
+     };
+     $scope.dex2jar = function(){
+
+         $http.get("/connector/?cmd=deepdive&test_id=dex2jar&package_name="+$scope.packageName)
+           .then(function (response) {
+
+            // Object is currently a string, convert it to JSON
+            var status = $.parseJSON( response.data.status );
+
+            $scope.dex2jar_thread = status.dex2jar_thread;
+            $scope.dex2jar_url    = status.dex2jar_url;
+         });
+     };
+     $scope.refreshLog = function(){
+
+         $http.get("/connector/?cmd=deepdive&test_id=get_stream")
+           .then(function (response) {
+
+            // Object is currently a string, convert it to JSON
+            var log = $.parseJSON( response.data.stream );
+            <!--var update = $scope.log_array.concat( log );-->
+            <!--$scope.log_array = update;-->
+            putLogTop( log );
+         });
+     };
+     $scope.clearLog = function(){
+
+         $http.get("/connector/?cmd=deepdive&test_id=clear_stream")
+           .then(function (response) {
+
+            $scope.log_array = [];
+         });
+     };
+     $scope.startCfr = function(){
+
+         $http.get("/connector/?cmd=deepdive&test_id=jar2src&method=cfr&package_name="+$scope.packageName)
+           .then(function (response) {
+
+            // Object is currently a string, convert it to JSON
+            var status = $.parseJSON( response.data.status );
+
+            $scope.cfr_thread = status.cfr_thread;
+            $scope.cfr_url    = status.cfr_url;
+         });
+     };
+     $scope.startJadx = function(){
+
+         $http.get("/connector/?cmd=deepdive&test_id=jar2src&method=jadx&package_name="+$scope.packageName)
+           .then(function (response) {
+
+            // Object is currently a string, convert it to JSON
+            var status = $.parseJSON( response.data.status );
+
+            $scope.jadx_thread = status.jadx_thread;
+            $scope.jadx_url    = status.jadx_url;
+         });
+     };
+     $scope.startFernFlower = function(){
+
+         $http.get("/connector/?cmd=deepdive&test_id=jar2src&method=fern_flower&package_name="+$scope.packageName)
+           .then(function (response) {
+
+            // Object is currently a string, convert it to JSON
+            var status = $.parseJSON( response.data.status );
+
+            $scope.fern_thread = status.fern_thread;
+            $scope.fern_url    = status.fern_url;
+         });
+     };
+});
+
+app.filter('checkmark', function() {
+ return function(input) {
+        return input ? '\u2713' : '-'; //'\u2718';
+ };
+});
+
+app.filter('showFlag', function() {
+ return function(x) {
+
+    if( x == 1)
+        return "Set";
+    if( x == 0)
+        return "-";
+
+    return "";
+ };
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+package com.nuvolect.deepdive.main;
+
+import android.app.Application;
+import android.content.Context;
+
+/**
+ * Provide an ability to get a context without
+ * having to use an Activity or Service context.
+ */
+public class App extends Application {
+
+    private static Context mContext;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mContext = this;
+    }
+
+    public static Context getContext(){
+        return mContext;
+    }
+}

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="debugController">
+<head>
+    <title>Developer</title>
+
+    <script src="/js/angular.min.js"></script>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/test.css" rel="stylesheet">
+
+</head>
+
+<body>
+<!-- Bootstrap core JavaScript -->
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<div class="container">
+
+    <br>
+    <br>
+    <div align="center">
+        <a href="/"><img src="/img/icon_64.png"></a>
+        <h1>Developer</h1>
+    </div>
+    <br>
+
+    <div align="left">
+
+
+        <table align="left">
+
+            <tr>
+                <td>
+                    Write some text in textbox:
+                </td>
+                <td>
+                    <input type="text" ng-model="sometext" size="50"/>
+                </td>
+                <td>
+                    Hello {{ sometext }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button ng-click="runTest('encode_hash', encode_hash_data )">Encode hash</button>
+                </td>
+                <td>
+                    <input type="text" ng-model="encode_hash_data" size="50"/>
+                </td>
+                <td>
+                    Result: {{ encode_hash_result }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button ng-click="runTest('decode_hash', decode_hash_data )">Decode hash</button>
+                </td>
+                <td>
+                    <input type="text" ng-model="decode_hash_data" size="50"/>
+                </td>
+                <td>
+                    Result: {{ decode_hash_result }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button ng-click="runTest('mime', mime_data )">Mime type</button>
+                </td>
+                <td>
+                    <input type="text" ng-model="mime_data" size="50"/>
+                </td>
+                <td>
+                    Result: {{ mime_result }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    JQuery version
+                </td>
+                <td>
+                    {{jquery_version}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    AngularJS version
+                </td>
+                <td>
+                    {{angular_version}}
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+<br>
+<br>
+<br>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+    <p>
+        &copy;
+        <script>
+			var d = new Date();
+			document.write(d.getFullYear());
+		</script>
+        Nuvolect LLC -
+        <a href="https://nuvolect.com/deepdive_terms/" target="_blank">Terms</a>
+        -
+        <a href="https://nuvolect.com/privacy/" target="_blank">Privacy</a>
+        -
+        <a href="https://nuvolect.com/deepdive_help/" target="_blank">Help</a>
+    </p>
+</div>
+
+</div>
+
+<script>
+
+var app = angular.module('myApp', []);
+app.controller('debugController', function($scope, $http, $parse) {
+
+  $scope.runTest = function( id, data ){
+
+     $http.get("/connector/?cmd=debug&test_id="+id+"&data="+data)
+       .then(function (response) {
+
+        // test_id the test name and is bound to the Angular result variable
+
+        // Get the model
+        var model = $parse(response.data.test_id+"_result");
+
+        // Replace timing result with error message if any
+        var result = response.data.result;
+        if( response.data.error.length > 0)
+            result = response.data.error;
+
+        // Assigns a value to it
+        model.assign($scope, result);
+     });
+   };
+
+   $scope.jquery_version = jQuery.fn.jquery;
+   $scope.angular_version = angular.version.full;
+
+});
+
+</script>
+</body>
+</html>
