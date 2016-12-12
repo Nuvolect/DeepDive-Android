@@ -6,8 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="3dp"
-    tools:context="com.nuvolect.crypsafe.SettingsActivity"
-    tools:ignore="MergeRootFrame" >
+    tools:context="com.nuvolect.deepdive.settings.LobbySettingsActivity"
+    tools:ignore="MergeRootFrame"
+    android:background="@drawable/water_gradient"
+    >
 
     <RelativeLayout
         android:id="@+id/setting_linear"

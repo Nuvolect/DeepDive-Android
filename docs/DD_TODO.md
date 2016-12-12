@@ -1,6 +1,9 @@
 # Sprint- minimal Tasks for pilot study
 * Lucene exact search examples
 ** Update ? help with working examples
+* Clear upload package name from dialog
+ * Provide pop-up/user feedback folder created
+* Indexing... eliminate multiple lines Indexing: /DeepDive/[package name]
 
 * Document multi-browser decompilier conflicts
 * Is there a better way to organize processess to monitor progress and kill-all
