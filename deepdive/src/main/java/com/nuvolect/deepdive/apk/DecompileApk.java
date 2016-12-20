@@ -265,7 +265,7 @@ public class DecompileApk {
             else
                 wrapper.put("fern_url", m_appFolderUrl);
 
-            wrapper.put("optimize_dex_status", optimizedDexExists?"1":"0");
+            wrapper.put("optimize_dex_status", optimizedDexExists?1:0);
 
             wrapper.put("unpack_apk_thread",  getThreadStatus( dexFileExists, m_unpackApkThread));
             wrapper.put("dex2jar_thread",     getThreadStatus( dex2jarFileExists, m_dex2jarThread));
@@ -292,7 +292,7 @@ public class DecompileApk {
      * Return the status of a compile process. The status can be one of three states:
      * running: compile process is running
      * stopped: comple process has stopped, folder exists
-     * null: compile process is not running, folder does not exist
+     * empty: compile process is not running, folder does not exist
      *
      * @param folderExists
      * @param aThread
@@ -306,7 +306,7 @@ public class DecompileApk {
         if( folderExists)
             return "stopped";
 
-        return "null";
+        return "empty";
     }
 
     private static String getThreadTime(long startTime){

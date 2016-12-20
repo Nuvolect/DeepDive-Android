@@ -44,7 +44,7 @@
                     {{ copy_apk_status | checkmark }}
                 </td>
                 <td align="center">
-                    <a href={{copy_apk_url}} target="_blank">
+                    <a href={{app_folder_url}} target="_blank">
                         <span class="glyphicon glyphicon-folder-open" style="font-size:1.5em"></span>
                     </a>
                 </td>
@@ -251,7 +251,7 @@ app.controller('myController', function($scope, $http, $parse, $interval, $timeo
 
     function getProcessState( state ){
 
-        if( state == "null")
+        if( state == "empty")
             return '-';
         if( state == "stopped")
             return '\u2713';
@@ -262,9 +262,7 @@ app.controller('myController', function($scope, $http, $parse, $interval, $timeo
     function updateStatus( status ){
 
         $scope.app_folder_path  = status.app_folder_path;
-        $scope.copy_apk_url  = status.copy_apk_url;
-        $scope.unpack_apk_url = status.unpack_apk_url;
-        $scope.dex2jar_url   = status.dex2jar_url;
+        $scope.app_folder_url = status.app_folder_url;
 
         $scope.cfr_url  = status.cfr_url;
         $scope.jadx_url = status.jadx_url;
@@ -287,19 +285,19 @@ app.controller('myController', function($scope, $http, $parse, $interval, $timeo
         $scope.jadx_time           = status.jadx_time;
         $scope.fern_time           = status.fern_time;
 
-        $scope.unpack_apk_show_time   = ( status.unpack_apk_time.length > 0 )
-        $scope.optimize_dex_show_time = ( status.optimize_dex_time.length > 0 )
-        $scope.dex2jar_show_time      = ( status.dex2jar_time.length > 0 )
-        $scope.cfr_show_time          = ( status.cfr_time.length > 0 )
-        $scope.jadx_show_time         = ( status.jadx_time.length > 0 )
-        $scope.fern_show_time         = ( status.fern_time.length > 0 )
+        $scope.unpack_apk_show_time   = ( status.unpack_apk_time.length > 0 );
+        $scope.optimize_dex_show_time = ( status.optimize_dex_time.length > 0 );
+        $scope.dex2jar_show_time      = ( status.dex2jar_time.length > 0 );
+        $scope.cfr_show_time          = ( status.cfr_time.length > 0 );
+        $scope.jadx_show_time         = ( status.jadx_time.length > 0 );
+        $scope.fern_show_time         = ( status.fern_time.length > 0 );
 
-        $scope.unpack_apk_show_button   = ( status.unpack_apk_thread == "running")
-        $scope.dex2jar_show_button      = ( status.dex2jar_thread == "running")
-        $scope.optimize_dex_show_button = ( status.optimize_dex_thread == "running")
-        $scope.cfr_show_button          = ( status.cfr_thread == "running")
-        $scope.jadx_show_button         = ( status.jadx_thread == "running")
-        $scope.fern_show_button         = ( status.fern_thread == "running")
+        $scope.unpack_apk_show_button   = ( status.unpack_apk_thread == "running");
+        $scope.dex2jar_show_button      = ( status.dex2jar_thread == "running");
+        $scope.optimize_dex_show_button = ( status.optimize_dex_thread == "running");
+        $scope.cfr_show_button          = ( status.cfr_thread == "running");
+        $scope.jadx_show_button         = ( status.jadx_thread == "running");
+        $scope.fern_show_button         = ( status.fern_thread == "running");
     }
 
     $scope.stopThread = function(myMethod){
@@ -355,7 +353,6 @@ app.controller('myController', function($scope, $http, $parse, $interval, $timeo
             var status = $.parseJSON( response.data.status );
 
             $scope.copy_apk_status = status.copy_apk_status;
-            $scope.copy_apk_url    = status.copy_apk_url;
          });
      };
      $scope.unpackApk = function(){
@@ -389,7 +386,6 @@ app.controller('myController', function($scope, $http, $parse, $interval, $timeo
             var status = $.parseJSON( response.data.status );
 
             $scope.dex2jar_thread = status.dex2jar_thread;
-            $scope.dex2jar_url    = status.dex2jar_url;
          });
      };
      $scope.refreshLog = function(){
