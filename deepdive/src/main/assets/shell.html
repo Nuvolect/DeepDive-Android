@@ -104,7 +104,7 @@ app.controller('appListController', function($scope, $http, $parse) {
             return;
         }
 
-        $http.get("/connector/?cmd=deepdive&test_id=shell&shell_cmd="+command)
+        $http.get("/device/shell/?shell_cmd="+command)
           .then(function (response) {
 
             // Returned data is currently a string, convert it to JSON

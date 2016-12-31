@@ -23,8 +23,6 @@ import java.util.Map;
 
 public class OmniRest {
 
-    private static Context m_ctx;
-
     private enum CMD_ID {
         NIL,
         decode_hash,

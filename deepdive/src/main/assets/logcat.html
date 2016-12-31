@@ -72,7 +72,7 @@ app.controller('appListController', function($scope, $http, $parse) {
 
      $scope.logcat = [];
 
-     $http.get("/connector/?cmd=deepdive&test_id=logcat")
+     $http.get("/device/logcat")
        .then(function (response) {
 
         // Returned data is currently a string, convert it to JSON
@@ -83,7 +83,7 @@ app.controller('appListController', function($scope, $http, $parse) {
 
      $scope.refreshLog = function(){
 
-         $http.get("/connector/?cmd=deepdive&test_id=logcat")
+         $http.get("/device/logcat")
            .then(function (response) {
 
             // Returned data is currently a string, convert it to JSON
@@ -94,11 +94,7 @@ app.controller('appListController', function($scope, $http, $parse) {
      };
      $scope.clearLog = function(){
 
-         $http.get("/connector/?cmd=deepdive&test_id=clear_stream")
-           .then(function (response) {
-
-            $scope.logcat = [];
-         });
+        $scope.logcat = [];
      };
 });
 

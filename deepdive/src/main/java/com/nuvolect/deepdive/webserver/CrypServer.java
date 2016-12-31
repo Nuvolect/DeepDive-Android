@@ -344,6 +344,10 @@ public class CrypServer extends NanoHTTPD{
                     else
                         return new Response(HTTP_OK, MimeUtil.MIME_HTML, stream, -1);
                 }
+                if (uri.startsWith("/device/")) {
+                    InputStream stream = DeviceRest.process(m_ctx, params);
+                    return new Response(HTTP_OK, MimeUtil.MIME_HTML, stream, -1);
+                }
                 if (uri.startsWith("/omni/")) {
                     InputStream stream = OmniRest.process(m_ctx, params);
                     return new Response(HTTP_OK, MimeUtil.MIME_HTML, stream, -1);
