@@ -2,8 +2,9 @@ package com.nuvolect.deepdive.webserver.connector;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniHash;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniHash;
+import com.nuvolect.deepdive.ddUtil.Omni;
 import com.nuvolect.deepdive.webserver.MimeUtil;
 
 import org.json.JSONException;
@@ -108,9 +109,9 @@ public class CmdDebug {
     private static String decode_hash(String data) {
 
         String hash = data;
-        if( VolUtil.matchVolume( data)){
+        if( Omni.matchVolume( data)){
 
-            hash = VolUtil.getPathFromUri( data);
+            hash = Omni.getPathFromUri( data);
         }
 
         return OmniHash.decode( hash );

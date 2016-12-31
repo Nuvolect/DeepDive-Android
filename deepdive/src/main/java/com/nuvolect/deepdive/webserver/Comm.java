@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.nuvolect.deepdive.util.CConst;
-import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.ddUtil.CConst;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;

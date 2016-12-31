@@ -8,7 +8,7 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
-import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
 
 
 /**

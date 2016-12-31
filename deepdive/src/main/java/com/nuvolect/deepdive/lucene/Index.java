@@ -1,9 +1,9 @@
 package com.nuvolect.deepdive.lucene;
 
-import android.content.Context;
-
-import com.nuvolect.deepdive.util.CConst;
-import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.ddUtil.CConst;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -20,13 +20,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.lukhnos.portmobile.file.Paths;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
-import static com.nuvolect.deepdive.lucene.Index.INDEX_STATE.indexing;
 
 /**
  * Index a Lucene database given an path.
@@ -53,7 +51,7 @@ public class Index {
     private static final int[] m_indexedDocs = {0};
     private static final String[] m_error = {""};
 
-    public static JSONObject index(Context ctx, final String searchPath, final boolean forceIndex) {
+    public static JSONObject index(final String volumeId, final String searchPath, final boolean forceIndex) {
 
         if( m_interrupt[0]){
 
@@ -61,13 +59,17 @@ public class Index {
             return responseInterruptIndexing();
         }
 
-        if( ! IndexUtil.folderExists( searchPath))
-            return responseFolderNotExists( searchPath);
+        OmniFile cacheDir = IndexUtil.getCacheDir( volumeId, searchPath);
+        boolean cacheDirCreated = false;
+        try {
+            cacheDirCreated = OmniUtil.forceMkdir(cacheDir);
+        } catch (IOException e) {
+            return responseFolderCreateError( searchPath);
+        }
 
-        File luceneDir = IndexUtil.getLuceneCacheDir( ctx, searchPath);
-        final String luceneDirPath = IndexUtil.getLuceneCacheDirPath( ctx, searchPath);
+        final String luceneDirPath = cacheDir.getAbsolutePath();
 
-        boolean cacheDirExists = ! luceneDir.mkdirs();
+        boolean cacheDirExists = ! cacheDirCreated;
         boolean indexingOngoing = m_indexThread != null && m_indexThread.isAlive();
         boolean indexingRequired = ! cacheDirExists || forceIndex;
 
@@ -117,7 +119,7 @@ public class Index {
                             iwriter.deleteAll();
                             iwriter.commit();
                         } catch (IOException e) {
-                            LogUtil.logException(LogUtil.LogType.LUCENE, e);
+                            LogUtil.logException( Index.class, e);
                             m_error[0] = "IndexWriter constructor exception";
                         }
 
@@ -125,10 +127,10 @@ public class Index {
                             m_fileTreeActive = true;
                             m_index_state = INDEX_STATE.filetree;
                         }
-                        Collection files = IndexUtil.getFilePaths( searchPath);
+                        Collection<OmniFile> files = IndexUtil.getFilePaths( volumeId, searchPath);
 
                         synchronized (m_lock){
-                            m_index_state = indexing;
+                            m_index_state = INDEX_STATE.indexing;
                             m_fileTreeActive = false;
                             m_totalDocs[0] = files.size();
                             m_indexedDocs[0] = 0;
@@ -136,14 +138,14 @@ public class Index {
 
                         try {
 
-                            for (Iterator<File> iterator = files.iterator();
+                            for (Iterator<OmniFile> iterator = files.iterator();
                                  iterator.hasNext() && ! m_interrupt[0];) {
 
-                                File file = iterator.next();
-                                String filePath = file.getPath();
+                                OmniFile file = iterator.next();
+                                String path = file.getPath();
 
-                                LogUtil.log(LogUtil.LogType.SEARCH, "indexing: "+filePath);
-                                iwriter.addDocument(makeDoc( filePath ));
+                                LogUtil.log( Index.class, "indexing: "+ path);
+                                iwriter.addDocument(makeDoc( volumeId, path));
                                 synchronized (m_lock){
                                     ++m_indexedDocs[0];
                                 }
@@ -156,12 +158,12 @@ public class Index {
                                 m_totalDocs[0] = m_indexedDocs[0];
                             }
                             if( m_interrupt[0])
-                                LogUtil.log(LogUtil.LogType.SEARCH, "indexing canceled");
+                                LogUtil.log( Index.class, "indexing canceled");
                             else
-                                LogUtil.log(LogUtil.LogType.SEARCH, "indexing complete");
+                                LogUtil.log( Index.class, "indexing complete");
 
                         } catch (Exception e) {
-                            LogUtil.logException(LogUtil.LogType.LUCENE, e);
+                            LogUtil.logException( Index.class, e);
                             m_error[0] = "IndexWriter addDocument exception";
                         }
                     }
@@ -185,7 +187,7 @@ public class Index {
                 ireader.close();
                 directory.close();
             } catch (IOException e) {
-                LogUtil.logException(LogUtil.LogType.LUCENE, e);
+                LogUtil.logException( Index.class, e);
             }
         }
 
@@ -196,7 +198,7 @@ public class Index {
                 result.put("error", m_error[0]);
                 result.put("indexed_docs", m_indexedDocs[0]);
                 result.put("total_docs", m_totalDocs[0]);
-                result.put("full_path", luceneDir.getAbsolutePath());
+//                result.put("full_path", cacheDir.getAbsolutePath());
                 result.put("search_path", searchPath);
             }
         } catch (JSONException e) {
@@ -211,7 +213,7 @@ public class Index {
         synchronized (m_lock) {
             m_interrupt[0] = true;
         }
-        LogUtil.log(LogUtil.LogType.SEARCH, "interrupting---------------================================================");
+        LogUtil.log( Index.class, "interrupting---------------================================================");
         return responseInterruptIndexing();
     }
 
@@ -232,7 +234,7 @@ public class Index {
         return result;
     }
 
-    private static JSONObject responseFolderNotExists(String searchPath) {
+    private static JSONObject responseFolderCreateError(String searchPath) {
 
         JSONObject result =new JSONObject();
         try {
@@ -251,25 +253,29 @@ public class Index {
 
     /**
      * Build a single document to be indexed with additional data to be returned with search results.
-     * @param filePath
+     * @param volumeId // Volume of the file
+     * @param path // Path to the file
      * @return
      * @throws IllegalArgumentException
      * @throws FileNotFoundException
      */
-    private static Document makeDoc(String filePath) throws IllegalArgumentException, FileNotFoundException {
+    private static Document makeDoc( String volumeId, String path) throws IllegalArgumentException, FileNotFoundException {
 
         Document doc = new Document();
 
-        String fileName = FilenameUtils.getName( filePath);
+        String fileName = FilenameUtils.getName(path);
         // Tokenize, index and store
         doc.add(new TextField(CConst.FIELD_FILENAME, fileName, Field.Store.YES));
 
         // Only stored, not indexed
-        doc.add( new StoredField(CConst.FIELD_PATH, filePath));
+        doc.add( new StoredField(CConst.FIELD_VOLUME, volumeId));
+
+        // Only stored, not indexed
+        doc.add( new StoredField(CConst.FIELD_PATH, path));
 
         // Index only, do not store
-        File file = new File( filePath);
-        java.io.Reader reader = new java.io.FileReader( file );
+        OmniFile file = new OmniFile( volumeId, path);
+        java.io.Reader reader = new java.io.FileReader( file.getStdFile() );
         doc.add(new Field( CConst.FIELD_CONTENT, reader, TextField.TYPE_NOT_STORED));
 
         return doc;

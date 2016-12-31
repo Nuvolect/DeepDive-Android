@@ -2,10 +2,11 @@ package com.nuvolect.deepdive.lucene;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.CConst;
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniHash;
-import com.nuvolect.deepdive.webserver.connector.VolUtil;
+import com.nuvolect.deepdive.ddUtil.CConst;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniHash;
+import com.nuvolect.deepdive.main.App;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -30,7 +31,7 @@ import java.util.Map;
 
 
 /**
- * Methods to search the public file system.
+ * Methods to search the Omni file structures
  */
 public class Search {
 
@@ -38,44 +39,45 @@ public class Search {
     private static Directory m_directory = null;
     private static final int MAX_HITS = 50;
 
-    private static void preSearch(Context ctx, String searchPath) {
+    private static void preSearch( String volumeId, String searchPath) {
 
         m_analyzer = new org.apache.lucene.analysis.core.WhitespaceAnalyzer();
 
-        File luceneDir = IndexUtil.getLuceneCacheDir( ctx, searchPath);
+        OmniFile luceneDir = IndexUtil.getCacheDir( volumeId, searchPath);
         boolean cacheDirExists = ! luceneDir.mkdirs();
 
         try {
             m_directory = FSDirectory.open( Paths.get( luceneDir.getCanonicalPath()));
         } catch (IOException e) {
-            LogUtil.logException(LogUtil.LogType.LUCENE, e);
+            LogUtil.logException( Search.class, e);
         }
 
         if( ! cacheDirExists)
-            Index.index(ctx, searchPath, true);// true == force re-index
+            Index.index( volumeId, searchPath, true);// true == force re-index
     }
 
     /**
      * Return results for a search along a specific path.  If the path is changed or new
      * create an index.
-     * @param search_query
-     * @param search_path
+     * @param searchQuery
+     * @param searchPath
      * @return
      */
-    public static JSONObject search(Context ctx, String search_query, String search_path) {
+    public static JSONObject search(String searchQuery, String volumeId, String searchPath) {
 
         JSONObject result = new JSONObject();
         JSONArray jsonArray = new JSONArray();
+        Context ctx = App.getContext();
 
         DirectoryReader ireader = null;
         ScoreDoc[] scoreDocs = null;
         String error = "";
 
-        preSearch( ctx, search_path);
+        preSearch(volumeId, searchPath);
         try {
             ireader = DirectoryReader.open(m_directory);
         } catch (IOException e) {
-            LogUtil.logException(LogUtil.LogType.LUCENE, e);
+            LogUtil.logException( Search.class, e);
             error += e.toString();
         }
         IndexSearcher isearcher = new IndexSearcher(ireader);
@@ -85,13 +87,13 @@ public class Search {
             // Parse a simple query that searches for "text":
             QueryParser parser = new QueryParser( CConst.FIELD_CONTENT, m_analyzer);
             Query query = null;
-            query = parser.parse( search_query);
+            query = parser.parse(searchQuery);
             TopScoreDocCollector collector = TopScoreDocCollector.create( MAX_HITS);
             isearcher.search( query, collector);
             scoreDocs = collector.topDocs().scoreDocs;
 
         } catch ( ParseException | IOException e) {
-            LogUtil.logException(LogUtil.LogType.LUCENE, e);
+            LogUtil.logException( Search.class, e);
             error += e.toString();
         }
         // Iterate through the results creating an object for each file
@@ -101,13 +103,15 @@ public class Search {
         /**
          * First iterate the hit list and count duplicates based on file path.
          */
+        // TODO Find a Lucene query that does not produce duplicates on same file
+        // This will save computation too
         for (int ii = 0; scoreDocs != null && ii < scoreDocs.length; ++ii) {
 
             Document hitDoc = null;
             try {
                 hitDoc = isearcher.doc(scoreDocs[ii].doc);
             } catch (IOException e) {
-                LogUtil.logException(LogUtil.LogType.LUCENE, e);
+                LogUtil.logException( Search.class, e);
                 error += e.toString();
             }
             String filePath = hitDoc.get(( CConst.FIELD_PATH));
@@ -120,7 +124,7 @@ public class Search {
             }
         }
 
-        String rootPath = VolUtil.getRoot(VolUtil.sdcardVolumeId);
+//        String rootPath = Omni.getRoot(volumeId);
         /**
          * Iterate over each unique hit and save the results
          */
@@ -130,28 +134,30 @@ public class Search {
             try {
                 hitDoc = isearcher.doc(scoreDocs[ uniqueHit.getValue() ].doc);
             } catch (IOException e) {
-                LogUtil.logException(LogUtil.LogType.LUCENE, e);
+                LogUtil.logException( Search.class, e);
                 error += e.toString();
             }
             String file_name = hitDoc.get(( CConst.FIELD_FILENAME));
             String file_path = hitDoc.get(( CConst.FIELD_PATH));
             File parentFolder = new File( file_path).getParentFile();
             try {
-                String folder_path = parentFolder.getCanonicalPath();
-                String relative_path = file_path.replaceFirst( rootPath, "/");
-                String folder_url = OmniHash.getHashedServerUrlFullPath( ctx, VolUtil.sdcardVolumeId, folder_path);
+//                String folder_path = parentFolder.getCanonicalPath();
+//                String relative_path = file_path.replaceFirst( rootPath, "/");
+//                String folder_url = OmniHash.getHashedServerUrl( ctx, volumeId, folder_path);
+                String folder_url = OmniHash.getHashedServerUrl( ctx, volumeId, file_path);
 
                 JSONObject hitObj = new JSONObject();
-                hitObj.put("file_name", file_name);
+                hitObj.put("volume_id", volumeId);
                 hitObj.put("file_path", file_path);
-                hitObj.put("relative_path", relative_path);
+                hitObj.put("file_name", file_name);
+//                hitObj.put("relative_path", relative_path);
                 hitObj.put("folder_url", folder_url);
                 hitObj.put("num_hits", hitCounts.get(file_path));
                 hitObj.put("error", error);
                 jsonArray.put(hitObj);
 
-            } catch (JSONException | IOException e) {
-                LogUtil.logException(LogUtil.LogType.LUCENE, e);
+            } catch (Exception e) {
+                LogUtil.logException( Search.class, e);
             }
         }
 
@@ -164,7 +170,7 @@ public class Search {
             m_directory.close();
 
         } catch (JSONException | IOException e) {
-            LogUtil.logException(LogUtil.LogType.LUCENE, e);
+            LogUtil.logException( Search.class, e);
         }
 
         return result;

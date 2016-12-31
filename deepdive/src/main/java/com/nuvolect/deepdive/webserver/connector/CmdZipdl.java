@@ -5,10 +5,10 @@ package com.nuvolect.deepdive.webserver.connector;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniFileUtil;
-import com.nuvolect.deepdive.util.OmniZip;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
+import com.nuvolect.deepdive.ddUtil.OmniZip;
 import com.nuvolect.deepdive.webserver.MimeUtil;
 
 import org.apache.commons.io.FilenameUtils;
@@ -180,7 +180,7 @@ public class CmdZipdl {
         zipdlFilename = "Archive.zip";
         String zipPath = targets[0].getParentFile().getPath()+"/"+ zipdlFilename;
         zipOmniFile = new OmniFile( volumeId, zipPath);
-        zipOmniFile = OmniFileUtil.makeUniqueName(zipOmniFile);// Add '~' to make unique
+        zipOmniFile = OmniUtil.makeUniqueName(zipOmniFile);// Add '~' to make unique
 
         zipdlFilename = FilenameUtils.getName(zipOmniFile.getPath()); // Filename may have changed
 

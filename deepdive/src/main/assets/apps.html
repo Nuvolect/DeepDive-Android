@@ -6,7 +6,7 @@
     <script src="/js/angular.min.js"></script>
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
-    <link href="/css/test.css" rel="stylesheet">
+    <link href="/css/probe.css" rel="stylesheet">
 
 </head>
 
@@ -85,32 +85,29 @@
             </div>
         </form>
     </div>
-    <div ng-show="show_folder_list" align="center">
+    <div ng-show="show_package_list" align="center">
 
-        <p style="color: Black"><input type="text" ng-model="folder_search" placeholder="Search apps">#{{ (folder_list|filter:folder_search).length }}</p>
+        <p style="color: Black"><input type="text" ng-model="folder_search" placeholder="Search apps">#{{ (package_list|filter:folder_search).length }}</p>
 
         <table class="card">
             <tr>
+                <td></td>
                 <td></td>
                 <td align="left">
                     <strong>Uploaded App</strong>
                 </td>
             </tr>
-            <tr style="vertical-align:middle" ng-repeat="f in folder_list | orderBy: 'name' | filter : folder_search ">
+            <tr style="vertical-align:middle" ng-repeat="p in package_list | orderBy: 'name' | filter : folder_search ">
                 <td>
-                    <a href="/decompile.html?packageName={{ f.name }}&appName={{ f.name }}">
+                    <a href="/decompile.html?packageName={{ p.name }}&appName={{ p.name }}">
                         <span class="glyphicon glyphicon-cog" style="font-size:1.8em"></span>
                     </a>
                 </td>
                 <td>
-                    <a href="https://play.google.com/store/apps/details?id={{ f.name }}" target="_blank">{{ f.name }}</a>
+                    <a href="{{ p.url }}" target="_blank"><span class="glyphicon glyphicon-folder-open" style="font-size:1.5em"></span></a>
                 </td>
                 <td>
-                    <a href="{{ f.url }}" target="_blank"><span class="glyphicon glyphicon-folder-open" style="font-size:1.5em"></span></a>
-                </td>
-                <td>
-                    <a ng-click="removeFolder(f.name)">
-                        <span class="glyphicon glyphicon-remove" style="font-size:1.5em"></span></a>
+                    <a href="https://play.google.com/store/apps/details?id={{ p.name }}" target="_blank">{{ p.name }}</a>
                 </td>
             </tr>
         </table>
@@ -145,7 +142,7 @@ app.controller('appListController', function($scope, $http, $parse) {
 
        $scope.show_input_package = false;
 
-     $http.get("/connector/?cmd=deepdive&test_id=apps")
+     $http.get("/probe/installed_apps")
        .then(function (response) {
 
         // List is currently a string, convert it to JSON
@@ -157,37 +154,37 @@ app.controller('appListController', function($scope, $http, $parse) {
         };
         $scope.addFolder = function(){
 
-            $http.get("/connector/?cmd=deepdive&test_id=folder_add&package_name="+this.package_name)
+            $http.get("/probe/create_package?package_name="+this.package_name)
                 .then(function (response) {
 
                 // List is currently a string, convert it to JSON, assign it to display with AngularJS
                 var response = $.parseJSON( response.data.result );
-                $scope.folder_list = response.list;
+                $scope.package_list = response.list;
 
-                $scope.show_folder_list = $scope.folder_list.length > 0;
+                $scope.show_package_list = $scope.package_list.length > 0;
              });
         };
         $scope.removeFolder = function( folder ){
 
-            $http.get("/connector/?cmd=deepdive&test_id=folder_remove&package_name="+folder)
+            $http.get("/probe/delete_package?package_name="+folder)
                 .then(function (response) {
 
                 // List is currently a string, convert it to JSON, assign it to display with AngularJS
                 var response = $.parseJSON( response.data.result );
-                $scope.folder_list = response.list;
+                $scope.package_list = response.list;
 
-                $scope.show_folder_list = $scope.folder_list.length > 0;
+                $scope.show_package_list = $scope.package_list.length > 0;
              });
         };
 
-        $http.get("/connector/?cmd=deepdive&test_id=folder_get_list")
+        $http.get("/probe/get_package_list")
             .then(function (response) {
 
             // List is currently a string, convert it to JSON, assign it to display with AngularJS
             var response = $.parseJSON( response.data.result );
-            $scope.folder_list = response.list;
+            $scope.package_list = response.list;
 
-            $scope.show_folder_list = $scope.folder_list.length > 0;
+            $scope.show_package_list = $scope.package_list.length > 0;
          });
      });
 });

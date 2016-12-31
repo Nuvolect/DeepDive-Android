@@ -6,11 +6,11 @@ import android.net.Uri;
 import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniFiles;
 import com.nuvolect.deepdive.license.AppSpecific;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniFiles;
+import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.webserver.MimeUtil;
-import com.nuvolect.deepdive.webserver.connector.VolUtil;
 
 /**
  * Share the selected file with the users application of choice.
@@ -22,7 +22,7 @@ public class Do_share {
         String mime = MimeUtil.getMime(Data.m_files.get(Data.m_selectedPosition));
 
         java.io.File f1 = null;
-        if( Data.m_volumeId.contentEquals(VolUtil.sdcardVolumeId)){
+        if( Data.m_volumeId.contentEquals(App.getUser().getDefaultVolumeId() )){
 
             f1 = Data.m_files.get(Data.m_selectedPosition).getStdFile();
         }else{
@@ -33,7 +33,7 @@ public class Do_share {
              */
             OmniFile cryFile = Data.m_files.get(Data.m_selectedPosition);
             Data.m_privateFile = new OmniFile(
-                    VolUtil.sdcardVolumeId,
+                    App.getUser().getDefaultVolumeId(),
                     act.getFilesDir().getPath()+"/"+cryFile.getName());
 
             Data.m_privateFile.getParentFile().mkdirs();

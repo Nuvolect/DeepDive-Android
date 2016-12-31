@@ -71,18 +71,18 @@
     var app = angular.module('myApp', ['ngSanitize']);
     app.controller('myController', function($scope, $http) {
 
-        $scope.paths = ["one","two"];
+        $scope.paths = [];
 
         $scope.changePath = function ($event) {
 
             var keyCode = $event.which || $event.keyCode;
-            if (keyCode === 13) {
+            if (keyCode === 13) { // Test for return character
 
                 var path = $scope.search_path.trim();
                 if( !path || 0 == path.length )
                     return;
 
-                $http.get("/connector/?cmd=deepdive&test_id=new_index&new_path="+path)
+                $http.get("/search/index/?path="+path)
                     .then(function (response) {
 
                     // Returned data is currently a string, convert it to JSON
@@ -90,13 +90,16 @@
 
                     $scope.path_error = result.error;
 
-                    if( result.error.length == 0 )
+                    if( result.error.length == 0 ){
+
                         $scope.paths = result.paths;
+                        $scope.search_path = "";
+                    }
                 });
             }
         };
 
-        $http.get("/connector/?cmd=deepdive&test_id=get_indexes")
+        $http.get("/search/get_indexes")
             .then(function (response) {
 
             // Returned data is currently a string, convert it to JSON

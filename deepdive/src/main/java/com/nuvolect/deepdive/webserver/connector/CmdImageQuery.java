@@ -1,8 +1,9 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniImage;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniImage;
+import com.nuvolect.deepdive.main.App;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,12 +29,11 @@ public class CmdImageQuery {
         long startTime = System.currentTimeMillis();
         String httpIpPort = params.get("url");
 
-        String volumeId = VolUtil.sdcardVolumeId;
+        String volumeId = App.getUser().getDefaultVolumeId();
         if( params.containsKey("volume_id"))
             volumeId = params.get("volume_id");
 
-        String path = VolUtil.getRoot( volumeId) + "DCIM/Camera";
-        OmniFile targetFile = new OmniFile( volumeId, path);
+        OmniFile targetFile = new OmniFile( volumeId, "/DCIM/Camera");
         OmniFile[] files = targetFile.listFiles();
         JSONArray list = new JSONArray();
 

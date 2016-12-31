@@ -1,7 +1,9 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.Omni;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,14 +24,14 @@ public class CmdRename {
         if( params.containsKey("target"))
             target = params.get("target");
 
-        OmniFile targetFile = VolUtil.getFileFromHash(target);
+        OmniFile targetFile = OmniUtil.getFileFromHash(target);
         LogUtil.log(LogUtil.LogType.CMD_RENAME, "Target " + targetFile.getPath());
 
         String name = "";
         if( params.containsKey("name"))
             name = params.get("name");
 
-        String volumeId = VolUtil.getVolumeId(target);
+        String volumeId = Omni.getVolumeId(target);
         String newPath = targetFile.getParentFile().getPath()+"/"+name;
         OmniFile newFile = new OmniFile(volumeId, newPath);
 

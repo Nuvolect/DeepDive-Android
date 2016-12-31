@@ -1,7 +1,8 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,7 +30,7 @@ public class CmdFile {
         if (params.containsKey("target")) {
             target = params.get("target");
 
-            OmniFile targetFile = VolUtil.getFileFromHash(target);
+            OmniFile targetFile = OmniUtil.getFileFromHash(target);
             LogUtil.log(LogUtil.LogType.CMD_FILE, "Target " + targetFile.getPath());
 
             /**

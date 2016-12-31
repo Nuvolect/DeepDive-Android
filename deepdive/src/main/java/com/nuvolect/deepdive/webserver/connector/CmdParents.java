@@ -1,7 +1,7 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,10 +68,6 @@ public class CmdParents {
         String target = params.get("target");
         OmniFile targetFile = new OmniFile( target );
         String volumeId = targetFile.getVolumeId();
-        String rootPath = VolUtil.getRoot(volumeId);
-        rootPath = rootPath.substring( 0, rootPath.length()-1);// remove trailing slash
-        if( rootPath.isEmpty())
-            rootPath = "/";
 
         if( DEBUG )
             LogUtil.log(LogUtil.LogType.CMD_PARENTS, "volumeId: "+volumeId+", path: "+targetFile.getPath());
@@ -83,7 +79,7 @@ public class CmdParents {
              * Iterate upward and capture all parent and parent sibling (aunts and uncles) directories
              */
 
-            while( targetFile != null && ! targetFile.getPath().contentEquals(rootPath)){
+             while( targetFile != null && ! targetFile.isRoot()){
 
                 targetFile = targetFile.getParentFile();
                 if( targetFile == null)
@@ -110,9 +106,7 @@ public class CmdParents {
 
             return new ByteArrayInputStream(tree.toString().getBytes("UTF-8"));
 
-        } catch (JSONException e) {
-            LogUtil.logException(LogUtil.LogType.CMD_PARENTS, e);
-        } catch (UnsupportedEncodingException e) {
+        } catch (JSONException | UnsupportedEncodingException e) {
             LogUtil.logException(LogUtil.LogType.CMD_PARENTS, e);
         }
 

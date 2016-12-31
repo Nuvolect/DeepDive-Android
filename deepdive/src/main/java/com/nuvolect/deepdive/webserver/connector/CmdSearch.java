@@ -1,7 +1,10 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.ddUtil.CConst;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.Omni;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,18 +57,17 @@ public class CmdSearch {
 
         if( target.isEmpty()){
 
-            for(String volumeId : VolUtil.getVolumeIds()) {
+            for(String volumeId : Omni.getActiveVolumeIds()) {
 
                 // Search all volumes
-                String volumeRoot = VolUtil.getRoot(volumeId);
-                OmniFile targetFile = new OmniFile( volumeId, volumeRoot);
+                OmniFile targetFile = new OmniFile( volumeId, CConst.ROOT);
                 searchTarget( SearchStr, targetFile, files, httpIpPort);
             }
             
         }else {
             
             // Search a directory
-            OmniFile targetFile = VolUtil.getFileFromHash(target);
+            OmniFile targetFile = OmniUtil.getFileFromHash(target);
             searchTarget( SearchStr, targetFile, files, httpIpPort);
         }
         try {

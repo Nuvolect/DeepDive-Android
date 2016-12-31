@@ -1,7 +1,10 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.ddUtil.CConst;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.Omni;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.main.App;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,31 +90,42 @@ import java.util.Map;
  */
 public class CmdOpen {
 
-    static boolean DEBUG = false; //LogUtil.DEBUG;
+    static boolean DEBUG = true; //LogUtil.DEBUG;
 
     public static ByteArrayInputStream go(Map<String, String> params) {
 
         long startTime = System.currentTimeMillis();
+        /**
+         init : (true|false|not set), optional parameter.
+         If true indicates that this request is an initialization request and its response must
+         include the value api (number or string >= 2) and should include the options object,
+         but will still work without it.
+
+         Also, this option affects the processing of parameter target hash value.
+         If init == true and target is not set or that directory doesn't exist,
+         then the data connector must return the root directory of the default volume.
+         Otherwise it must return error "File not found".
+
+         target : (string) Hash of directory to open. Required if init == false or init is not set.
+
+         tree : (true|false), optional. If true, response must contain subfolders trees of roots directories.
+         */
+        boolean init = false;
+        if( params.containsKey("init"))
+            init = params.get("init").contentEquals("1");
+
+        /**
+         * target : (string) Hash of directory to open. Required if init == false or init is not set
+         */
         OmniFile targetFile;
         String target = "";
         if( params.containsKey("target"))
             target = params.get("target");
 
         /**
-         * init : (true|false|not set), optional parameter.
-         * If true indicates that this request is an initialization request and its response must
-         * include the value api (number or string >= 2) and should include the options object,
-         * but will still work without it.
-         * Also, this option affects the processing of parameter target hash value.
-         * If init == true and target is not set or that directory doesn't exist,
-         * then the data connector must return the root directory of the default volume.
-         * Otherwise it must return error "File not found".
+         * tree : (true|false), optional. If true, response must contain subfolders trees of roots directories.
          */
-        boolean init = false;
-        if( params.containsKey("init"))
-            init = params.get("init").contentEquals("1");
-
-        boolean tree = false; // if true, response must contain subfolders trees of roots directories.
+        boolean tree = false;
         if( params.containsKey("tree"))
             tree = params.get("tree").contentEquals("1");
 
@@ -132,20 +146,25 @@ public class CmdOpen {
 
         try {
 
+            if( init ){
+
+                /**
+                 * api : (Number) The version number of the protocol, must be >= 2.1,
+                 * ATTENTION - return api ONLY for init request!
+                 */
+                wrapper.put("api","2.1");
+            }
+
             /**
-             * An empty target defaults to the sdcard folder otherwise
+             * An empty target defaults to the root of the default volume otherwise
              * a non-empty target uses a hashed file volume and path.
              * The path starts with the volume appended with an encoded path.
              */
             if( target.isEmpty()){
-                volumeId = VolUtil.sdcardVolumeId;
-                targetFile = new OmniFile(volumeId, VolUtil.getRoot( volumeId));
+                volumeId = App.getUser().getDefaultVolumeId();
+                targetFile = new OmniFile(volumeId, CConst.ROOT);
                 if( DEBUG)
                     LogUtil.log(LogUtil.LogType.CMD_OPEN,"Target empty: "+targetFile.getPath());
-                /**
-                 * Target is the default volume. Files will be added when volumes are added.
-                 */
-                fileObjects = new JSONArray();
             }else {
                 /**
                  * A non-empty target is a hashed path starting with with the volume
@@ -155,18 +174,18 @@ public class CmdOpen {
                 volumeId = targetFile.getVolumeId();
                 if( DEBUG)
                     LogUtil.log(LogUtil.LogType.CMD_OPEN,"Target: "+targetFile.getPath());
-                /**
-                 * Add files that are in the target directory
-                 */
-                fileObjects = targetFile.listFileObjects(httpIpPort);
             }
-
-            if( init ){
-
-                wrapper.put("api","2.1");
-                wrapper.put("uplMaxSize", "100M");
-                wrapper.put("uplMaxFile", "20");
-            }
+            /**
+             * Add files that are in the target directory
+             *
+             * files : (Array) array of objects - files and directories in current directory.
+             * If parameter tree == true, then added to the folder of the directory tree to a given depth.
+             * The order of files is not important.
+             *
+             * Note you must include the top-level volume objects here as well (i.e. cwd is repeated here,
+             * in addition to other volumes) Information about File/Directory
+             */
+            fileObjects = targetFile.listFileObjects(httpIpPort);
 
             /**
              * The current working directory is always a directory and never a file.
@@ -194,12 +213,11 @@ public class CmdOpen {
 
             if( tree){
 
-                String volumeIds[] = VolUtil.getVolumeIds();
+                String volumeIds[] = Omni.getActiveVolumeIds();
 
                 for(String thisVolumeId : volumeIds){
 
-                    String thisVolumeRoot = VolUtil.getRoot(thisVolumeId);
-                    OmniFile thisRootFile = new OmniFile( thisVolumeId, thisVolumeRoot);
+                    OmniFile thisRootFile = new OmniFile( thisVolumeId, CConst.ROOT);
                     JSONObject thisRootFileObject = thisRootFile.getFileObject(httpIpPort);
                     // Only the root objects get this
                     thisRootFileObject.put("csscls", "elfinder-navbar-root-local");
@@ -222,12 +240,27 @@ public class CmdOpen {
 
             wrapper.put("files", fileObjects);
 
+            /**
+             * Optional
+             */
+            wrapper.put("uplMaxSize", "100M");
+            wrapper.put("uplMaxFile", "100");
+
             // Remove leading slash from the path
             JSONObject options = new JSONObject();
             String path = targetFile.getPath();
-            if( ! path.isEmpty())
+            if( path.startsWith("/"))
                 path = path.substring(1);
             options.put("path", path);
+
+            /**
+             * Using the optional 'url' creates odd results.
+             * From elFinder, Get info, link: produces a link combining the hashed path and a clear text filename
+             *
+             * Omitting the 'url' prodduces a link that is only a hashed url and this is desired,
+             * So don't use the 'url' option.
+             */
+//            options.put("url", httpIpPort +"/"+ targetFile.getHash()+"/");
             /**
              * Normally the client uses this URL as a base to fetch thumbnails,
              * a clear text filename would be added to perform a GET.
@@ -237,8 +270,7 @@ public class CmdOpen {
              */
             options.put("tmbUrl", httpIpPort + "/");
 
-            options.put("url", httpIpPort +"/"+ targetFile.getHash()+"/");
-            options.put("separator","/");
+            options.put("separator", CConst.SLASH);
 //            options.put("dispInlineRegex","^(?:(?:image|text)|application/x-shockwave-flash$)");
             options.put("dispInlineRegex","^(?:image|text/plain$)");
             JSONArray disabled = new JSONArray();
@@ -312,10 +344,14 @@ public class CmdOpen {
                 wrapper.put("debug",debug);
             }
 
-            if( DEBUG)
-                LogUtil.log(LogUtil.LogType.CMD_OPEN, wrapper.toString(2));
+            if( DEBUG){
 
-            return new ByteArrayInputStream(wrapper.toString().getBytes("UTF-8"));
+                LogUtil.log(LogUtil.LogType.CMD_OPEN, wrapper.toString());
+                LogUtil.log(LogUtil.LogType.CMD_OPEN, "After wrapper");
+            }
+
+            String result = wrapper.toString();
+            return new ByteArrayInputStream(result.getBytes("UTF-8"));
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

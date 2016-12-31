@@ -1,8 +1,8 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.OmniHash;
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniHash;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,12 +43,11 @@ public class CmdInfo {
          */
         String segments[] = targets[0].split("_");
         String volumeId = segments[0] + "_";
-        String rootPath = VolUtil.getRoot( volumeId);
 
-        String relativePath = OmniHash.decode(segments[1]);
-        OmniFile targetFile = new OmniFile(volumeId, rootPath + relativePath);
+        String path = OmniHash.decode(segments[1]);
+        OmniFile targetFile = new OmniFile(volumeId, path);
 
-        LogUtil.log(LogUtil.LogType.CMD_INFO, "volumeId: " + volumeId + ", relativePath: " + relativePath);
+        LogUtil.log(LogUtil.LogType.CMD_INFO, "volumeId: " + volumeId + ", relativePath: " + path);
 
         try {
             JSONArray files = new JSONArray();

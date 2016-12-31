@@ -2,10 +2,11 @@ package com.nuvolect.deepdive.webserver.connector;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.CConst;
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniFiles;
+import com.nuvolect.deepdive.ddUtil.CConst;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniFiles;
+import com.nuvolect.deepdive.main.App;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -198,9 +199,9 @@ public class CmdUpload {
                     }
                 }
 
-                OmniFile srcFile = new OmniFile(VolUtil.sdcardVolumeId, filePath);
+                OmniFile srcFile = new OmniFile(App.getUser().getDefaultVolumeId(), filePath);
                 OmniFile destFile = new OmniFile(
-                        !chunk.isEmpty()?VolUtil.sdcardVolumeId:targetVolumeId,
+                        !chunk.isEmpty()? App.getUser().getDefaultVolumeId():targetVolumeId,
                         destPath +"/"+ uploadFileName);
 
                 error = OmniFiles.copyFile(srcFile, destFile)?"":"File copy failure";
@@ -253,7 +254,7 @@ public class CmdUpload {
                             for( int j = 0; j <= chunkMax; j++){
 
                                 String sourceName = chunkFileName +"."+j+"_"+chunkMax+".part";
-                                OmniFile sourceFile = new OmniFile(VolUtil.sdcardVolumeId,
+                                OmniFile sourceFile = new OmniFile(App.getUser().getDefaultVolumeId(),
                                         sourcePath + "/" + sourceName);
 
                                 int bytesCopied = OmniFiles.copyFileLeaveOutOpen(

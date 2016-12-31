@@ -2,8 +2,8 @@ package com.nuvolect.deepdive.webserver.connector;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.Analytics;
-import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.ddUtil.Analytics;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -50,7 +50,7 @@ public class ServeCmd {
         debug,     // debugging commands
         login,
         logout,
-        deepdive,   // penetration testing
+//        deepdive,  // penetration testing
         test,      // run a test
     }
 
@@ -124,20 +124,20 @@ public class ServeCmd {
             case ping:
                 inputStream = CmdPing.go(params);
                 break;
-            case deepdive:
-                /**
-                 * Skip analytics that generate excessive api calls
-                 */
-                String test_id = params.get("test_id");
-                boolean skip = test_id.contains("get_stream") || test_id.contains("get_status");
-                if( ! skip){
-                    String extra = "";
-                    if( params.containsKey("package_name"))
-                        extra = params.get("package_name");
-                    Analytics.send(ctx, Analytics.PEN_TEST, cmd.name(), extra, 1L);
-                }
-                inputStream = CmdPenTest.go(ctx, params);
-                break;
+//            case deepdive:
+//                /**
+//                 * Skip analytics that generate excessive api calls
+//                 */
+//                String test_id = params.get("test_id");
+//                boolean skip = test_id.contains("get_stream") || test_id.contains("get_status");
+//                if( ! skip){
+//                    String extra = "";
+//                    if( params.containsKey("package_name"))
+//                        extra = params.get("package_name");
+//                    Analytics.send(ctx, Analytics.PEN_TEST, cmd.name(), extra, 1L);
+//                }
+//                inputStream = TestAndroid.go(ctx, params);
+//                break;
             case put:
                 inputStream = CmdPut.go(params);
                 break;

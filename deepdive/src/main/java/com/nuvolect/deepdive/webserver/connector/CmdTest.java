@@ -2,8 +2,10 @@ package com.nuvolect.deepdive.webserver.connector;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniFiles;
+import com.nuvolect.deepdive.ddUtil.Omni;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniFiles;
+import com.nuvolect.deepdive.main.App;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -120,89 +122,89 @@ public class CmdTest {
     }
 
     private static void delete_crypto_test_folder() {
-        String path = VolUtil.getRoot(VolUtil.cryptoVolumeId)+"_pvtest";
-        OmniFile file = new OmniFile(VolUtil.cryptoVolumeId, path);
+        String path = "/_pvtest";
+        OmniFile file = new OmniFile(Omni.cryptoVolumeId, path);
         CmdRm.delete(m_ctx, file);
     }
 
     private static void delete_sdcard_test_folder() {
-        String path = VolUtil.getRoot(VolUtil.sdcardVolumeId)+"_pvtest";
-        OmniFile file = new OmniFile(VolUtil.sdcardVolumeId, path);
+        String path = "/_pvtest";
+        OmniFile file = new OmniFile(App.getUser().getDefaultVolumeId(), path);
         CmdRm.delete(m_ctx, file);
     }
 
     private static void delete_crypto_test_file() {
-        String path = VolUtil.getRoot(VolUtil.cryptoVolumeId)+"_pvtest/test.bin";
-        OmniFile file = new OmniFile(VolUtil.cryptoVolumeId, path);
+        String path = "/_pvtest/test.bin";
+        OmniFile file = new OmniFile(Omni.cryptoVolumeId, path);
         file.delete();
     }
 
     private static void delete_sdcard_test_file() {
-        String path = VolUtil.getRoot(VolUtil.sdcardVolumeId)+"_pvtest/test.bin";
-        OmniFile file = new OmniFile(VolUtil.sdcardVolumeId, path);
+        String path = "/_pvtest/test.bin";
+        OmniFile file = new OmniFile(App.getUser().getDefaultVolumeId(), path);
         file.delete();
     }
 
     private static void copy_sdcard_file_to_crypto() {
 
-        String inPath = VolUtil.getRoot(VolUtil.sdcardVolumeId)+"_pvtest/test.bin";
-        OmniFile in = new OmniFile(VolUtil.sdcardVolumeId, inPath);
+        String inPath = "/_pvtest/test.bin";
+        OmniFile in = new OmniFile(App.getUser().getDefaultVolumeId(), inPath);
 
-        String outPath = VolUtil.getRoot(VolUtil.cryptoVolumeId)+"_pvtest/~test.bin";
-        OmniFile out = new OmniFile(VolUtil.cryptoVolumeId, outPath);
+        String outPath = "/_pvtest/~test.bin";
+        OmniFile out = new OmniFile(Omni.cryptoVolumeId, outPath);
 
         OmniFiles.copyFile(in, out);
     }
 
     private static void copy_crypto_file_to_sdcard() {
 
-        String inPath = VolUtil.getRoot(VolUtil.cryptoVolumeId)+"_pvtest/test.bin";
-        OmniFile in = new OmniFile(VolUtil.cryptoVolumeId, inPath);
+        String inPath = "/_pvtest/test.bin";
+        OmniFile in = new OmniFile(Omni.cryptoVolumeId, inPath);
 
-        String outPath = VolUtil.getRoot(VolUtil.sdcardVolumeId)+"_pvtest/~test.bin";
-        OmniFile out = new OmniFile(VolUtil.sdcardVolumeId, outPath);
+        String outPath = "/_pvtest/~test.bin";
+        OmniFile out = new OmniFile(App.getUser().getDefaultVolumeId(), outPath);
 
         OmniFiles.copyFile(in, out);
     }
 
     private static void duplicate_sdcard_test_file() {
-        String inPath = VolUtil.getRoot(VolUtil.sdcardVolumeId)+"_pvtest/test.bin";
-        OmniFile in = new OmniFile(VolUtil.sdcardVolumeId, inPath);
-        String outPath = VolUtil.getRoot(VolUtil.sdcardVolumeId)+"_pvtest/duplicate.bin";
-        OmniFile out = new OmniFile(VolUtil.sdcardVolumeId, outPath);
+        String inPath = "/_pvtest/test.bin";
+        OmniFile in = new OmniFile(App.getUser().getDefaultVolumeId(), inPath);
+        String outPath = "/_pvtest/duplicate.bin";
+        OmniFile out = new OmniFile(App.getUser().getDefaultVolumeId(), outPath);
         OmniFiles.copyFile( in, out);
     }
 
     private static void duplicate_crypto_test_file() {
-        String inPath = VolUtil.getRoot(VolUtil.cryptoVolumeId)+"_pvtest/test.bin";
-        OmniFile in = new OmniFile(VolUtil.cryptoVolumeId, inPath);
-        String outPath = VolUtil.getRoot(VolUtil.cryptoVolumeId)+"_pvtest/duplicate.bin";
-        OmniFile out = new OmniFile(VolUtil.cryptoVolumeId, outPath);
+        String inPath = "/_pvtest/test.bin";
+        OmniFile in = new OmniFile(Omni.cryptoVolumeId, inPath);
+        String outPath = "/_pvtest/duplicate.bin";
+        OmniFile out = new OmniFile(Omni.cryptoVolumeId, outPath);
         OmniFiles.copyFile( in, out);
     }
 
     private static void read_crypto_test_file() throws IOException {
-        String path = VolUtil.getRoot(VolUtil.cryptoVolumeId)+"_pvtest/test.bin";
-        OmniFile file = new OmniFile(VolUtil.cryptoVolumeId, path);
+        String path = "/_pvtest/test.bin";
+        OmniFile file = new OmniFile(Omni.cryptoVolumeId, path);
         file.getParentFile().mkdirs();
         OmniFiles.countBytes( file );
     }
 
     private static void read_sdcard_test_file() throws IOException {
-        String path = VolUtil.getRoot(VolUtil.sdcardVolumeId)+"_pvtest/test.bin";
-        OmniFile file = new OmniFile(VolUtil.sdcardVolumeId, path);
+        String path = "/_pvtest/test.bin";
+        OmniFile file = new OmniFile(App.getUser().getDefaultVolumeId(), path);
         OmniFiles.countBytes( file );
     }
     private static void write_crypto_test_file() throws IOException {
-        String path = VolUtil.getRoot(VolUtil.cryptoVolumeId)+"_pvtest/test.bin";
-        OmniFile file = new OmniFile(VolUtil.cryptoVolumeId, path);
+        String path = "/_pvtest/test.bin";
+        OmniFile file = new OmniFile(Omni.cryptoVolumeId, path);
         file.getParentFile().mkdirs();
         OmniFiles.createFile( file, testFileSize);
     }
 
     private static void write_sdcard_test_file() throws IOException {
-        String path = VolUtil.getRoot(VolUtil.sdcardVolumeId)+"_pvtest/test.bin";
-        OmniFile file = new OmniFile(VolUtil.sdcardVolumeId, path);
+        String path = "/_pvtest/test.bin";
+        OmniFile file = new OmniFile(App.getUser().getDefaultVolumeId(), path);
         file.getParentFile().mkdirs();
         OmniFiles.createFile( file, testFileSize);
     }

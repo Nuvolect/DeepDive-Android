@@ -1,9 +1,9 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniFileUtil;
-import com.nuvolect.deepdive.util.OmniZip;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
+import com.nuvolect.deepdive.ddUtil.OmniZip;
 
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
@@ -59,7 +59,7 @@ public class CmdExtract {
              */
             String path = destinationFolder.getPath() + "/" + dirName;
             destinationFolder = new OmniFile(volumeId, path);
-            destinationFolder = OmniFileUtil.makeUniqueName( destinationFolder);
+            destinationFolder = OmniUtil.makeUniqueName( destinationFolder);
             destinationFolder.mkdir();
 
             // Record addition of the new directory

@@ -1,8 +1,9 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniImage;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniImage;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +57,7 @@ public class CmdResize {
 
         if( params.containsKey("target"))
             target = params.get("target");
-        OmniFile targetFile = VolUtil.getFileFromHash(target);
+        OmniFile targetFile = OmniUtil.getFileFromHash(target);
         LogUtil.log(LogUtil.LogType.CMD_RESIZE, "Target " + targetFile.getPath());
 
         String mode = "";

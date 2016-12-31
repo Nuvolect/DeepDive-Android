@@ -1,7 +1,9 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.Omni;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,14 +26,14 @@ public class CmdMkdir {
 
         String httpIpPort = params.get("url");
 
-        OmniFile targetFile = VolUtil.getFileFromHash(target);
+        OmniFile targetFile = OmniUtil.getFileFromHash(target);
         LogUtil.log(LogUtil.LogType.CMD_MKDIR, "Target " + targetFile.getPath());
 
         String name = "";
         if( params.containsKey("name"))
             name = params.get("name");
 
-        String volumeId = VolUtil.getVolumeId(target);
+        String volumeId = Omni.getVolumeId(target);
         String path = targetFile.getPath();
 
         OmniFile file = new OmniFile(volumeId, path+"/"+name);

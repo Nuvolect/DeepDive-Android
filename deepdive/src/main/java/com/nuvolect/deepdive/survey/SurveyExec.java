@@ -7,8 +7,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.nuvolect.deepdive.R;
-import com.nuvolect.deepdive.util.Analytics;
-import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.ddUtil.Analytics;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -4,11 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.nuvolect.deepdive.util.BetterCrypto;
-import com.nuvolect.deepdive.util.CConst;
-import com.nuvolect.deepdive.util.CrypUtil;
-import com.nuvolect.deepdive.util.JsonUtil;
-import com.nuvolect.deepdive.util.TimeUtil;
+import com.nuvolect.deepdive.ddUtil.BetterCrypto;
+import com.nuvolect.deepdive.ddUtil.CConst;
+import com.nuvolect.deepdive.ddUtil.CrypUtil;
+import com.nuvolect.deepdive.ddUtil.JsonUtil;
+import com.nuvolect.deepdive.ddUtil.TimeUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;

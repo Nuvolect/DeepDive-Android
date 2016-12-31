@@ -3,8 +3,9 @@ package com.nuvolect.deepdive.webserver.connector;//
 import android.content.Context;
 import android.media.MediaScannerConnection;
 
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniImage;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniImage;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,7 +74,7 @@ public class CmdRm {
 
         for(String target : targets ){
 
-            OmniFile targetFile = VolUtil.getFileFromHash(target);
+            OmniFile targetFile = OmniUtil.getFileFromHash(target);
 
             /**
              * Recursively delete files and folders adding each delete to an arraylist.

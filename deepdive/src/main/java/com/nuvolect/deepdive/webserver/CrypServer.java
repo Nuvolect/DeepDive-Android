@@ -2,15 +2,16 @@ package com.nuvolect.deepdive.webserver;//
 
 import android.content.Context;
 
+import com.nuvolect.deepdive.ddUtil.CConst;
+import com.nuvolect.deepdive.ddUtil.CrypUtil;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.Omni;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
+import com.nuvolect.deepdive.ddUtil.Passphrase;
 import com.nuvolect.deepdive.main.UserManager;
-import com.nuvolect.deepdive.util.CConst;
-import com.nuvolect.deepdive.util.CrypUtil;
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.Passphrase;
 import com.nuvolect.deepdive.webserver.connector.CmdZipdl;
 import com.nuvolect.deepdive.webserver.connector.ServeCmd;
-import com.nuvolect.deepdive.webserver.connector.VolUtil;
 
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
@@ -27,7 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import static com.nuvolect.deepdive.util.LogUtil.log;
+import static com.nuvolect.deepdive.ddUtil.LogUtil.log;
 
 /**<pre>
  * Server for running webserver on a service or background thread.
@@ -61,6 +62,7 @@ public class CrypServer extends NanoHTTPD{
     private static boolean mAuthenticated = false;
 
     private static Response.IStatus HTTP_OK = Response.Status.OK;
+    private static Response.IStatus HTTP_NOT_FOUND = Response.Status.NOT_FOUND;
 
     public CrypServer(Context ctx, int port) {
         super(port);
@@ -140,6 +142,7 @@ public class CrypServer extends NanoHTTPD{
         Map<String, String> params = session.getParms();
         String uri = session.getUri();
         String fileExtension = FilenameUtils.getExtension(uri).toLowerCase(Locale.US);
+        params.put("uri", uri);
         params.put("queryParameterStrings", session.getQueryParameterString());
 
         log(LogUtil.LogType.CRYP_SERVER, method + " '" + uri + "' " + params.toString());
@@ -211,26 +214,30 @@ public class CrypServer extends NanoHTTPD{
                  * 2. volume + hash + path
                  *    // /l0_L3N0b3JhZ2UvZW11bGF0ZWQvMC90ZXN0L3JldmVhbC5qcy1tYXN0ZXI/test/reveal.js-master/css/reveal.css
                  * 3. /  root file is lobby.htm
-                 * 4. /connector
-                 * 5. /*  file is in /assets
+                 * 4. RESTFul: /connector /omni /probe /search
+                 * 5. file in /assets
                  */
 
-                String volumeId = VolUtil.getVolumeIdFromUri(uri);
+                String volumeId = Omni.getVolumeIdFromUri(uri);
                 /**
                  * Check for a URI with a volumeId, case 1 and 2
                  */
                 if( ! volumeId.isEmpty()){
 
-                    OmniFile file = VolUtil.getFileFromUri( uri );
-                    String mime = file.getMime();
+                    OmniFile file = OmniUtil.getFileFromUri( uri );
+                    if( file.exists()){
+
+                        String mime = file.getMime();
 
 //                    LogUtil.log(LogUtil.LogType.CRYP_SERVER,
 //                            "hashed file path: "+file.getPath()+", mime: "+mime);
 //                    LogUtil.log(LogUtil.LogType.CRYP_SERVER, "file exists: "+file.exists());
 
-                    is = file.getFileInputStream();
+                        is = file.getFileInputStream();
 
-                    return new Response(HTTP_OK, mime, is, file.length());
+                        return new Response(HTTP_OK, mime, is, file.length());
+                    }
+                    return new Response(HTTP_NOT_FOUND, null, null, -1 );
                 }
 
                 /**
@@ -298,7 +305,7 @@ public class CrypServer extends NanoHTTPD{
                         if( params.containsKey("target")){
 
                             String target = params.get("target");
-                            OmniFile targetFile = VolUtil.getFileFromHash(target);
+                            OmniFile targetFile = OmniUtil.getFileFromHash(target);
                             fileName = targetFile.getName();
                             mime = MimeUtil.getMime(targetFile);
                         }else
@@ -336,6 +343,18 @@ public class CrypServer extends NanoHTTPD{
                     }
                     else
                         return new Response(HTTP_OK, MimeUtil.MIME_HTML, stream, -1);
+                }
+                if (uri.startsWith("/omni/")) {
+                    InputStream stream = OmniRest.process(m_ctx, params);
+                    return new Response(HTTP_OK, MimeUtil.MIME_HTML, stream, -1);
+                }
+                if (uri.startsWith("/probe/")) {
+                    InputStream stream = ProbeRest.process(m_ctx, params);
+                    return new Response(HTTP_OK, MimeUtil.MIME_HTML, stream, -1);
+                }
+                if (uri.startsWith("/search/")) {
+                    InputStream stream = SearchRest.process(m_ctx, params);
+                    return new Response(HTTP_OK, MimeUtil.MIME_HTML, stream, -1);
                 }
 
                 /**

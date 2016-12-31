@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.nuvolect.deepdive.R;
-import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.ddUtil.CConst;
 
 
 /**

@@ -7,7 +7,7 @@
     <script src="/js/angular-sanitize.min.js"></script>
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
-    <link href="/css/test.css" rel="stylesheet">
+    <link href="/css/probe.css" rel="stylesheet">
 
 </head>
 
@@ -26,7 +26,7 @@
         <input ng-model="search_path" ng-keypress="changePath($event)"
                placeholder="Path" type="text" size="50" ng-trim="false" >
         {{ indexed_docs | number }} docs
-        <a ng-click="indexFiles( search_path, true, false)">
+        <a ng-click="indexFiles( search_path, true)">
             <span class="glyphicon glyphicon-refresh"></span></a>
         <button ng-show="show_cancel_button" ng-click="interruptIndexing()">Cancel</button>
         <p align="left" ng-show="show_progress_bar"><strong>Indexing...</strong></p>
@@ -116,20 +116,19 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
         $scope.log_array = arrayEntries.concat( $scope.log_array );
     }
 
-
     $scope.viewFile = function( file_name, file_path ){
 
         $scope.view_file_name = file_name;
 
-        $http.get("/connector/?cmd=deepdive&test_id=get_text&path="+file_path)
+        $http.get("/omni/get_text/?path="+file_path)
           .then(function (response) {
 
             // Returned data is currently a string, convert it to JSON
             var result = $.parseJSON( response.data.result );
 
+            $scope.file_name = result.file_name;
             $scope.view_file_content = result.file_content;
-            $scope.view_file_path = result.file_relative_path;
-            return;
+            $scope.view_file_path = result.file_path;
         });
     };
 
@@ -144,7 +143,7 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
 
             var num_hits = line.num_hits;
             var file_url =
-                    "<a href=\"/view.html?path="+line.file_path+"\" target=\"_blank\">"+
+                    "<a href=\"/view_text_file.html?path="+line.file_path+"\" target=\"_blank\">"+
                         "<span class=\"glyphicon glyphicon-eye-open\"></span></a>";
             var hits_str = " hits, ";
                 if( num_hits == 1)
@@ -154,7 +153,7 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
                     "<a href=\""+line.folder_url+"\" target=\"_blank\">"+
                         "<span class=\"glyphicon glyphicon-folder-open\"></span></a>";
 
-            var hit_path = "<br><p>"+line.relative_path+"</p>";
+            var hit_path = "<br><p>"+line.file_path+"</p>";
             var my_line = file_name+", "+num_hits+hits_str+file_url+"  "+folder_url+hit_path;
 
            return $sce.trustAsHtml(my_line);
@@ -165,7 +164,9 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
     };
 
     var search_query = getURLParameter('search_query');
-    $scope.search_query = search_query;
+    if( search_query )
+        $scope.search_query = search_query;
+
     var search_path = getURLParameter('search_path');
     $scope.search_path = search_path;
 
@@ -203,14 +204,14 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
                 return;
             }
 
-            // New index created if it does not exist, false==not force, false==not kill
-            $scope.indexFiles( path, false, false);
+            // New index created if it does not exist, false==not force
+            $scope.indexFiles( path, false);
         }
     };
 
     $scope.indexFiles = function( search_path, force_index ){
 
-        $http.get("/connector/?cmd=deepdive&test_id=search_index&search_path="+search_path+"&force_index="+force_index)
+        $http.get("/search/index/?search_path="+search_path+"&force_index="+force_index)
           .then(function (response) {
 
             // Returned data is currently a string, convert it to JSON
@@ -286,12 +287,14 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
 
     $scope.interruptIndexing = function(){
 
-        $http.get("/connector/?cmd=deepdive&test_id=search_index_interrupt")
+        $http.get("/search/interrupt_indexing")
           .then(function (response) {
 
             // Returned data is currently a string, convert it to JSON
             var result = $.parseJSON( response.data.result );
 
+            //FIXME mkk display user friendly result of the interrupt request
+            putLogTop( result );
         });
     };
 
@@ -335,7 +338,7 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
                 return;
             }
 
-            $http.get("/connector/?cmd=deepdive&test_id=search&search_query="+search_query+"&search_path="+search_path)
+            $http.get("/search/search/?search_query="+search_query+"&search_path="+search_path)
               .then(function (response) {
 
                 // Returned data is currently a string, convert it to JSON
@@ -354,7 +357,6 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
                 putLogTop( "Expression: "+search_query+s );
 
                 $scope.search_entry = "";
-                return;
             });
         }
     };
@@ -365,7 +367,7 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
         $scope.search_entry = "";
     };
 
-    $scope.indexFiles( search_path, false, false);
+    $scope.indexFiles( search_path, false);
 });
 
 // Compile is used when injecting html into the ng-repeat list.

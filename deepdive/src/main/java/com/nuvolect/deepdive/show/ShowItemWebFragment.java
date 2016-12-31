@@ -9,9 +9,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.nuvolect.deepdive.util.ActionBarUtil;
-import com.nuvolect.deepdive.util.MyWebViewClient;
-import com.nuvolect.deepdive.util.MyWebViewFragment;
+import com.nuvolect.deepdive.ddUtil.ActionBarUtil;
+import com.nuvolect.deepdive.ddUtil.MyWebViewClient;
+import com.nuvolect.deepdive.ddUtil.MyWebViewFragment;
 import com.nuvolect.deepdive.webserver.WebUtil;
 
 public class ShowItemWebFragment extends MyWebViewFragment {
