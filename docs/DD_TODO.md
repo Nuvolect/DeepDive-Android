@@ -11,10 +11,22 @@
 
 * Add Probe and ProbeMgr classes, convert Decompile.java to be an instance of Probe
 
-* Off-line creation of bitmaps
+* Background thread creation of bitmaps
 
 * Document multi-browser decompilier conflicts
 * Is there a better way to organize processess to monitor progress and kill-all
+
+# Performance timing server and Android DD Apps
+com.amazon.kindle, large apk at 52.41 MB
+o Dex 2 JAR, Android 4 min 19 seconds
+o Dex 2 JAR, ddServe 0 min 27 seconds
+o CFR decompile, Android 30 min 24 seconds
+o CFR decompile, ddServe 2 min 14 seconds
+com.evernote, 33.701,878 bytes
+o Dex 2 JAR, Android 3 min 32 seconds
+o Dex 2 JAR, ddServe 0 min 17 seconds
+o CFR decompile, ddServe 2 min 21 seconds
+
 
 # Extract a backup from an app
 adb backup com.packagename.android

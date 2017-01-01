@@ -87,7 +87,7 @@ public class ProbeRest {
                 case decompile_action:{
                     String action = params.get("action");
                     DecompileApk decompile = ProbeMgr.getProbe( ctx, package_name).getDecompiler();
-                    JSONObject status = decompile.startThread(action);
+                    JSONObject status = decompile.startThread( ctx, action);
                     wrapper.put("status", status.toString());
                     break;
                 }

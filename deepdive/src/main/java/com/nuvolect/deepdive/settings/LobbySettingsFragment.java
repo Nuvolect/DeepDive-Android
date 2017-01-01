@@ -62,7 +62,7 @@ public class LobbySettingsFragment extends PreferenceFragment
         ActionBarUtil.showActionBarUpButton(m_act);
 
         // Display current port number
-        final EditTextPreference portPref = (EditTextPreference)findPreference("port_number");
+        final EditTextPreference portPref = (EditTextPreference)findPreference(CConst.PORT_NUMBER);
         portPref.setSummary(String.valueOf(WebUtil.getPort(m_act)));
         portPref.setDefaultValue(String.valueOf(WebUtil.getPort(m_act)));
         portPref.setText(String.valueOf(WebUtil.getPort(m_act)));

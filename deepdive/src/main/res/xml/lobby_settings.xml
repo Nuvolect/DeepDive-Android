@@ -22,6 +22,12 @@
         android:title="Permission Manager"
         android:summary=""
         />
+    <EditTextPreference
+        android:key="thread_stack_size"
+        android:title="Stack size"
+        android:defaultValue="20"
+        android:summary="Stack size used by the decompiler in megabytes."
+        />
     <CheckBoxPreference
         android:key="show_tips"
         android:title="Show Tips"

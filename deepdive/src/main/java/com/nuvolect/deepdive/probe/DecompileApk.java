@@ -1,8 +1,10 @@
 package com.nuvolect.deepdive.probe;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 
 import com.googlecode.dex2jar.Method;
 import com.googlecode.dex2jar.ir.IrMethod;
@@ -102,8 +104,6 @@ public class DecompileApk {
     private String m_srcFernFolderPath;
     private String m_srcJadxFolderPath;
 
-    //    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    //    STACK_SIZE = Integer.valueOf(prefs.getString("thread_stack_size", String.valueOf(20 * 1024 * 1024)));
     //    IGNORE_LIBS = prefs.getBoolean("ignore_libraries", true);
     private int STACK_SIZE = 20 * 1024 * 1024;
 
@@ -142,6 +142,7 @@ public class DecompileApk {
         m_packageName = packageName;
         m_userFolderPath = App.getUser().getUserFolderPath();
         m_volumeId = App.getUser().getDefaultVolumeId();
+
         m_progressStream = new ProgressStream();
         m_progressStream.putStream("Decompiler ready");
 
@@ -259,7 +260,10 @@ public class DecompileApk {
      * @param action
      * @return
      */
-    public JSONObject startThread(String action) {
+    public JSONObject startThread(Context ctx, String action) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        STACK_SIZE = Integer.valueOf(prefs.getString(CConst.THREAD_STACK_SIZE, "20")) * 1024 * 1024;
 
         THREAD_ID action_id = null;
         try {
@@ -345,7 +349,7 @@ public class DecompileApk {
             int bytes_copied = Util.copyFile( inputStream, outputStream);
             String formatted_count = NumberFormat.getNumberInstance(Locale.US).format(bytes_copied);
 
-            m_progressStream.putStream("Copy APK complete. Copied: "+formatted_count);
+            m_progressStream.putStream("Copy APK complete, "+formatted_count+" bytes");
 
             wrapper.put("copy_apk_status", 1); // Change to success if we get here
             wrapper.put("copy_apk_url", m_appFolderUrl);

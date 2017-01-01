@@ -25,6 +25,7 @@ public class CConst {
     public static final String OK                                 = "ok";
     public static final String PERMISSION_MANAGER                 = "permission_manager";
     public static final String PORT                               = "port";
+    public static final String PORT_NUMBER                        = "port_number";
     public static final String QUERY_STRING                       = "query_string";
     public static final String RANDOM_EDGE                        = "h0!U9#Wfnx";//FIXME replace random edge
     public static final String RESPONSE_CODE                      = "response_code";
@@ -33,6 +34,7 @@ public class CConst {
     public static final String SEARCH_MANAGER_PAGE                = "/search_manager.html";
     public static final String SEC_TOK                            = "sec_tok";
     public static final String SHOW_TIPS                          = "show_tips";
+    public static final String THREAD_STACK_SIZE                  = "thread_stack_size";
     public static final String TMP                                = "tmp";
     public static final String USER_FOLDER_NAME                   = "Deep Dive";
     public static final String USER_FOLDER_PATH                   = "/DeepDive/";

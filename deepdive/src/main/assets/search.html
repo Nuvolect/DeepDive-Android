@@ -108,6 +108,9 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
     // Add an array or simple variable entry to the top of the log
     function putLogTop( logEntry ){
 
+        if( typeof logEntry === 'object')
+            return;
+
         var arrayEntries = logEntry;
 
         if( ! Array.isArray( logEntry ))
@@ -228,12 +231,6 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
 
             if( result.error.length > 0)
                 putLogTop( result.error );
-            else
-                if( result.index_state.includes("complete"))
-                    putLogTop( "Path: "+search_path+", "+result.indexed_docs+" docs" );
-            else
-                if( result.index_state.includes("filetree"))
-                    putLogTop( "Indexing: "+search_path+" ..." );
 
             switch( result.index_state ){
 
@@ -241,6 +238,7 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
                     $scope.show_progress_bar = true;
                     $scope.show_cancel_button = true;
                     $scope.width_percent = "width: 5%";
+                    putLogTop( "File tree: "+search_path+" ..." );
                 break;
 
                 case "indexing":
@@ -258,12 +256,12 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
                 case "complete":
                     $scope.width_percent = "width: 100%";
                     $scope.show_cancel_button = false;
+                    putLogTop( "Path: "+search_path+", "+result.indexed_docs+" docs" );
 
-                $timeout( function() {
-
-                    $scope.show_progress_bar = false;
-
-                }, 1000);
+                    // Brief pause before removing the completed progress bar
+                    $timeout( function() {
+                        $scope.show_progress_bar = false;
+                    }, 1000);
                 break;
 
                 case "interrupted":

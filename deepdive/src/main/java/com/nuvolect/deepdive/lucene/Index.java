@@ -23,7 +23,6 @@ import org.lukhnos.portmobile.file.Paths;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
 
 
 /**
@@ -54,6 +53,8 @@ public class Index {
     public static JSONObject index(final String volumeId, final String searchPath, final boolean forceIndex) {
 
         if( m_interrupt[0]){
+
+            LogUtil.log(Index.class, "Index canceled post interrupt");
 
             m_interrupt[0] = false;
             return responseInterruptIndexing();
@@ -138,15 +139,18 @@ public class Index {
 
                         try {
 
-                            for (Iterator<OmniFile> iterator = files.iterator();
-                                 iterator.hasNext() && ! m_interrupt[0];) {
+                            for (OmniFile file : files) {
 
-                                OmniFile file = iterator.next();
+                                if ( m_interrupt[0]) {
+                                    LogUtil.log(Index.class, "Iterator loop canceled");
+                                    break;
+                                }
+
                                 String path = file.getPath();
 
-                                LogUtil.log( Index.class, "indexing: "+ path);
+                                LogUtil.log(Index.class, "indexing: " + path);
                                 iwriter.addDocument(makeDoc( volumeId, path));
-                                synchronized (m_lock){
+                                synchronized (m_lock) {
                                     ++m_indexedDocs[0];
                                 }
                             }
@@ -157,10 +161,6 @@ public class Index {
                                 m_index_state = m_interrupt[0]?INDEX_STATE.interrupted :INDEX_STATE.complete;
                                 m_totalDocs[0] = m_indexedDocs[0];
                             }
-                            if( m_interrupt[0])
-                                LogUtil.log( Index.class, "indexing canceled");
-                            else
-                                LogUtil.log( Index.class, "indexing complete");
 
                         } catch (Exception e) {
                             LogUtil.logException( Index.class, e);

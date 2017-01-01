@@ -346,10 +346,7 @@
          $http.get("/probe/copy_apk/?package_name="+$scope.packageName)
            .then(function (response) {
 
-            // Object is currently a string, convert it to JSON
-            var status = $.parseJSON( response.data.status );
-
-            $scope.copy_apk_status = status.copy_apk_status;
+            $scope.getLog();
          });
      };
      $scope.unpackApk = function(){
@@ -411,9 +408,8 @@
             $http.get("/probe/get_log/?package_name=" + $scope.packageName)
                 .then(function (response) {
 
-                    var log = response.data;
-
-                    putLogTop(log);
+                    var stream = $.parseJSON( response.data.stream );
+                    putLogTop( stream);
                 });
         };
         $scope.clearLog = function () {
