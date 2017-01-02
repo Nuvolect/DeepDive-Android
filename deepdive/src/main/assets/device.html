@@ -69,6 +69,11 @@
             </tr>
             <tr>
                 <td></td>
+                <td> <strong>Security Patch</strong> </td>
+                <td> {{ security_patch }} </td>
+            </tr>
+            <tr>
+                <td></td>
                 <td> <strong>Internal Memory</strong> </td>
                 <td> {{ internalMemorySize }} </td>
             </tr>
@@ -135,6 +140,7 @@ app.controller('appListController', function($scope, $http, $parse) {
 
         $scope.manufacturer = device.manufacturer;
         $scope.model = device.model;
+        $scope.security_patch = device.security_patch;
         $scope.uniqueInstallId = device.uniqueInstallId;
         $scope.ssl = device.ssl;
         $scope.accounts = device.accounts;

@@ -96,14 +96,16 @@ public class DeviceSurvey {
         JSONObject object = new JSONObject();
 
         try {
+            int API = android.os.Build.VERSION.SDK_INT;
             object.put("manufacturer", android.os.Build.MANUFACTURER);
             object.put("model", android.os.Build.MODEL);
+            object.put("security_patch", API>=23?android.os.Build.VERSION.SECURITY_PATCH:"N/A<23");
+            object.put("release", android.os.Build.VERSION.RELEASE);
             object.put("uniqueInstallId", getUniqueInstallId(ctx));
             object.put("ssl", getSslDetails());
             object.put("accounts", getAccounts(ctx));
             object.put("wifiList", getWifiConfigured(ctx));
             object.put("externalStorageAvailable", externalMemoryAvailable());
-//            object.put("internalMemorySize", getInternalMemorySize());
             object.put("internalMemorySize", getInternalMemoryDescription(ctx));
             object.put("externalStorageSize", getExternalStorageDescription());
             object.put("deviceInfo", com.nuvolect.deepdive.ddUtil.DeviceInfo.getDeviceInfo(ctx));
