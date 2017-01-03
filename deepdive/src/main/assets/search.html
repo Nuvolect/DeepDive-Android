@@ -108,8 +108,8 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
     // Add an array or simple variable entry to the top of the log
     function putLogTop( logEntry ){
 
-        if( typeof logEntry === 'object')
-            return;
+        <!--if( typeof logEntry === 'object')-->
+            <!--return;-->
 
         var arrayEntries = logEntry;
 
@@ -301,7 +301,7 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
         var keyCode = $event.which || $event.keyCode;
         if (keyCode === 13) {
 
-            search_query = $scope.search_entry.trim();
+            search_query = $scope.search_entry.toLowerCase();
             if( !search_query || 0 == search_query.length )
                 return;
 

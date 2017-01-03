@@ -41,7 +41,11 @@ public class Search {
 
     private static void preSearch( String volumeId, String searchPath) {
 
-        m_analyzer = new org.apache.lucene.analysis.core.WhitespaceAnalyzer();
+        /**
+         * The WhitespaceAnalyzer is case sensitive.
+         */
+//        m_analyzer = new org.apache.lucene.analysis.core.WhitespaceAnalyzer();
+        m_analyzer = new org.apache.lucene.analysis.core.SimpleAnalyzer();
 
         OmniFile luceneDir = IndexUtil.getCacheDir( volumeId, searchPath);
         boolean cacheDirExists = ! luceneDir.mkdirs();
@@ -55,6 +59,7 @@ public class Search {
         if( ! cacheDirExists)
             Index.index( volumeId, searchPath, true);// true == force re-index
     }
+
 
     /**
      * Return results for a search along a specific path.  If the path is changed or new

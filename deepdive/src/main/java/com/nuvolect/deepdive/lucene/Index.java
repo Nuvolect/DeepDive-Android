@@ -110,7 +110,8 @@ public class Index {
                     @Override
                     public void run() {
 
-                        Analyzer analyzer = new org.apache.lucene.analysis.core.WhitespaceAnalyzer();//standard.StandardAnalyzer();
+//                        Analyzer analyzer = new org.apache.lucene.analysis.core.WhitespaceAnalyzer();//standard.StandardAnalyzer();
+                        Analyzer analyzer = new org.apache.lucene.analysis.core.SimpleAnalyzer();//WhitespaceAnalyzer();//standard.StandardAnalyzer();
                         IndexWriterConfig config = new IndexWriterConfig(analyzer);
                         IndexWriter iwriter = null;
 
