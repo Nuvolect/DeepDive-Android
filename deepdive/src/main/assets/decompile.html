@@ -347,6 +347,7 @@
            .then(function (response) {
 
             $scope.getLog();
+            $scope.iterateGetStatus();//FIXME limit to a single instance in case user is performing more than one task
          });
      };
      $scope.unpackApk = function(){

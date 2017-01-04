@@ -7,6 +7,7 @@ import android.content.Context;
 
 import com.nuvolect.deepdive.ddUtil.LogUtil;
 import com.nuvolect.deepdive.survey.DeviceSurvey;
+import com.nuvolect.deepdive.survey.SurveyExec;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,9 +20,10 @@ public class DeviceRest {
 
     private enum CMD_ID {
         NIL,
+        app_detail,
+        info,
         logcat,
         shell,
-        info,
     }
     public static InputStream process(Context ctx, Map<String, String> params) {
 
@@ -44,6 +46,17 @@ public class DeviceRest {
 
                 case NIL:
                     break;
+                case app_detail:{
+                    String package_name = params.get("package_name");
+                    JSONObject app_detail = SurveyExec.getAppDetail( ctx, package_name);
+                    wrapper.put("app_detail", app_detail.toString());
+                    break;
+                }
+                case info:{
+                    JSONObject device = DeviceSurvey.getInfo(ctx);
+                    wrapper.put("device", device.toString());
+                    break;
+                }
                 case logcat: {
                     JSONArray logcat = DeviceSurvey.getLogCat();
                     wrapper.put("logcat", logcat.toString());
@@ -53,11 +66,6 @@ public class DeviceRest {
                     String shell_cmd = params.get("shell_cmd");
                     JSONArray shell_log = DeviceSurvey.getShell( shell_cmd );
                     wrapper.put("shell_log", shell_log.toString());
-                    break;
-                }
-                case info:{
-                    JSONObject device = DeviceSurvey.getInfo(ctx);
-                    wrapper.put("device", device.toString());
                     break;
                 }
             }

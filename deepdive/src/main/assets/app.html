@@ -606,7 +606,7 @@ app.controller('appDetailController', function($scope, $http, $parse) {
     var package = getURLParameter('package');
     $scope.package = package;
 
-     $http.get("/connector/?cmd=deepdive&test_id=app_detail&package_name="+package)
+     $http.get("/device/app_detail/?package_name="+package)
        .then(function (response) {
 
         // Object is currently a string, convert it to JSON
