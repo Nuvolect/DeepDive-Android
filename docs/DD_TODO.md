@@ -1,5 +1,16 @@
 # Sprint- minimal Tasks for pilot study
-* Lucene exact search examples
+* search path has double //
+* Current index conflict
+* Fix search result Angular errors
+
+====================
+Search group concept
+o Add '+' to search log after "expression"
+oo Popup, add to current group, select different group, create / delete group
+oo Add description of search
+oo Record search expression and description
+o Link to search lists, shows current list, select item to start search on list terms
+
 
 ** Update ? help with working examples
 * Clear upload package name from dialog
