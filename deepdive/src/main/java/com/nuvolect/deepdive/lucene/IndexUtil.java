@@ -196,7 +196,7 @@ public class IndexUtil {
     public static String getCacheDirPath(String volumeId, String searchPath) {
 
         String hashedSearchPath = volumeId+OmniHash.encode(searchPath);
-        return INDEX_FOLDER + hashedSearchPath;//FIXME confirm working
+        return INDEX_FOLDER + hashedSearchPath;
     }
 
     public static boolean folderExists( String volumeId, String path) {

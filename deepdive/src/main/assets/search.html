@@ -8,7 +8,6 @@
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/probe.css" rel="stylesheet">
-    <!--<script data-main="app" src="/js/require.js"></script>-->
     <script src="/cryptojs-3.1.2/rollups/md5.js"></script>
 
 </head>
@@ -191,6 +190,7 @@ debugger;
                 <!--"<a data-toggle=\"modal\" data-target=\"#myModal\" onclick=\"myOnClick('" +line.file_name+'\',\''+line.file_path+"\')\">"-->
                 <!--+line.file_name+"</a>";-->
 
+<!--FIXME ng-click inside ng-repeat is never called and the modal is not populated-->
             var file_name =
                 "<a data-toggle=\"modal\" data-target=\"#myModal\" ng-click=\"$parent.viewFileModal(\'"
                 +line.file_name+'\',\''+line.file_path+"\')\">"

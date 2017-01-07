@@ -517,7 +517,7 @@ public class DecompileApk {
                     s.close();
 
                 /**
-                 * FIXME: Current solution reads dex from the APK.  It appears to only read the first classes.dex.
+                 * FIXME: Optimizing DEX appears to only read the first classes.dex.
                  * The problem is the classes{n}.dex files are ignored and not all classes can be decompiled.
                  */
 //                File dFile = new File( m_appFolderPath +"/classes.dex" );
