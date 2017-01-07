@@ -1,7 +1,0 @@
-#Sun Dec 11 15:10:39 EST 2016
-base.0=/Users/mattkraus/AndroidstudioProjects/DeepDive/deepdive/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_b19afa892b70ff96cd6d9be616b18186625d0a5a
-renamed.1=classes2.dex
-renamed.0=classes.dex
-file.1=/Users/mattkraus/AndroidstudioProjects/DeepDive/deepdive/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_4367427d4665a33e5c12d3f36cc406b94b33013b/classes.dex
-base.1=/Users/mattkraus/AndroidstudioProjects/DeepDive/deepdive/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_4367427d4665a33e5c12d3f36cc406b94b33013b
-file.0=/Users/mattkraus/AndroidstudioProjects/DeepDive/deepdive/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_b19afa892b70ff96cd6d9be616b18186625d0a5a/classes.dex
