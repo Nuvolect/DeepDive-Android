@@ -8,6 +8,8 @@
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/probe.css" rel="stylesheet">
+    <!--<script data-main="app" src="/js/require.js"></script>-->
+    <script src="/cryptojs-3.1.2/rollups/md5.js"></script>
 
 </head>
 
@@ -50,8 +52,8 @@
                     <button ng-click="clearLog()"><span class="glyphicon glyphicon-remove"></span></button>
                 </td>
             </tr>
-            <tr ng-repeat="line in log_array track by $index">
-                <td ng-bind-html="getContent(line)" compile="getContent(line)" style="padding: 2px 0;"></td>
+            <tr ng-repeat="line in log_array">
+                <td ng-bind-html="getContent(line)" style="padding: 2px 0;"></td>
             </tr>
         </table>
         <br>
@@ -98,8 +100,30 @@
 </div>
 <script>
 
-var app = angular.module('myApp', ['ngSanitize','compile']);
+function myOnClick( fileName, filePath){
+
+    console.log("got to myOnClick(): "+fileName+ filePath);
+}
+
+var app = angular.module('myApp', ['ngSanitize']);
 app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
+
+    var search_query = getURLParameter('search_query');
+    if( search_query )
+        $scope.search_query = search_query;
+
+    var search_path = getURLParameter('search_path');
+    $scope.search_path = search_path;
+
+    var force_index = getURLParameter('force_index');
+    if( force_index == undefined || force_index != "1"){
+
+        force_index = "0";
+    }
+
+    var logCache = [];
+    $scope.log_array = [];
+    $scope.search_entry = "";
 
     function getURLParameter(name) {
       return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
@@ -108,28 +132,27 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
     // Add an array or simple variable entry to the top of the log
     function putLogTop( logEntry ){
 
-        <!--if( typeof logEntry === 'object')-->
-            <!--return;-->
+        var entityType = typeof logEntry;
+        if( Array.isArray( logEntry ))
+            entityType = "array";
 
         var arrayEntries = logEntry;
 
         if( ! Array.isArray( logEntry ))
             arrayEntries = [ logEntry ];
 
-        $scope.log_array = arrayEntries.concat( $scope.log_array );
+        Array.prototype.unshift.apply( $scope.log_array, arrayEntries);
     }
 
-    $scope.viewFile = function( file_name, file_path ){
-
-        $scope.view_file_name = file_name;
-
+    $scope.viewFileModal = function( file_name, file_path ){
+debugger;
         $http.get("/omni/get_text/?path="+file_path)
           .then(function (response) {
 
             // Returned data is currently a string, convert it to JSON
             var result = $.parseJSON( response.data.result );
 
-            $scope.file_name = result.file_name;
+            $scope.view_file_name = result.file_name;
             $scope.view_file_content = result.file_content;
             $scope.view_file_path = result.file_path;
         });
@@ -137,10 +160,39 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
 
     $scope.getContent = function( line ){
 
-        if( line !== null && typeof line === 'object'){
+<!--console.log( "getContent:"+line +", typeof:"+ typeof line );-->
+
+        if( typeof line === 'string'){
+
+            var hash = CryptoJS.MD5( line);
+            var cachedLine = logCache[ hash ];
+            if( cachedLine ){
+<!--console.log("string cache hit:"+cachedLine);-->
+                return cachedLine;
+            }
+
+            logCache[hash] = line;
+            cachedLine = logCache[hash];// always return same cached object
+
+<!--console.log("string cache miss:"+cachedLine);-->
+            return cachedLine;
+        }
+        else {
+
+            var hash = CryptoJS.MD5( JSON.stringify(line));
+            var cachedLine = logCache[ hash ];
+            if( cachedLine ){
+
+<!--console.log("my_html cache hit:"+hash+":"+cachedLine);-->
+                return $sce.trustAsHtml(cachedLine);
+            }
+
+            <!--var file_name =-->
+                <!--"<a data-toggle=\"modal\" data-target=\"#myModal\" onclick=\"myOnClick('" +line.file_name+'\',\''+line.file_path+"\')\">"-->
+                <!--+line.file_name+"</a>";-->
 
             var file_name =
-                "<a data-toggle=\"modal\" data-target=\"#myModal\" ng-click=\"$parent.viewFile(\'"
+                "<a data-toggle=\"modal\" data-target=\"#myModal\" ng-click=\"$parent.viewFileModal(\'"
                 +line.file_name+'\',\''+line.file_path+"\')\">"
                 +line.file_name+"</a>";
 
@@ -159,28 +211,14 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
             var hit_path = "<br><p>"+line.file_path+"</p>";
             var my_line = file_name+", "+num_hits+hits_str+file_url+"  "+folder_url+hit_path;
 
-           return $sce.trustAsHtml(my_line);
-        }
-        else{
-            return line;
+<!--console.log("my_html cache miss:"+hash+":"+my_line);-->
+
+            logCache[hash] = my_line;
+            cachedLine = logCache[hash];// always return same cached object
+
+            return $sce.trustAsHtml(cachedLine);
         }
     };
-
-    var search_query = getURLParameter('search_query');
-    if( search_query )
-        $scope.search_query = search_query;
-
-    var search_path = getURLParameter('search_path');
-    $scope.search_path = search_path;
-
-    var force_index = getURLParameter('force_index');
-    if( force_index == undefined || force_index != "1"){
-
-        force_index = "0";
-    }
-
-    $scope.log_array = [];
-    $scope.search_entry = "";
 
     $scope.changePath = function ($event) {
 
@@ -262,6 +300,10 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
                     $timeout( function() {
                         $scope.show_progress_bar = false;
                     }, 1000);
+
+                    // Indexing is complete, if there is a query use it
+                    if( search_query)
+                        $scope.searchFiles( search_path, search_query);
                 break;
 
                 case "interrupted":
@@ -336,66 +378,42 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
                 return;
             }
 
-            $http.get("/search/search/?search_query="+search_query+"&search_path="+search_path)
-              .then(function (response) {
-
-                // Returned data is currently a string, convert it to JSON
-                var result = $.parseJSON( response.data.result );
-
-                if( result.error.length > 0)
-                    putLogTop( result.error );
-                else
-                    putLogTop( result.hits );
-
-                var s = " hits";
-                if( result.num_hits == 1)
-                    s = " hit";
-                s = ", "+result.num_hits+s;
-
-                putLogTop( "Expression: "+search_query+s );
-
-                $scope.search_entry = "";
-            });
+            $scope.searchFiles( search_path, search_query);
         }
-    };
+    }
+
+    $scope.searchFiles = function( search_path, search_query){
+
+        $http.get("/search/search/?search_query="+search_query+"&search_path="+search_path)
+          .then(function (response) {
+
+            // Returned data is currently a string, convert it to JSON
+            var result = $.parseJSON( response.data.result );
+
+            if( result.error.length > 0)
+                putLogTop( result.error );
+            else
+                putLogTop( result.hits );
+
+            var s = " hits";
+            if( result.num_hits == 1)
+                s = " hit";
+            s = ", "+result.num_hits+s;
+
+            putLogTop( "Expression: "+search_query+s );
+
+            $scope.search_entry = "";
+        });
+    }
 
     $scope.clearLog = function(){
 
+        logCache = [];
         $scope.log_array = [];
         $scope.search_entry = "";
     };
 
     $scope.indexFiles( search_path, false);
-});
-
-// Compile is used when injecting html into the ng-repeat list.
-// Without it the ng-click is never called.
-  // declare a new module, and inject the $compileProvider
-angular.module('compile', [], function($compileProvider) {
-  // configure new 'compile' directive by passing a directive
-  // factory function. The factory function injects the '$compile'
-  $compileProvider.directive('compile', function($compile) {
-    // directive factory creates a link function
-    return function(scope, element, attrs) {
-      scope.$watch(
-        function(scope) {
-           // watch the 'compile' expression for changes
-          return scope.$eval(attrs.compile);
-        },
-        function(value) {
-          // when the 'compile' expression changes
-          // assign it into the current DOM
-          element.html(value);
-
-          // compile the new DOM and link it to the current
-          // scope.
-          // NOTE: we only compile .childNodes so that
-          // we don't get into infinite loop compiling ourselves
-          $compile(element.contents())(scope);
-        }
-      );
-    };
-  })
 });
 
 </script>
