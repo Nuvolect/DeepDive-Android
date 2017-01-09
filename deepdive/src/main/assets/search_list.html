@@ -100,10 +100,10 @@
 
             if( $scope.new_list_name ){
 
-                var emptyListName = $scope.new_list_name;
+                var emptyListFilename = $scope.new_list_name+".json";
                 $scope.new_list_name = "";// clear input field for next use
 
-                $http.get("/search/put_list?list=[]&name="+emptyListName+".json")
+                $http.get("/search/put_list?list=[]&name="+emptyListFilename)
                     .then(function (response) {
 
                     // Returned data is currently a string, convert it to JSON
@@ -111,7 +111,7 @@
 
                     if( result.success === true){
 
-                        $http.get("/search/set_current_list?name="+emptyListName)
+                        $http.get("/search/set_current_list?name="+emptyListFilename)
                             .then(function (response) {
 
                             // Returned data is currently a string, convert it to JSON
@@ -119,7 +119,7 @@
 
                             if( result.success === true){
 
-                                $scope.getCurrentList();
+                                $scope.getLists();
                             }
                         });
                     }
@@ -173,7 +173,7 @@
 
                 // Update select menu by iterating all lists and setting current list object
                 var arrayLength = $scope.lists.length;
-debugger;
+
                 for(var i=0; i < arrayLength; i++){
 
                    if( $scope.lists[i].name === result.name){

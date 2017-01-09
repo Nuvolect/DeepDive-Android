@@ -6,6 +6,7 @@ package com.nuvolect.deepdive.webserver;
 import android.content.Context;
 
 import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.Safe;
 import com.nuvolect.deepdive.lucene.Index;
 import com.nuvolect.deepdive.lucene.IndexUtil;
 import com.nuvolect.deepdive.lucene.Search;
@@ -97,6 +98,7 @@ public class SearchRest {
                 case put_list: {// Post method
                     JSONArray list = new JSONArray( params.get("list"));
                     String name = params.get("name");
+                    name = Safe.removeWhitespace( name);
                     JSONObject result = SearchLists.putList( ctx, volumeId, name, list);
                     wrapper.put("result", result.toString());
                     break;

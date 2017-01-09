@@ -52,4 +52,14 @@ public class Safe {
         }
         return safeString.trim();
     }
+
+    /**
+     * Remove all whitespace and non-visible characters.
+     * @param hasWhitespace
+     * @return
+     */
+    public static String removeWhitespace(String hasWhitespace){
+
+        return hasWhitespace.replaceAll("\\s","");
+    }
 }
