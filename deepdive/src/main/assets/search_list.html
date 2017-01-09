@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="myController">
+<head>
+    <title>Search List</title>
+
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/angular-sanitize.min.js"></script>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/lobby.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- Bootstrap core JavaScript -->
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<div class="container">
+
+    <br>
+    <br>
+    <div align="center">
+        <a href="/"><img src="/img/icon_64.png"></a>
+        <h1>Search List</h1>
+        <h3>{{search_path}}</h3>
+    </div>
+    <br>
+
+    <div align="center">
+
+        <form name="myForm">
+            <label for="current_list">Choose list:</label>
+            <select
+                ng-model="current_list"
+                ng-change="selectChange()"
+                ng-options="x.name for x in lists track by x.name" >
+            </select>
+            <a href="#" ng-click="addList()"><span class="glyphicon glyphicon-plus"></span></a>
+            <a
+               mw-confirm-click="removeList()"
+               mw-confirm-click-message="You are about to delete a list of queries!! Are you sure?" >
+               <span class="glyphicon glyphicon-minus"></span></a>
+            </a>
+        </form>
+        <br>
+
+        <table class="card" style="border-collapse: separate; border-spacing: 20px 5px;">
+
+            <tr ng-repeat="x in query_list">
+                <td style="padding: 2px 0;">
+                    <a href="search.html?search_path={{search_path}}&search_query={{x.query}}">{{x.query}}</a>
+                </td>
+                <td>{{x.description}}</td>
+            </tr>
+
+        </table>
+
+        <br>
+        <br>
+    </div>
+
+</div><!-- /card-container -->
+
+<div ng-include="'footer.html'"></div>
+
+<script>
+    var app = angular.module('myApp', ['ngSanitize']);
+    app.controller('myController', function($scope, $http) {
+
+        var search_path = getURLParameter('search_path');
+        $scope.search_path = search_path;
+
+        function getURLParameter(name) {
+          return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+        }
+
+        $scope.addList = function(){
+
+            console.log("addList");
+        }
+
+        $scope.removeList = function(){
+
+            $http.get("/search/delete_list?list="+$scope.current_list.filename)
+                .then(function (response) {
+
+                // Returned data is currently a string, convert it to JSON
+                var result = $.parseJSON( response.data.result );
+
+                if( result.success === true){
+
+                    $scope.getLists();
+                }
+            });
+        }
+
+        $scope.selectChange = function(){
+
+            if( $scope.current_list ){
+
+                $http.get("/search/set_current_list?list="+$scope.current_list.filename)
+                    .then(function (response) {
+
+                    // Returned data is currently a string, convert it to JSON
+                    var result = $.parseJSON( response.data.result );
+
+                    if( result.success === true){
+
+                        $scope.getCurrentList();
+                    }
+                });
+            }
+        }
+
+        $scope.getCurrentList = function(){
+
+            $http.get("/search/get_current_list")
+                .then(function (response) {
+
+                // Returned data is currently a string, convert it to JSON
+                var result = $.parseJSON( response.data.result );
+
+                // Set query list
+                $scope.query_list = result.list;
+
+                // Update select menu by iterating all lists and setting current list object
+                var arrayLength = $scope.lists.length;
+
+                for(var i=0; i < arrayLength; i++){
+
+                   if( $scope.lists[i].name === result.name){
+
+                       $scope.current_list = $scope.lists[i];
+                       break;
+                   }
+                }
+            });
+        }
+
+        // 1. Get the complete set of lists for the select menu
+        // 2. Get the persisted current list
+        $scope.getLists = function(){
+
+            $http.get("/search/lists")
+                .then(function (response) {
+
+                // Returned data is currently a string, convert it to JSON
+                var result = $.parseJSON( response.data.result );
+
+                $scope.lists = result.lists;
+                $scope.getCurrentList();
+            });
+        }
+
+        $scope.getLists();
+    });
+    // http://stackoverflow.com/questions/18313576/confirmation-dialog-on-ng-click-angularjs
+    app.directive( "mwConfirmClick", [
+      function( ) {
+        return {
+          priority: -1,
+          restrict: 'A',
+          scope: { confirmFunction: "&mwConfirmClick" },
+          link: function( scope, element, attrs ){
+            element.bind( 'click', function( e ){
+              // message defaults to "Are you sure?"
+              var message = attrs.mwConfirmClickMessage ? attrs.mwConfirmClickMessage : "Are you sure?";
+              // confirm() requires jQuery
+              if( confirm( message ) ) {
+                scope.confirmFunction();
+              }
+            });
+          }
+        }
+      }
+    ]);
+
+    app.service('ModalService', ['$modal',
+    function ($modal) {
+
+        var modalDefaults = {
+            backdrop: true,
+            keyboard: true,
+            modalFade: true,
+            templateUrl: 'modal.html'
+        };
+
+        var modalOptions = {
+            closeButtonText: 'Close',
+            actionButtonText: 'OK',
+            headerText: 'Proceed?',
+            bodyText: 'Perform this action?'
+        };
+
+        this.showModal = function (customModalDefaults, customModalOptions) {
+            if (!customModalDefaults) customModalDefaults = {};
+            customModalDefaults.backdrop = 'static';
+            return this.show(customModalDefaults, customModalOptions);
+        };
+
+        this.show = function (customModalDefaults, customModalOptions) {
+            //Create temp objects to work with since we're in a singleton service
+            var tempModalDefaults = {};
+            var tempModalOptions = {};
+
+            //Map angular-ui modal custom defaults to modal defaults defined in service
+            angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
+
+            //Map modal.html $scope custom properties to defaults defined in service
+            angular.extend(tempModalOptions, modalOptions, customModalOptions);
+
+            if (!tempModalDefaults.controller) {
+                tempModalDefaults.controller = function ($scope, $modalInstance) {
+                    $scope.modalOptions = tempModalOptions;
+                    $scope.modalOptions.ok = function (result) {
+                        $modalInstance.close(result);
+                    };
+                    $scope.modalOptions.close = function (result) {
+                        $modalInstance.dismiss('cancel');
+                    };
+                }
+            }
+
+            return $modal.open(tempModalDefaults);
+        };
+    }]);
+
+</script>
+</body>
+</html>

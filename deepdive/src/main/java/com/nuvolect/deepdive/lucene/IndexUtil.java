@@ -93,7 +93,8 @@ public class IndexUtil {
         }
 
         /**
-         * Delete any index folders that no longer have
+         * Delete any index folders that no longer needed
+         * FIXME confirm hash dir list needs to be maintained
          */
         for (OmniFile hashDirToDelete : hashedDirsToDelete){
             hashDirToDelete.delete();

@@ -281,8 +281,9 @@ public class OmniUtil {
         return forceMkdir(parent);
     }
 
-    public static void writeFile(OmniFile file, String fileContents) {
+    public static boolean writeFile(OmniFile file, String fileContents) {
 
+        boolean success = true;
         try {
             OutputStream out = null;
 
@@ -297,7 +298,9 @@ public class OmniUtil {
         }
         catch (IOException e) {
             LogUtil.log( FileUtil.class, "File write failed: " + e.toString());
+            success = false;
         }
+        return success;
     }
 
     /**

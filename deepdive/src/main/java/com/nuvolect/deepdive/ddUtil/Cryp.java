@@ -65,7 +65,7 @@ public class Cryp {
             LogUtil.log("put key is NULL - ERROR ----------------------------------------");
 
         String cryp = BetterCrypto.encrypt(ctx, value);
-        return Persist.put(ctx, key, cryp);
+        return Persist.put(ctx, key, cryp)?1:0;
     }
 
     /**
@@ -115,6 +115,6 @@ public class Cryp {
 
         String cryp = BetterCrypto.encrypt(ctx, String.valueOf( val ));
 
-        return Persist.put( ctx, key, cryp);
+        return Persist.put( ctx, key, cryp)?1:0;
     }
 }

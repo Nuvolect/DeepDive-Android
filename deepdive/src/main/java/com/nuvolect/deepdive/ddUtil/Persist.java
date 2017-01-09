@@ -51,15 +51,38 @@ public class Persist {
     }
 
     /**
+     * Simple get.  Return default string if not found
+     * @param ctx
+     * @param key
+     * @return
+     */
+    public static String get(Context ctx, String key, String defaultString) {
+
+        final SharedPreferences pref = ctx.getSharedPreferences( PERSIST_NAME, Context.MODE_PRIVATE);
+        return pref.getString(key, defaultString);
+    }
+
+//    /**
+//     * Simple put value with the given key.//FIXME remove
+//     * Return 1 if successful, otherwise 0.
+//     * @param ctx
+//     * @param key
+//     * @param value
+//     */
+//    public static int put(Context ctx, String key, String value){
+//        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
+//        return pref.edit().putString(key, value).commit()?1:0;
+//    }
+    /**
      * Simple put value with the given key.
-     * Return 1 if successful, otherwise 0.
+     * Return true if successful, otherwise false.
      * @param ctx
      * @param key
      * @param value
      */
-    public static int put(Context ctx, String key, String value){
+    public static boolean put(Context ctx, String key, String value){
         final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
-        return pref.edit().putString(key, value).commit()?1:0;
+        return pref.edit().putString(key, value).commit();
     }
 
     /**
