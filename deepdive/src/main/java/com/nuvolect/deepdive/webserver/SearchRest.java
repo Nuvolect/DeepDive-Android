@@ -95,26 +95,27 @@ public class SearchRest {
                     break;
                 }
                 case put_list: {// Post method
-                    JSONObject list = new JSONObject( params.get("list"));
-                    JSONObject result = SearchLists.putList( ctx, volumeId, list);
+                    JSONArray list = new JSONArray( params.get("list"));
+                    String name = params.get("name");
+                    JSONObject result = SearchLists.putList( ctx, volumeId, name, list);
                     wrapper.put("result", result.toString());
                     break;
                 }
                 case get_list:{
-                    String list = params.get("list");
-                    JSONObject result = SearchLists.getList( ctx, volumeId, list);
+                    String name = params.get("name");
+                    JSONObject result = SearchLists.getList( ctx, volumeId, name);
                     wrapper.put("result", result.toString());
                     break;
                 }
                 case delete_list:{
-                    String list = params.get("list");
-                    JSONObject result = SearchLists.deleteList( ctx, volumeId, list);
+                    String name = params.get("name");
+                    JSONObject result = SearchLists.deleteList( ctx, volumeId, name);
                     wrapper.put("result", result.toString());
                     break;
                 }
                 case set_current_list:{
-                    String list = params.get("list");
-                    JSONObject result = SearchLists.setCurrentListFileName( ctx, volumeId, list);
+                    String name = params.get("name");
+                    JSONObject result = SearchLists.setCurrentListFileName( ctx, volumeId, name);
                     wrapper.put("result", result.toString());
                     break;
                 }

@@ -140,7 +140,7 @@
 var app = angular.module('myApp', []);
 app.controller('appListController', function($scope, $http, $parse) {
 
-       $scope.show_input_package = false;
+     $scope.show_input_package = false;
 
      $http.get("/probe/installed_apps")
        .then(function (response) {

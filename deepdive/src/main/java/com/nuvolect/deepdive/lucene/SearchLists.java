@@ -93,15 +93,14 @@ public class SearchLists {
      * @param list
      * @return
      */
-    public static JSONObject putList(Context ctx, String volumeId, JSONObject list) {
+    public static JSONObject putList(Context ctx, String volumeId, String fileName, JSONArray list) {
 
         boolean success;
         try {
-            String fileName = list.getString("filename");
             OmniFile omniFile = new OmniFile( volumeId, SEARCH_LIST_FOLDER_PATH+fileName);
             String content = list.toString();
             success = OmniUtil.writeFile( omniFile, content);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             success = false;
         }

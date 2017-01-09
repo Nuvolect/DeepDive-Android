@@ -35,7 +35,7 @@
                 ng-change="selectChange()"
                 ng-options="x.name for x in lists track by x.name" >
             </select>
-            <a href="#" ng-click="addList()"><span class="glyphicon glyphicon-plus"></span></a>
+            <a href="#" ng-click="showNewListDialog()"><span class="glyphicon glyphicon-plus"></span></a>
             <a
                mw-confirm-click="removeList()"
                mw-confirm-click-message="You are about to delete a list of queries!! Are you sure?" >
@@ -43,6 +43,17 @@
             </a>
         </form>
         <br>
+
+        <div align="center" ng-show="show_new_list_dialog">
+            <form class="form-inline">
+                <div class="form-group" style="color: Black">
+                    List name:
+                    <input type="text" ng-model="new_list_name" name="new_list_name" placeholder="Enter new list name">
+                </div>
+                <button type="submit" class="btn btn-default" ng-click="createList()">Submit</button>
+            </form>
+            <br>
+        </div>
 
         <table class="card" style="border-collapse: separate; border-spacing: 20px 5px;">
 
@@ -52,6 +63,7 @@
                 </td>
                 <td>{{x.description}}</td>
             </tr>
+            <tr ng-hide="query_list.length"><td>No quiries defined</td></tr>
 
         </table>
 
@@ -69,19 +81,55 @@
 
         var search_path = getURLParameter('search_path');
         $scope.search_path = search_path;
+        $scope.show_new_list_dialog = false;
 
         function getURLParameter(name) {
           return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
         }
 
-        $scope.addList = function(){
+        $scope.showNewListDialog = function(){
 
-            console.log("addList");
+            console.log("showNewListDialog");
+            $scope.show_new_list_dialog = true;
+        }
+
+        $scope.createList = function(){
+
+            console.log("createList: $scope.new_list_name");
+            $scope.show_new_list_dialog = false;
+
+            if( $scope.new_list_name ){
+
+                var emptyListName = $scope.new_list_name;
+                $scope.new_list_name = "";// clear input field for next use
+
+                $http.get("/search/put_list?list=[]&name="+emptyListName+".json")
+                    .then(function (response) {
+
+                    // Returned data is currently a string, convert it to JSON
+                    var result = $.parseJSON( response.data.result );
+
+                    if( result.success === true){
+
+                        $http.get("/search/set_current_list?name="+emptyListName)
+                            .then(function (response) {
+
+                            // Returned data is currently a string, convert it to JSON
+                            var result = $.parseJSON( response.data.result );
+
+                            if( result.success === true){
+
+                                $scope.getCurrentList();
+                            }
+                        });
+                    }
+                });
+            }
         }
 
         $scope.removeList = function(){
 
-            $http.get("/search/delete_list?list="+$scope.current_list.filename)
+            $http.get("/search/delete_list?name="+$scope.current_list.filename)
                 .then(function (response) {
 
                 // Returned data is currently a string, convert it to JSON
@@ -98,7 +146,7 @@
 
             if( $scope.current_list ){
 
-                $http.get("/search/set_current_list?list="+$scope.current_list.filename)
+                $http.get("/search/set_current_list?name="+$scope.current_list.filename)
                     .then(function (response) {
 
                     // Returned data is currently a string, convert it to JSON
@@ -125,7 +173,7 @@
 
                 // Update select menu by iterating all lists and setting current list object
                 var arrayLength = $scope.lists.length;
-
+debugger;
                 for(var i=0; i < arrayLength; i++){
 
                    if( $scope.lists[i].name === result.name){
@@ -174,56 +222,6 @@
         }
       }
     ]);
-
-    app.service('ModalService', ['$modal',
-    function ($modal) {
-
-        var modalDefaults = {
-            backdrop: true,
-            keyboard: true,
-            modalFade: true,
-            templateUrl: 'modal.html'
-        };
-
-        var modalOptions = {
-            closeButtonText: 'Close',
-            actionButtonText: 'OK',
-            headerText: 'Proceed?',
-            bodyText: 'Perform this action?'
-        };
-
-        this.showModal = function (customModalDefaults, customModalOptions) {
-            if (!customModalDefaults) customModalDefaults = {};
-            customModalDefaults.backdrop = 'static';
-            return this.show(customModalDefaults, customModalOptions);
-        };
-
-        this.show = function (customModalDefaults, customModalOptions) {
-            //Create temp objects to work with since we're in a singleton service
-            var tempModalDefaults = {};
-            var tempModalOptions = {};
-
-            //Map angular-ui modal custom defaults to modal defaults defined in service
-            angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
-
-            //Map modal.html $scope custom properties to defaults defined in service
-            angular.extend(tempModalOptions, modalOptions, customModalOptions);
-
-            if (!tempModalDefaults.controller) {
-                tempModalDefaults.controller = function ($scope, $modalInstance) {
-                    $scope.modalOptions = tempModalOptions;
-                    $scope.modalOptions.ok = function (result) {
-                        $modalInstance.close(result);
-                    };
-                    $scope.modalOptions.close = function (result) {
-                        $modalInstance.dismiss('cancel');
-                    };
-                }
-            }
-
-            return $modal.open(tempModalDefaults);
-        };
-    }]);
 
 </script>
 </body>
