@@ -30,6 +30,10 @@
         <table class="card" style="border-collapse: separate; border-spacing: 20px 5px;">
 
             <tr ng-repeat="p in paths | orderBy: 'path'">
+                <td>
+                    <a href="search_list.html?search_path={{p.path}}">
+                        <span class="glyphicon glyphicon-th-list"></span></a>
+                </td>
                 <td style="padding: 2px 0;">
                     <a href="search.html?search_path={{p.path}}">{{p.path}}</a>
                 </td>

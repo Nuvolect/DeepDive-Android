@@ -1,5 +1,45 @@
 [
   {
+    "query": "black hat",
+    "description":"Common search for password"
+  },
+  {
+    "query": "botnet",
+    "description":"Common search for password"
+  },
+  {
+    "query": "cyber hack",
+    "description":"Common search for password"
+  },
+  {
+    "query": "data mining",
+    "description":"Common search for password"
+  },
+  {
+    "query": "ddos",
+    "description":"Common search for password"
+  },
+  {
+    "query": "sneakernet",
+    "description":"Common search for password"
+  },
+  {
+    "query": "nsa",
+    "description":"Common search for password"
+  },
+  {
+    "query": "whitelist",
+    "description":"Common search for password"
+  },
+  {
+    "query": "blacklist",
+    "description":"Common search for password"
+  },
+  {
+    "query": "white hat",
+    "description":"Common search for password"
+  },
+  {
     "query": "password",
     "description":"Common search for password"
   },

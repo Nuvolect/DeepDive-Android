@@ -21,46 +21,9 @@
     <br>
     <div align="center">
         <a href="/"><img src="/img/icon_64.png"></a>
-        <h1>Apps</h1>
+        <h2>Working Apps</h2>
     </div>
-    <br>
 
-    <div align="center">
-
-        <p><input type="text" ng-model="app_search" placeholder="Search apps">#{{ (apps|filter:app_search).length }}</p>
-
-        <table class="card">
-            <tr>
-                <td></td>
-                <td></td>
-                <td align="left">
-                    <strong>Installed App</strong>
-                </td>
-                <td>
-                    <strong>Package</strong>
-                </td>
-                <td>
-                    <strong>Version</strong>
-                </td>
-            </tr>
-            <tr style="vertical-align:middle" ng-repeat="a in apps | orderBy: 'name' | filter : app_search ">
-                <td>
-                    <a href="/app.html?package={{ a.package}}">
-                        <span class="glyphicon glyphicon-info-sign" style="font-size:1.8em"></span>
-                    </a>
-                </td>
-                <td>
-                    <a href="/decompile.html?packageName={{ a.package }}&appName={{ a.name }}">
-                        <span class="glyphicon glyphicon-cog" style="font-size:1.8em"></span>
-                    </a>
-                </td>
-                <td>{{ a.name }}</td>
-                <td><a href="https://play.google.com/store/apps/details?id={{a.package}}" target="_blank">{{ a.package }}</a></td>
-                <td>{{ a.version_name }}</td>
-            </tr>
-        </table>
-    </div>
-    <br>
     <br>
     <div align="center">
         <a ng-click="exposePackageInput()" style="color: Black"><span class="glyphicon glyphicon-upload" style="font-size:1.8em; color: Black"></span> Upload APK</a>
@@ -116,6 +79,44 @@
 </div><!-- /card-container -->
 
 <br>
+<br>
+<div align="center">
+
+    <h2>Installed Apps</h2>
+
+    <p><input type="text" ng-model="app_search" placeholder="Search apps">#{{ (apps|filter:app_search).length }}</p>
+
+    <table class="card">
+        <tr>
+            <td></td>
+            <td></td>
+            <td align="left">
+                <strong>Installed App</strong>
+            </td>
+            <td>
+                <strong>Package</strong>
+            </td>
+            <td>
+                <strong>Version</strong>
+            </td>
+        </tr>
+        <tr style="vertical-align:middle" ng-repeat="a in apps | orderBy: 'name' | filter : app_search ">
+            <td>
+                <a href="/app.html?package={{ a.package}}">
+                    <span class="glyphicon glyphicon-info-sign" style="font-size:1.8em"></span>
+                </a>
+            </td>
+            <td>
+                <a href="/decompile.html?packageName={{ a.package }}&appName={{ a.name }}">
+                    <span class="glyphicon glyphicon-cog" style="font-size:1.8em"></span>
+                </a>
+            </td>
+            <td>{{ a.name }}</td>
+            <td><a href="https://play.google.com/store/apps/details?id={{a.package}}" target="_blank">{{ a.package }}</a></td>
+            <td>{{ a.version_name }}</td>
+        </tr>
+    </table>
+</div>
 <br>
 <br>
 

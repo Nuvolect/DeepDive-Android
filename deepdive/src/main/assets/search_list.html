@@ -41,6 +41,7 @@
                mw-confirm-click-message="You are about to delete a list of queries!! Are you sure?" >
                <span class="glyphicon glyphicon-minus"></span></a>
             </a>
+            <button ng-click="startSearch()" ng-disabled="start_button_disabled">Start</button>
         </form>
         <br>
 
@@ -55,16 +56,76 @@
             <br>
         </div>
 
+        <div ng-show="show_danger_alert" class="alert alert-danger alert-dismissable">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>{{danger_alert_message}}</strong>
+        </div>
+
         <table class="card" style="border-collapse: separate; border-spacing: 20px 5px;">
 
-            <tr ng-repeat="x in query_list">
+            <tr>
+                <th align="right">Hits</th>
+                <th>Query</th>
+                <th>Description</th>
+            </tr>
+            <tr ng-repeat="x in query_list | orderBy: '-num_hits'">
+                <td align="right">{{x.num_hits}}</td>
                 <td style="padding: 2px 0;">
                     <a href="search.html?search_path={{search_path}}&search_query={{x.query}}">{{x.query}}</a>
                 </td>
                 <td>{{x.description}}</td>
+                <td><a
+                        mw-confirm-click="removeQuery( x.query )"
+                        mw-confirm-click-message="You are about to delete a query!! Are you sure?" >
+                    <span class="glyphicon glyphicon-minus"></span></a>
+                </a>
+                </td>
             </tr>
-            <tr ng-hide="query_list.length"><td>No quiries defined</td></tr>
+            <tr ng-hide="query_list.length"><td></td><td>No quiries defined</td></tr>
 
+
+            <tr>
+                <td></td>
+                <td>
+                    <div align="left">
+                        <a href="#" ng-click="show_new_query_dialog=true;"><span class="glyphicon glyphicon-plus"></span></a>
+                    </div>
+                </td>
+            </tr>
+
+            <div align="left" ng-show="show_new_query_dialog">
+                <tr ng-show="show_new_query_dialog">
+                    <td></td>
+                    <form class="form-inline">
+                        <div class="form-group" style="color: Black">
+                            <td>
+                                <input type="text" ng-model="new_query" name="new_query"
+                                       placeholder="Enter new query">
+                            </td>
+                            <td>
+                                <input type="text" ng-model="new_query_description"
+                                       name="new_query_description"
+                                       placeholder="Enter query description"
+                                       size="42" >
+                            </td>
+                        </div>
+                <tr ng-show="show_new_query_dialog">
+                    <td></td>
+                    <td>
+                        <button type="submit" class="btn btn-default" ng-click="createQuery()">
+                            Submit
+                        </button>
+                    </td>
+                </tr>
+                </form>
+                <br>
+            </div>
+
+            <tr>
+                <td >
+                    <label>Edit: <input type="checkbox" ng-model="edit_checkbox" ng-click="editChecked()"></label><br/>
+                </td>
+            </tr>
         </table>
 
         <br>
@@ -82,20 +143,120 @@
         var search_path = getURLParameter('search_path');
         $scope.search_path = search_path;
         $scope.show_new_list_dialog = false;
+        $scope.show_new_query_dialog = false;
+        $scope.query_list = [];
+        $scope.searchLength = 0;
+        $scope.currentSearch = -1;
+        $scope.start_button_disabled = false;
+        $scope.show_danger_alert = false;
 
         function getURLParameter(name) {
           return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
         }
 
+        $scope.dangerAlert = function( message ){
+
+            $scope.danger_alert_message = message;
+            $scope.show_danger_alert = true;
+        }
+
+        $scope.createQuery = function(){
+
+            var obj = {
+                query:$scope.new_query,
+                description:$scope.new_query_description
+            };
+            $scope.query_list.push( obj );
+
+            <!--console.log("createQuery(): "+$scope.new_query);-->
+            <!--console.log("createQuery(): "+$scope.new_query_description);-->
+
+            // Hide the dialog
+            $scope.show_new_query_dialog = false;
+
+            // Clear input fields for next use
+            $scope.new_query = "";
+            $scope.new_query_description = "";
+
+            var cleanList = angular.toJson( $scope.query_list );
+
+            $http.get("/search/put_list?list="+cleanList+"&name="+$scope.current_list.filename)
+                .then(function (response) {
+
+                // Returned data is currently a string, convert it to JSON
+                var result = $.parseJSON( response.data.result );
+
+                if( ! result.success === true){
+
+                    $scope.dangerAlert("Error saving query list");
+                }
+            });
+        }
+
+        $scope.removeQuery = function( query ){
+
+            <!--console.log("removeQuery(): "+query);-->
+
+            // Find index by iterating the list
+            var arrayLength = $scope.query_list.length;
+
+            for(var i=0; i < arrayLength; i++){//mkk
+
+               if( $scope.query_list[i].query === query){
+
+                   $scope.query_list.splice( i, 1);
+                   break;
+               }
+            }
+            // Memory list is updated, now save it to server
+            // mkk
+        }
+
+        $scope.startSearch = function(){
+
+            <!--console.log("startSearch");-->
+
+            $scope.start_button_disabled = true;
+            $scope.searchLength = $scope.query_list.length;
+            $scope.currentSearch = -1;
+
+            $scope.nextSearch();
+        }
+
+        // Iterate a single search event
+        $scope.nextSearch = function(){
+
+            if( ++ $scope.currentSearch >= $scope.searchLength){
+
+                $scope.start_button_disabled = false;
+                <!--console.log("last search complete");-->
+                return;
+            }
+            var search_query = $scope.query_list[ $scope.currentSearch ].query;
+            <!--console.log("next search: "+search_query);-->
+
+            $http.get("/search/search?search_path="+ search_path +"&search_query="+ search_query)
+                .then(function (response) {
+
+                // Returned data is currently a string, convert it to JSON
+                var result = $.parseJSON( response.data.result );
+
+                // Save number of hits and iterate to the next search
+                $scope.query_list[ $scope.currentSearch ].num_hits = result.num_hits;;
+
+                $scope.nextSearch();
+            });
+        }
+
         $scope.showNewListDialog = function(){
 
-            console.log("showNewListDialog");
+            <!--console.log("showNewListDialog");-->
             $scope.show_new_list_dialog = true;
         }
 
         $scope.createList = function(){
 
-            console.log("createList: $scope.new_list_name");
+            <!--console.log("createList: $scope.new_list_name");-->
             $scope.show_new_list_dialog = false;
 
             if( $scope.new_list_name ){
@@ -111,6 +272,9 @@
 
                     if( result.success === true){
 
+                        // Update name made "safe" by server
+                        emptyListFilename = result.name;
+
                         $http.get("/search/set_current_list?name="+emptyListFilename)
                             .then(function (response) {
 
@@ -123,6 +287,8 @@
                             }
                         });
                     }
+                    else
+                        $scope.dangerAlert("Error creating list");
                 });
             }
         }
@@ -139,6 +305,8 @@
 
                     $scope.getLists();
                 }
+                else
+                    $scope.dangerAlert("Error removing list");
             });
         }
 
@@ -156,6 +324,8 @@
 
                         $scope.getCurrentList();
                     }
+                    else
+                        $scope.dangerAlert("Error changing list");
                 });
             }
         }
@@ -189,7 +359,7 @@
         // 2. Get the persisted current list
         $scope.getLists = function(){
 
-            $http.get("/search/lists")
+            $http.get("/search/get_lists")
                 .then(function (response) {
 
                 // Returned data is currently a string, convert it to JSON

@@ -10,7 +10,7 @@ import com.nuvolect.deepdive.ddUtil.Safe;
 import com.nuvolect.deepdive.lucene.Index;
 import com.nuvolect.deepdive.lucene.IndexUtil;
 import com.nuvolect.deepdive.lucene.Search;
-import com.nuvolect.deepdive.lucene.SearchLists;
+import com.nuvolect.deepdive.lucene.SearchList;
 import com.nuvolect.deepdive.main.App;
 
 import org.json.JSONArray;
@@ -30,7 +30,7 @@ public class SearchRest {
         get_indexes,
         index,
         interrupt_indexing,
-        lists,
+        get_lists,
         put_list,
         get_list,
         delete_list,
@@ -90,8 +90,8 @@ public class SearchRest {
                     wrapper.put("result", result.toString());
                     break;
                 }
-                case lists:{
-                    JSONObject result = SearchLists.getLists( ctx, volumeId);
+                case get_lists:{
+                    JSONObject result = SearchList.getLists( ctx, volumeId);
                     wrapper.put("result", result.toString());
                     break;
                 }
@@ -99,30 +99,30 @@ public class SearchRest {
                     JSONArray list = new JSONArray( params.get("list"));
                     String name = params.get("name");
                     name = Safe.removeWhitespace( name);
-                    JSONObject result = SearchLists.putList( ctx, volumeId, name, list);
+                    JSONObject result = SearchList.putList( ctx, volumeId, name, list);
                     wrapper.put("result", result.toString());
                     break;
                 }
                 case get_list:{
                     String name = params.get("name");
-                    JSONObject result = SearchLists.getList( ctx, volumeId, name);
+                    JSONObject result = SearchList.getList( ctx, volumeId, name);
                     wrapper.put("result", result.toString());
                     break;
                 }
                 case delete_list:{
                     String name = params.get("name");
-                    JSONObject result = SearchLists.deleteList( ctx, volumeId, name);
+                    JSONObject result = SearchList.deleteList( ctx, volumeId, name);
                     wrapper.put("result", result.toString());
                     break;
                 }
                 case set_current_list:{
                     String name = params.get("name");
-                    JSONObject result = SearchLists.setCurrentListFileName( ctx, volumeId, name);
+                    JSONObject result = SearchList.setCurrentListFileName( ctx, volumeId, name);
                     wrapper.put("result", result.toString());
                     break;
                 }
                 case get_current_list:{
-                    JSONObject result = SearchLists.getCurrentList( ctx, volumeId);
+                    JSONObject result = SearchList.getCurrentList( ctx, volumeId);
                     wrapper.put("result", result.toString());
                     break;
                 }

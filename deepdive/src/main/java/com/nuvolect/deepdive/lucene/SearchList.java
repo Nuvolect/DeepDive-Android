@@ -20,7 +20,7 @@ import java.io.OutputStream;
 /**
  * Manage search lists
  */
-public class SearchLists {
+public class SearchList {
 
     static String SEARCH_LIST_FOLDER_PATH = "/.search_list/";
     static String DEFAULT_SEARCH_LIST_FILENAME = "default_search_list.json";
@@ -59,7 +59,7 @@ public class SearchLists {
                 outputStream.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.logException(SearchList.class, e);
         }
 
         JSONArray lists = new JSONArray();
@@ -80,7 +80,7 @@ public class SearchLists {
             wrapper.put("success", i>0);
 
         } catch (JSONException e) {
-            LogUtil.logException( SearchLists.class, e);
+            LogUtil.logException( SearchList.class, e);
         }
 
         return wrapper;
@@ -101,10 +101,17 @@ public class SearchLists {
             String content = list.toString();
             success = OmniUtil.writeFile( omniFile, content);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.logException(SearchList.class, e);
             success = false;
         }
-        return successResult( success);
+        JSONObject result = successResult( success);
+        try {
+            result.put("name",fileName);
+        } catch (JSONException e) {
+            LogUtil.logException(SearchList.class, e);
+        }
+
+        return result;
     }
 
     /**
@@ -117,7 +124,7 @@ public class SearchLists {
         try {
             jsonObject.put("success", success);
         } catch (JSONException e) {
-            e.printStackTrace();
+            LogUtil.logException(SearchList.class, e);
         }
         return jsonObject;
     }
@@ -181,7 +188,7 @@ public class SearchLists {
             wrapper.put("name", listFile.getName().replace(".json",""));
 
         } catch (JSONException e) {
-            LogUtil.logException( SearchLists.class, e);
+            LogUtil.logException( SearchList.class, e);
         }
 
         return wrapper;
