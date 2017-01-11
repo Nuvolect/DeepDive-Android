@@ -35,12 +35,14 @@
                 ng-change="selectChange()"
                 ng-options="x.name for x in lists track by x.name" >
             </select>
-            <a href="#" ng-click="showNewListDialog()"><span class="glyphicon glyphicon-plus"></span></a>
-            <a
-               mw-confirm-click="removeList()"
-               mw-confirm-click-message="You are about to delete a list of queries!! Are you sure?" >
-               <span class="glyphicon glyphicon-minus"></span></a>
-            </a>
+                <a ng-show="edit_mode"
+                    href="#" ng-click="showNewListDialog()"><span class="glyphicon glyphicon-plus"></span>
+                </a>
+                <a ng-show="edit_mode"
+                   mw-confirm-click="removeList()"
+                   mw-confirm-click-message="You are about to delete a list of queries!! Are you sure?" >
+                   <span class="glyphicon glyphicon-minus"></span></a>
+                </a>
             <button ng-click="startSearch()" ng-disabled="start_button_disabled">Start</button>
         </form>
         <br>
@@ -74,7 +76,7 @@
                     <a href="search.html?search_path={{search_path}}&search_query={{x.query}}">{{x.query}}</a>
                 </td>
                 <td>{{x.description}}</td>
-                <td><a
+                <td ng-show="edit_mode"><a
                         mw-confirm-click="removeQuery( x.query )"
                         mw-confirm-click-message="You are about to delete a query!! Are you sure?" >
                     <span class="glyphicon glyphicon-minus"></span></a>
@@ -84,7 +86,7 @@
             <tr ng-hide="query_list.length"><td></td><td>No quiries defined</td></tr>
 
 
-            <tr>
+            <tr ng-show="edit_mode">
                 <td></td>
                 <td>
                     <div align="left">
@@ -120,15 +122,10 @@
                 </form>
                 <br>
             </div>
-
-            <tr>
-                <td >
-                    <label>Edit: <input type="checkbox" ng-model="edit_checkbox" ng-click="editChecked()"></label><br/>
-                </td>
-            </tr>
         </table>
-
         <br>
+        <label>Edit <input type="checkbox" ng-model="edit_mode" ng-click="editChecked()"></label>
+
         <br>
     </div>
 

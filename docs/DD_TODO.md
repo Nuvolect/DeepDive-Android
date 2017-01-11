@@ -3,14 +3,10 @@
 * Current index conflict
 * Fix search result Angular errors
 
-====================
-Search group concept
-o Add '+' to search log after "expression"
-oo Popup, add to current group, select different group, create / delete group
-oo Add description of search
-oo Record search expression and description
-o Link to search lists, shows current list, select item to start search on list terms
+* Header design, developer menu
 
+* Include common header.html 
+* Include common footer.html
 
 ** Update ? help with working examples
 * Clear upload package name from dialog
@@ -26,6 +22,9 @@ o Link to search lists, shows current list, select item to start search on list 
 
 * Document multi-browser decompilier conflicts
 * Is there a better way to organize processess to monitor progress and kill-all
+
+* Integrate TinyMCE
+https://github.com/Studio-42/elFinder/wiki/Using-custom-editor-to-edit-files-within-elfinder
 
 # Performance timing server and Android DD Apps
 com.amazon.kindle, large apk at 52.41 MB
