@@ -5,7 +5,7 @@ import android.content.Context;
 import com.nuvolect.deepdive.ddUtil.CConst;
 import com.nuvolect.deepdive.ddUtil.LogUtil;
 import com.nuvolect.deepdive.ddUtil.OmniFile;
-import com.nuvolect.deepdive.ddUtil.OmniFileUtils;
+import com.nuvolect.deepdive.ddUtil.OmniFileFilter;
 import com.nuvolect.deepdive.ddUtil.OmniHash;
 import com.nuvolect.deepdive.ddUtil.OmniUtil;
 import com.nuvolect.deepdive.main.App;
@@ -210,7 +210,7 @@ public class IndexUtil {
     public static Collection<OmniFile> getFilePaths( String volumeId, String path) {
 
         OmniFile topDir = new OmniFile( volumeId, path);
-        Collection<OmniFile> files = OmniFileUtils.listFiles( topDir, TEXT_FILE_EXTENSION, true);
+        Collection<OmniFile> files = OmniFileFilter.listFiles( topDir, TEXT_FILE_EXTENSION, true);
 
         return files;
     }
