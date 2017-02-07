@@ -2,8 +2,8 @@ package com.nuvolect.deepdive.webserver.connector;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniZip;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniZip;
 
 import org.json.JSONArray;
 import org.json.JSONException;

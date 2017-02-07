@@ -1,7 +1,7 @@
 package com.nuvolect.deepdive.webserver;//
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
 
 import org.apache.commons.io.FilenameUtils;
 

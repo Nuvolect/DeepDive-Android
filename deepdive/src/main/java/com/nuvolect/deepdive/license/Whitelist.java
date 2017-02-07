@@ -2,7 +2,7 @@ package com.nuvolect.deepdive.license;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.DeviceInfo;
+import com.nuvolect.deepdive.ddUtil.DeviceInfo;
 
 import java.util.HashSet;
 import java.util.Set;

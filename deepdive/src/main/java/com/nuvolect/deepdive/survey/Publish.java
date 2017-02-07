@@ -5,10 +5,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import com.nuvolect.deepdive.util.Analytics;
-import com.nuvolect.deepdive.util.AnalyticsThrottle;
-import com.nuvolect.deepdive.util.CConst;
-import com.nuvolect.deepdive.util.JsonUtil;
+import com.nuvolect.deepdive.ddUtil.Analytics;
+import com.nuvolect.deepdive.ddUtil.AnalyticsThrottle;
+import com.nuvolect.deepdive.ddUtil.CConst;
+import com.nuvolect.deepdive.ddUtil.JsonUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;

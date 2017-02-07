@@ -1,9 +1,9 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniUtil;
-import com.nuvolect.deepdive.util.OmniZip;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
+import com.nuvolect.deepdive.ddUtil.OmniZip;
 
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;

@@ -2,10 +2,10 @@ package com.nuvolect.deepdive.show;//
 
 import android.app.Activity;
 
-import com.nuvolect.deepdive.util.DialogUtil;
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniImage;
+import com.nuvolect.deepdive.ddUtil.DialogUtil;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniImage;
 import com.nuvolect.deepdive.webserver.MimeUtil;
 
 import org.apache.commons.io.FileUtils;

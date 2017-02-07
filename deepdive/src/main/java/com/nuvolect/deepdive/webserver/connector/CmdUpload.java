@@ -2,10 +2,10 @@ package com.nuvolect.deepdive.webserver.connector;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.CConst;
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniFiles;
+import com.nuvolect.deepdive.ddUtil.CConst;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniFiles;
 import com.nuvolect.deepdive.main.App;
 
 import org.json.JSONArray;

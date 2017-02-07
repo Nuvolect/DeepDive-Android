@@ -2,8 +2,8 @@ package com.nuvolect.deepdive.webserver.connector;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.Analytics;
-import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.ddUtil.Analytics;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
 
 import java.io.InputStream;
 import java.util.Map;

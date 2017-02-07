@@ -13,7 +13,7 @@ import android.os.StatFs;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 
-import com.nuvolect.deepdive.util.PermissionUtil;
+import com.nuvolect.deepdive.ddUtil.PermissionUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -108,7 +108,7 @@ public class DeviceSurvey {
             object.put("externalStorageAvailable", externalMemoryAvailable());
             object.put("internalMemorySize", getInternalMemoryDescription(ctx));
             object.put("externalStorageSize", getExternalStorageDescription());
-            object.put("deviceInfo", com.nuvolect.deepdive.util.DeviceInfo.getDeviceInfo(ctx));
+            object.put("deviceInfo", com.nuvolect.deepdive.ddUtil.DeviceInfo.getDeviceInfo(ctx));
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -2,11 +2,11 @@ package com.nuvolect.deepdive.lucene;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.FileUtil;
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniUtil;
-import com.nuvolect.deepdive.util.Persist;
+import com.nuvolect.deepdive.ddUtil.FileUtil;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
+import com.nuvolect.deepdive.ddUtil.Persist;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;

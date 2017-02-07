@@ -3,9 +3,9 @@ package com.nuvolect.deepdive.webserver.connector;//
 import android.content.Context;
 import android.media.MediaScannerConnection;
 
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniImage;
-import com.nuvolect.deepdive.util.OmniUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniImage;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;

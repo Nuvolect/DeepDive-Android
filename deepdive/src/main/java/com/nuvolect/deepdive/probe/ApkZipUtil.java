@@ -3,9 +3,9 @@ package com.nuvolect.deepdive.probe;
 //TODO create class description
 //
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniFiles;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniFiles;
 
 import org.apache.commons.io.FilenameUtils;
 
