@@ -1,4 +1,4 @@
-package com.nuvolect.deepdive.util;
+package com.nuvolect.deepdive.ddUtil;
 
 import org.apache.commons.io.filefilter.*;
 
@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * Created by mattkraus on 12/20/16.
  */
-public class OmniFileUtils {
+public class OmniFileFilter {
 
     /**
      * Finds files within a given directory (and optionally its subdirectories)

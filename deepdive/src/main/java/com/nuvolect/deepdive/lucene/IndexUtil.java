@@ -2,12 +2,12 @@ package com.nuvolect.deepdive.lucene;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.CConst;
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniFileUtils;
-import com.nuvolect.deepdive.util.OmniHash;
-import com.nuvolect.deepdive.util.OmniUtil;
+import com.nuvolect.deepdive.ddUtil.CConst;
+import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.ddUtil.OmniFileFilter;
+import com.nuvolect.deepdive.ddUtil.OmniHash;
+import com.nuvolect.deepdive.ddUtil.OmniUtil;
 import com.nuvolect.deepdive.main.App;
 
 import org.json.JSONArray;
@@ -210,7 +210,7 @@ public class IndexUtil {
     public static Collection<OmniFile> getFilePaths( String volumeId, String path) {
 
         OmniFile topDir = new OmniFile( volumeId, path);
-        Collection<OmniFile> files = OmniFileUtils.listFiles( topDir, TEXT_FILE_EXTENSION, true);
+        Collection<OmniFile> files = OmniFileFilter.listFiles( topDir, TEXT_FILE_EXTENSION, true);
 
         return files;
     }
