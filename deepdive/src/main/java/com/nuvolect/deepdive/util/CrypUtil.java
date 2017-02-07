@@ -22,7 +22,7 @@ public class CrypUtil {
         if( crypValue.isEmpty())
             return "";
 
-        return BetterCrypto.decrypt(ctx, crypValue);
+        return SymmetricCrypto.decrypt(ctx, crypValue);
     }
 
     /**
@@ -39,7 +39,7 @@ public class CrypUtil {
         if( crypValue.isEmpty())
             return defValue;
 
-        return BetterCrypto.decrypt(ctx, crypValue);
+        return SymmetricCrypto.decrypt(ctx, crypValue);
     }
 
     /**
@@ -51,7 +51,7 @@ public class CrypUtil {
      */
     public static int put(Context ctx, String key, String value){
 
-        String crypValue = BetterCrypto.encrypt(ctx, value);
+        String crypValue = SymmetricCrypto.encrypt(ctx, value);
 
         int firstTime = 0;
         try {

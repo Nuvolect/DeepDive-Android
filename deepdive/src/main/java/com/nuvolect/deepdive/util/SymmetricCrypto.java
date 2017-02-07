@@ -74,7 +74,7 @@ import javax.crypto.spec.SecretKeySpec;
      System.out.println("Bummer!");
  }
  */
-public class BetterCrypto {
+public class SymmetricCrypto {
 
     public static String decrypt(Context ctx, String encrypted){
 

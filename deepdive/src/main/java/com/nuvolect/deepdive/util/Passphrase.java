@@ -71,7 +71,7 @@ public class Passphrase {
              */
             String uniqueInstallId = DeviceSurvey.getUniqueInstallId(ctx);
             String md5Key = LicenseUtil.md5(CConst.RANDOM_EDGE + uniqueInstallId);
-            clearPassphrase = BetterCrypto.decrypt( md5Key, cryptPassphrase);
+            clearPassphrase = SymmetricCrypto.decrypt( md5Key, cryptPassphrase);
 
         } catch (Exception e) {
             LogUtil.logException(ctx, LogUtil.LogType.CRYPT, e);
@@ -87,7 +87,7 @@ public class Passphrase {
 
             String uniqueInstallId = DeviceSurvey.getUniqueInstallId(ctx);
             String md5Key = LicenseUtil.md5( CConst.RANDOM_EDGE + uniqueInstallId);
-            String cryptPassphrase = BetterCrypto.encrypt( md5Key, passphrase);
+            String cryptPassphrase = SymmetricCrypto.encrypt( md5Key, passphrase);
             Persist.setEncryptedPassphrase(ctx, cryptPassphrase);
 
         } catch (Exception e) {
