@@ -25,7 +25,7 @@ public class Cryp {
         if( cryp.isEmpty())
             return "";
 
-        String clear = BetterCrypto.decrypt(ctx, cryp);
+        String clear = SymmetricCrypto.decrypt(ctx, cryp);
 
         return clear;
     }
@@ -64,7 +64,7 @@ public class Cryp {
         if( value == null)
             LogUtil.log("put key is NULL - ERROR ----------------------------------------");
 
-        String cryp = BetterCrypto.encrypt(ctx, value);
+        String cryp = SymmetricCrypto.encrypt(ctx, value);
         return Persist.put(ctx, key, cryp)?1:0;
     }
 
@@ -80,7 +80,7 @@ public class Cryp {
         if( v.isEmpty())
             return 0;
         else{
-            String clear = BetterCrypto.decrypt(ctx, v);
+            String clear = SymmetricCrypto.decrypt(ctx, v);
             return Integer.valueOf( clear );
         }
     }
@@ -100,7 +100,7 @@ public class Cryp {
             return defInt;
         }
         else{
-            String clear = BetterCrypto.decrypt(ctx, v);
+            String clear = SymmetricCrypto.decrypt(ctx, v);
             return Integer.valueOf( clear );
         }
     }
@@ -113,7 +113,7 @@ public class Cryp {
      */
     public static int putInt(Context ctx, String key, int val) {
 
-        String cryp = BetterCrypto.encrypt(ctx, String.valueOf( val ));
+        String cryp = SymmetricCrypto.encrypt(ctx, String.valueOf( val ));
 
         return Persist.put( ctx, key, cryp)?1:0;
     }

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.nuvolect.deepdive.util.BetterCrypto;
+import com.nuvolect.deepdive.util.SymmetricCrypto;
 import com.nuvolect.deepdive.util.CConst;
 import com.nuvolect.deepdive.util.CrypUtil;
 import com.nuvolect.deepdive.util.JsonUtil;
@@ -54,7 +54,7 @@ public class LicensePersist {
 
     public static void setLicenseAccount(Context ctx, String accountName){
         final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
-        String cryptAccount = BetterCrypto.encrypt(ctx, accountName);
+        String cryptAccount = SymmetricCrypto.encrypt(ctx, accountName);
         pref.edit().putString(LICENSE_ACCOUNT_NAME, cryptAccount).commit();
     }
 
@@ -67,7 +67,7 @@ public class LicensePersist {
         if( cryptAccount.isEmpty())
             return CConst.DEFAULT_ACCOUNT;
         else{
-            String clearText = BetterCrypto.decrypt(ctx, cryptAccount);
+            String clearText = SymmetricCrypto.decrypt(ctx, cryptAccount);
 
             return clearText;
         }
