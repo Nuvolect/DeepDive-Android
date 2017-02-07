@@ -2,9 +2,9 @@ package com.nuvolect.deepdive.webserver.connector;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.ddUtil.LogUtil;
-import com.nuvolect.deepdive.ddUtil.OmniHash;
-import com.nuvolect.deepdive.ddUtil.Omni;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.OmniHash;
+import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.webserver.MimeUtil;
 
 import org.json.JSONException;

@@ -6,9 +6,9 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 
 import com.nuvolect.deepdive.R;
-import com.nuvolect.deepdive.ddUtil.CConst;
-import com.nuvolect.deepdive.ddUtil.CrypUtil;
-import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.util.CrypUtil;
+import com.nuvolect.deepdive.util.LogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;

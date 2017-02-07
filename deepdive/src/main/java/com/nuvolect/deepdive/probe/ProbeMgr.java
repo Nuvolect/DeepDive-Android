@@ -3,7 +3,7 @@ package com.nuvolect.deepdive.probe;
 import android.content.Context;
 
 import com.nuvolect.deepdive.main.App;
-import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.util.LogUtil;
 
 import java.util.HashMap;
 

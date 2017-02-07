@@ -1,7 +1,7 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.ddUtil.LogUtil;
-import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.OmniFile;
 
 import org.json.JSONException;
 import org.json.JSONObject;
