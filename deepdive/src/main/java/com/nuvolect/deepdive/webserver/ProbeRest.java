@@ -5,8 +5,8 @@ package com.nuvolect.deepdive.webserver;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.ddUtil.CConst;
-import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.probe.DecompileApk;
 import com.nuvolect.deepdive.probe.ProbeMgr;

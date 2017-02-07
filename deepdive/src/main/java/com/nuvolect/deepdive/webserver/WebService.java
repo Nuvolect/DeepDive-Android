@@ -10,8 +10,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-import com.nuvolect.deepdive.ddUtil.LogUtil;
-import com.nuvolect.deepdive.ddUtil.Omni;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.webserver.connector.ServeInit;
 import com.squareup.okhttp.OkHttpClient;
 

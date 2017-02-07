@@ -5,8 +5,8 @@ package com.nuvolect.deepdive.webserver;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.ddUtil.LogUtil;
-import com.nuvolect.deepdive.ddUtil.Safe;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.Safe;
 import com.nuvolect.deepdive.lucene.Index;
 import com.nuvolect.deepdive.lucene.IndexUtil;
 import com.nuvolect.deepdive.lucene.Search;

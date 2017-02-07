@@ -2,12 +2,12 @@ package com.nuvolect.deepdive.probe;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.ddUtil.CConst;
-import com.nuvolect.deepdive.ddUtil.LogUtil;
-import com.nuvolect.deepdive.ddUtil.Omni;
-import com.nuvolect.deepdive.ddUtil.OmniFile;
-import com.nuvolect.deepdive.ddUtil.OmniHash;
-import com.nuvolect.deepdive.ddUtil.OmniUtil;
+import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.Omni;
+import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.util.OmniHash;
+import com.nuvolect.deepdive.util.OmniUtil;
 import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.webserver.connector.FileObj;
 

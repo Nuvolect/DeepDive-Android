@@ -2,7 +2,7 @@ package com.nuvolect.deepdive.probe;
 
 import android.support.annotation.NonNull;
 
-import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.util.LogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;

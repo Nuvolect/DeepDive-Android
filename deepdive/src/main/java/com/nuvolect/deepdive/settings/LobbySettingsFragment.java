@@ -26,11 +26,11 @@ import com.nuvolect.deepdive.R;
 import com.nuvolect.deepdive.license.AppSpecific;
 import com.nuvolect.deepdive.license.LicensePersist;
 import com.nuvolect.deepdive.main.UserManager;
-import com.nuvolect.deepdive.ddUtil.ActionBarUtil;
-import com.nuvolect.deepdive.ddUtil.CConst;
-import com.nuvolect.deepdive.ddUtil.DeviceInfo;
-import com.nuvolect.deepdive.ddUtil.LogUtil;
-import com.nuvolect.deepdive.ddUtil.PermissionManager;
+import com.nuvolect.deepdive.util.ActionBarUtil;
+import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.util.DeviceInfo;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.PermissionManager;
 import com.nuvolect.deepdive.webserver.Comm;
 import com.nuvolect.deepdive.webserver.WebUtil;
 
