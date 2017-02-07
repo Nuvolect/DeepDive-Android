@@ -5,6 +5,7 @@ package com.nuvolect.deepdive.webserver;
 
 import android.content.Context;
 
+import com.nuvolect.deepdive.util.KeystoreUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.survey.DeviceSurvey;
 import com.nuvolect.deepdive.survey.SurveyExec;
@@ -22,6 +23,7 @@ public class DeviceRest {
         NIL,
         app_detail,
         info,
+        keystore,
         logcat,
         shell,
     }
@@ -55,6 +57,11 @@ public class DeviceRest {
                 case info:{
                     JSONObject device = DeviceSurvey.getInfo(ctx);
                     wrapper.put("device", device.toString());
+                    break;
+                }
+                case keystore:{
+                    JSONObject result = KeystoreUtil.dispatch(ctx, params);
+                    wrapper.put("result", result);
                     break;
                 }
                 case logcat: {
