@@ -2,13 +2,13 @@ package com.nuvolect.deepdive.webserver;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.ddUtil.CConst;
-import com.nuvolect.deepdive.ddUtil.CrypUtil;
-import com.nuvolect.deepdive.ddUtil.LogUtil;
-import com.nuvolect.deepdive.ddUtil.Omni;
-import com.nuvolect.deepdive.ddUtil.OmniFile;
-import com.nuvolect.deepdive.ddUtil.OmniUtil;
-import com.nuvolect.deepdive.ddUtil.Passphrase;
+import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.util.CrypUtil;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.Omni;
+import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.util.OmniUtil;
+import com.nuvolect.deepdive.util.Passphrase;
 import com.nuvolect.deepdive.main.UserManager;
 import com.nuvolect.deepdive.webserver.connector.CmdZipdl;
 import com.nuvolect.deepdive.webserver.connector.ServeCmd;
@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import static com.nuvolect.deepdive.ddUtil.LogUtil.log;
+import static com.nuvolect.deepdive.util.LogUtil.log;
 
 /**<pre>
  * Server for running webserver on a service or background thread.

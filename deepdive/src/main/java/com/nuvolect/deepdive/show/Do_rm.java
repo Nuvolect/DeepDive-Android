@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.nuvolect.deepdive.ddUtil.DialogUtil;
-import com.nuvolect.deepdive.ddUtil.LogUtil;
-import com.nuvolect.deepdive.ddUtil.OmniFile;
+import com.nuvolect.deepdive.util.DialogUtil;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.OmniFile;
 
 import java.util.ArrayList;
 import java.util.Locale;

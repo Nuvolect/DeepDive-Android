@@ -1,4 +1,4 @@
-package com.nuvolect.deepdive.ddUtil;
+package com.nuvolect.deepdive.util;
 
 import org.apache.commons.io.filefilter.*;
 

@@ -1,8 +1,8 @@
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.ddUtil.LogUtil;
-import com.nuvolect.deepdive.ddUtil.OmniFile;
-import com.nuvolect.deepdive.ddUtil.OmniUtil;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.util.OmniUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;

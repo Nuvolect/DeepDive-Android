@@ -11,10 +11,10 @@ import android.webkit.WebView;
 import android.widget.EditText;
 
 import com.nuvolect.deepdive.R;
-import com.nuvolect.deepdive.ddUtil.CConst;
-import com.nuvolect.deepdive.ddUtil.Cryp;
-import com.nuvolect.deepdive.ddUtil.LogUtil;
-import com.nuvolect.deepdive.ddUtil.Safe;
+import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.util.Cryp;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.Safe;
 import com.nuvolect.deepdive.webserver.Comm;
 import com.nuvolect.deepdive.webserver.WebUtil;
 

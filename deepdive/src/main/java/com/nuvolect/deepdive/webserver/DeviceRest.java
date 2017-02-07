@@ -5,7 +5,7 @@ package com.nuvolect.deepdive.webserver;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.survey.DeviceSurvey;
 import com.nuvolect.deepdive.survey.SurveyExec;
 

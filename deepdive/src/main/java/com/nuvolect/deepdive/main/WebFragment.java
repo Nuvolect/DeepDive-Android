@@ -12,11 +12,11 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.nuvolect.deepdive.ddUtil.ActionBarUtil;
-import com.nuvolect.deepdive.ddUtil.CConst;
-import com.nuvolect.deepdive.ddUtil.LogUtil;
-import com.nuvolect.deepdive.ddUtil.MyWebViewClient;
-import com.nuvolect.deepdive.ddUtil.MyWebViewFragment;
+import com.nuvolect.deepdive.util.ActionBarUtil;
+import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.MyWebViewClient;
+import com.nuvolect.deepdive.util.MyWebViewFragment;
 import com.nuvolect.deepdive.webserver.NanoHTTPD;
 
 import java.util.HashMap;

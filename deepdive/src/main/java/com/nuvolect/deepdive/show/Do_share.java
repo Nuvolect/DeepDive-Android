@@ -6,8 +6,8 @@ import android.net.Uri;
 import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
-import com.nuvolect.deepdive.ddUtil.OmniFile;
-import com.nuvolect.deepdive.ddUtil.OmniFiles;
+import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.util.OmniFiles;
 import com.nuvolect.deepdive.license.AppSpecific;
 import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.webserver.MimeUtil;

@@ -15,8 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nuvolect.deepdive.R;
-import com.nuvolect.deepdive.ddUtil.Analytics;
-import com.nuvolect.deepdive.ddUtil.ShowTips;
+import com.nuvolect.deepdive.util.Analytics;
+import com.nuvolect.deepdive.util.ShowTips;
 import com.nuvolect.deepdive.webserver.WebUtil;
 
 public class LobbyFragment extends Fragment {

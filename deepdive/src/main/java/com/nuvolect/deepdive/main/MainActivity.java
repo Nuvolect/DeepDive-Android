@@ -17,11 +17,11 @@ import android.widget.Toast;
 
 import com.commonsware.cwac.security.RuntimePermissionUtils;
 import com.nuvolect.deepdive.R;
-import com.nuvolect.deepdive.ddUtil.ActionBarUtil;
-import com.nuvolect.deepdive.ddUtil.Analytics;
-import com.nuvolect.deepdive.ddUtil.CConst;
-import com.nuvolect.deepdive.ddUtil.DialogUtil;
-import com.nuvolect.deepdive.ddUtil.LogUtil;
+import com.nuvolect.deepdive.util.ActionBarUtil;
+import com.nuvolect.deepdive.util.Analytics;
+import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.util.DialogUtil;
+import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.license.AppSpecific;
 import com.nuvolect.deepdive.license.LicenseManager;
 import com.nuvolect.deepdive.license.LicensePersist;
