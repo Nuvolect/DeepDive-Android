@@ -11,15 +11,14 @@
 ** Update ? help with working examples
 * Clear upload package name from dialog
  * Provide pop-up/user feedback folder created
+
+# Backlog
  
+* apps.html, show "No current working apps" when there are none
 * Indexing... eliminate multiple lines Indexing: /DeepDive/[package name]
-
 * Test refactoring of file links and preview
-
 * Add Probe and ProbeMgr classes, convert Decompile.java to be an instance of Probe
-
 * Background thread creation of bitmaps
-
 * Document multi-browser decompilier conflicts
 * Is there a better way to organize processess to monitor progress and kill-all
 
