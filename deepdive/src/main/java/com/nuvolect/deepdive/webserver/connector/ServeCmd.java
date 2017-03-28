@@ -1,20 +1,40 @@
-package com.nuvolect.deepdive.webserver.connector;//
+/*
+ * Copyright (c) 2017. Nuvolect LLC
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Contact legal@nuvolect.com for a less restrictive commercial license if you would like to use the
+ * software without the GPLv3 restrictions.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not,
+ * see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+package com.nuvolect.deepdive.webserver.connector;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.LogUtil;
 
 import java.io.InputStream;
 import java.util.Map;
 
-//TODO create class description
-//
+/**
+ * Dispatch to serve RESTful services.
+ * This class will be expanded to serve the full set of elFinder commands.
+ */
 public class ServeCmd {
 
     private static boolean DEBUG = LogUtil.DEBUG;
 
-    enum CMD {
+    private enum CMD {
         // elFinder commands in documentation order
         open,      // open directory and initializes data when no directory is defined (first iteration)
         file,      // output file contents to the browser (download/preview)
@@ -42,22 +62,11 @@ public class ServeCmd {
         netmount,  // mount network volume during user session. Only ftp now supported.
         ping,      // simple ping, returns the time
         zipdl,     // zip and download files
-
-        // Image-swipe commands
-        image_query,//TODO remove
-
-        // App commands
-        debug,     // debugging commands
-        login,
-        logout,
-//        deepdive,  // penetration testing
-        test,      // run a test
     }
 
     public static InputStream process(Context ctx, Map<String, String> params) {
 
         String error = "";
-        boolean sendAnalytics = true;
 
         CMD cmd = null;
         try {
@@ -71,9 +80,6 @@ public class ServeCmd {
 
             case archive:
                 inputStream = CmdArchive.go(ctx, params);
-                break;
-            case debug:
-                inputStream = CmdDebug.go(ctx, params);
                 break;
             case dim:
                 break;
@@ -89,20 +95,11 @@ public class ServeCmd {
             case get:
                 inputStream = CmdGet.go(params);
                 break;
-            case image_query:
-                inputStream = CmdImageQuery.go(params);
-                break;
             case info:
                 inputStream = CmdInfo.go(params);
                 break;
             case ls:
                 inputStream = CmdLs.go(params);
-                break;
-            case login:
-                inputStream = CmdLogin.go(ctx, params);
-                break;
-            case logout:
-                inputStream = CmdLogout.go(ctx, params);
                 break;
             case mkdir:
                 inputStream = CmdMkdir.go(params);
@@ -124,20 +121,6 @@ public class ServeCmd {
             case ping:
                 inputStream = CmdPing.go(params);
                 break;
-//            case deepdive:
-//                /**
-//                 * Skip analytics that generate excessive api calls
-//                 */
-//                String test_id = params.get("test_id");
-//                boolean skip = test_id.contains("get_stream") || test_id.contains("get_status");
-//                if( ! skip){
-//                    String extra = "";
-//                    if( params.containsKey("package_name"))
-//                        extra = params.get("package_name");
-//                    Analytics.send(ctx, Analytics.PEN_TEST, cmd.name(), extra, 1L);
-//                }
-//                inputStream = TestAndroid.go(ctx, params);
-//                break;
             case put:
                 inputStream = CmdPut.go(params);
                 break;
@@ -161,9 +144,6 @@ public class ServeCmd {
             case search:
                 inputStream = CmdSearch.go(params);
                 break;
-            case test:
-                inputStream = CmdTest.go(ctx, params);
-                break;
             case upload:
                 inputStream = CmdUpload.go(ctx, params);
                 break;
@@ -173,11 +153,8 @@ public class ServeCmd {
                 inputStream = CmdZipdl.go(ctx, params);
                 break;
             default:
-                LogUtil.log(LogUtil.LogType.SERVE, "Invalid connector command: "+error);
+                LogUtil.log(LogUtil.LogType.CONNECTOR_SERVE_CMD, "Invalid connector command: "+error);
         }
-
-        if( sendAnalytics)
-            Analytics.send(ctx, Analytics.FINDER, cmd.name(), "label", 1L);
 
         return inputStream;
     }

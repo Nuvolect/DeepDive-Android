@@ -31,8 +31,6 @@
 
 package org.jf.dexlib2.dexbacked.util;
 
-import com.google.common.collect.Iterators;
-
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
@@ -52,6 +50,7 @@ import org.jf.dexlib2.immutable.debug.ImmutableSetSourceFile;
 import org.jf.dexlib2.immutable.debug.ImmutableStartLocal;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 import javax.annotation.Nonnull;
@@ -85,13 +84,19 @@ public abstract class DebugInfo implements Iterable<DebugItem> {
         @Nonnull
         @Override
         public Iterator<DebugItem> iterator() {
-            return Iterators.emptyIterator();
+            // Not public, cannot be accessed from outside package
+            // return Iterators.emptyIterator();
+            Iterator<DebugItem> emptyIterator = Collections.emptyIterator();
+            return emptyIterator;
         }
 
         @Nonnull
         @Override
         public Iterator<String> getParameterNames(@Nullable DexReader reader) {
-            return Iterators.emptyIterator();
+            // Not public, cannot be accessed from outside package
+            // return Iterators.emptyIterator();
+            Iterator<String> emptyIterator = Collections.emptyIterator();
+            return emptyIterator;
         }
     }
 

@@ -6,7 +6,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 
 import com.nuvolect.deepdive.R;
-import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.CrypUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 

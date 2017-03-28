@@ -13,6 +13,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.nuvolect.deepdive.R;
+import com.nuvolect.deepdive.main.CConst;
 
 
 /**

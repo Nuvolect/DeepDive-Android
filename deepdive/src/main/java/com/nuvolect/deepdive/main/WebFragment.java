@@ -13,7 +13,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.nuvolect.deepdive.util.ActionBarUtil;
-import com.nuvolect.deepdive.util.CConst;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.MyWebViewClient;
 import com.nuvolect.deepdive.util.MyWebViewFragment;

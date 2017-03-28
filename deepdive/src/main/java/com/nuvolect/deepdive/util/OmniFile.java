@@ -1,5 +1,25 @@
+/*
+ * Copyright (c) 2017. Nuvolect LLC
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Contact legal@nuvolect.com for a less restrictive commercial license if you would like to use the
+ * software without the GPLv3 restrictions.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not,
+ * see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.nuvolect.deepdive.util;//
 
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.webserver.MimeUtil;
 import com.nuvolect.deepdive.webserver.connector.FileObj;
 
@@ -15,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 /**
@@ -23,7 +44,7 @@ import java.util.Locale;
  */
 public class OmniFile {
 
-    static boolean DEBUG = true; //LogUtil.DEBUG;
+    private static boolean DEBUG = LogUtil.DEBUG;
 
     /**
      * Volume ID for the specified file. The volume ID ends with the '_' underscore character.
@@ -46,6 +67,10 @@ public class OmniFile {
      * Flag set when file is created indicating file is a root directory of the volume.
      */
     private boolean m_isRoot;      // File is root of the filesystem
+    /**
+     * Hash, if the file was created from a hash, otherwise null;
+     */
+    private String m_volumeHash;
 
     /**
      * Debugging only
@@ -53,16 +78,14 @@ public class OmniFile {
     private String m_name;         // Name as reported by file system
     private String m_absolutePath; // Complete path including root
     private String m_path;         // Path relative to the volume
-    private String m_hash;         // Hash of path relative to volume
     private String m_lastModified; // Text of last time modified
 
     public void calcDebug(String myTag){
 
             m_name = this.getName();
             m_path = this.getPath();
-            m_hash = getHash();
             m_absolutePath = this.getAbsolutePath();
-            m_lastModified = TimeUtil.friendlyTimeString( this.lastModified());
+            m_lastModified = TimeUtil.friendlyTimeMDYM( this.lastModified());
 //            LogUtil.log( OmniFile.class, myTag+ " OmniFile:  "+ m_name+" last modified: "+ m_lastModified);
     }
 
@@ -76,9 +99,13 @@ public class OmniFile {
         m_volumeId = volumeId;
         m_isRoot = Omni.isRoot( volumeId, path);
         m_isCryp = m_volumeId.contentEquals(Omni.cryptoVolumeId);
+        m_volumeHash = null;
 
         if( m_isCryp ){
-//            m_cry_file = new info.guardianproject.iocipher.File( path );
+            m_cry_file = new info.guardianproject.iocipher.File( path );
+            /**
+             * It appears as though IOCipher is ignoring file/folder timestamps, a big issue.
+             */
 //            long time = System.currentTimeMillis();
 //            boolean success = m_cry_file.setLastModified( time );
 //            if( ! success)
@@ -104,8 +131,12 @@ public class OmniFile {
      */
     public OmniFile( String volumeHash){
 
+        if( volumeHash.startsWith("/"))
+            volumeHash = volumeHash.substring(1);
+
+        m_volumeHash = volumeHash;
         String segments[] = volumeHash.split("_");
-        m_volumeId = segments[0] + "_";
+        m_volumeId = segments[0];
         m_isRoot = Omni.isRoot( volumeHash);
         m_isCryp = m_volumeId.contentEquals(Omni.cryptoVolumeId);
 
@@ -115,7 +146,7 @@ public class OmniFile {
             path = (rootPath + path).replace("//","/");
 
         if( m_isCryp )
-            m_cry_file = null;//new info.guardianproject.iocipher.File( path );
+            m_cry_file = new info.guardianproject.iocipher.File( path );
         else
             m_std_file = new java.io.File( path );
 
@@ -129,7 +160,7 @@ public class OmniFile {
      */
     public String getHash(){
 
-        return m_volumeId+OmniHash.encode( getPath());
+        return m_volumeId+"_"+OmniHash.encode( getPath());
     }
 
     /**
@@ -143,12 +174,11 @@ public class OmniFile {
 
         if( m_isCryp ){
 
-//            info.guardianproject.iocipher.File parent = m_cry_file.getParentFile();
-//            if( parent == null)
-//                return null;
-//            else
-//            return new OmniFile( m_volumeId, parent.getPath());
-            return null;
+            info.guardianproject.iocipher.File parent = m_cry_file.getParentFile();
+            if( parent == null)
+                return null;
+            else
+            return new OmniFile( m_volumeId, parent.getPath());
         }
         else {
             if( m_isRoot)
@@ -182,7 +212,7 @@ public class OmniFile {
         if( m_isCryp )
             absolutePath = m_cry_file.getPath();
         else
-            absolutePath = m_std_file.getPath();
+            absolutePath = m_std_file.getPath();//FIXME confirm works for private filesystem
 
             String root = Omni.getRoot( this.m_volumeId);
             String path = ("/"+StringUtils.removeStart( absolutePath, root)).replace("//","/");
@@ -228,16 +258,15 @@ public class OmniFile {
 
         if( m_isCryp ) {
 
-//            info.guardianproject.iocipher.File files[] = m_cry_file.listFiles();
-//            if( files == null || files.length == 0)
-//                return new OmniFile[0];
-//            OmniFile[] omniFiles = new OmniFile[files.length];
-//
-//            for( int i = 0; i < files.length; i++)
-//                omniFiles[i] = new OmniFile(m_volumeId, files[i].getPath());
-//
-//            return omniFiles;
-            return null;
+            info.guardianproject.iocipher.File files[] = m_cry_file.listFiles();
+            if( files == null || files.length == 0)
+                return new OmniFile[0];
+            OmniFile[] omniFiles = new OmniFile[files.length];
+
+            for( int i = 0; i < files.length; i++)
+                omniFiles[i] = new OmniFile(m_volumeId, files[i].getPath());
+
+            return omniFiles;
         }
         else {
             java.io.File files[] = m_std_file.listFiles();
@@ -406,7 +435,7 @@ public class OmniFile {
 
     public OutputStream getOutputStream() throws FileNotFoundException {
         if( m_isCryp )
-            return null;//new info.guardianproject.iocipher.FileOutputStream(m_cry_file);
+            return new info.guardianproject.iocipher.FileOutputStream(m_cry_file);
         else
             return new java.io.FileOutputStream(m_std_file);
     }
@@ -416,7 +445,7 @@ public class OmniFile {
         try {
 
             if( m_isCryp)
-                return null;//new info.guardianproject.iocipher.FileInputStream( m_cry_file );
+                return new info.guardianproject.iocipher.FileInputStream( m_cry_file );
             else
                 return new java.io.FileInputStream( m_std_file );
 
@@ -435,7 +464,28 @@ public class OmniFile {
 
     public String getMime() {
 
-        return MimeUtil.getMime(m_std_file);
+        if( this.isDirectory())
+            return "directory";
+
+        if( m_volumeHash != null){
+
+            String hash = m_volumeHash;
+
+            String segments[] = m_volumeHash.split("_");
+            if( segments.length > 1){
+                hash = segments[1];
+            }
+
+            try {
+                String path = OmniHash.decodeWithException( hash);
+                String extension = FilenameUtils.getExtension(path).toLowerCase(Locale.US);
+                return MimeUtil.getMime( extension);
+            } catch (UnsupportedEncodingException e) {
+                return "";
+            }
+        }
+
+        return MimeUtil.getMime( this );
     }
 
     public boolean isRoot() {

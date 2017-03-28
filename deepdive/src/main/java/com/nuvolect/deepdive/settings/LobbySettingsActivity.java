@@ -17,7 +17,7 @@ import com.nuvolect.deepdive.R;
 import com.nuvolect.deepdive.license.AppSpecific;
 import com.nuvolect.deepdive.util.ActionBarUtil;
 import com.nuvolect.deepdive.util.Analytics;
-import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.PermissionManager;
 import com.nuvolect.deepdive.util.ShowTips;

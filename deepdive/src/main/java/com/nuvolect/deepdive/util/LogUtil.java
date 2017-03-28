@@ -3,17 +3,26 @@ package com.nuvolect.deepdive.util;
 import android.content.Context;
 import android.util.Log;
 
-import com.nuvolect.deepdive.R;
-import com.nuvolect.deepdive.main.App;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+/**
+ * Utility class for logging. All logcat info goes through these methods.
+ * By default the development build enables verbose logging and the release
+ * build is quiet.
+ */
 public class LogUtil {
 
-    public static boolean DEBUG = true;
-    public static boolean VERBOSE = DEBUG;
-    public static final String TAG = App.getContext().getResources().getString(R.string.app_name);
+    /**
+     * Set each time the app starts from App.class with reference
+     * to debug/values/strings.xml and main/values/strings.xml.
+     *
+     * VERBOSE and DEBUG are also toggled from the developer menu.
+     */
+    public static boolean VERBOSE = false;
+    public static boolean DEBUG = false;// Used to enable blocks of debugging code.
+
+    public static final String TAG = "DeepDive";
 
     public enum LogType { NIL,
         ANALYTICS,
@@ -78,8 +87,14 @@ public class LogUtil {
         WEB_FRAGMENT,
         WEB_SERVER,
         WEB_SERVICE,
-        ZIP_UTIL, DEEPDIVE, DECOMPILE, SEARCH, LUCENE, FERNFLOWER,
+        ZIP_UTIL, DEEPDIVE, DECOMPILE, SEARCH, LUCENE, FERNFLOWER, CONNECTOR_SERVE_CMD,
         }
+
+    public static void setVerbose(boolean verbose){
+
+        VERBOSE = verbose;
+        DEBUG = verbose;
+    }
 
     /**
      * Post a message to the developer console if VERBOSE is enabled.

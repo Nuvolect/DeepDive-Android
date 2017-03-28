@@ -11,8 +11,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.Omni;
-import com.nuvolect.deepdive.webserver.connector.ServeInit;
+import com.nuvolect.deepdive.webserver.connector.ServerInit;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
@@ -57,13 +56,9 @@ public class WebService extends Service {
         m_ctx = getApplicationContext();
 
         /**
-         * Initialize application file system support
-         */
-        Omni.init(m_ctx);
-        /**
          * Initialize web service command data
          */
-        ServeInit.init();
+        ServerInit.init( m_ctx);
 
         WebServiceThread looper = new WebServiceThread();
         looper.start();

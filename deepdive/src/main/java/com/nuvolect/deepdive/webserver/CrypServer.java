@@ -2,7 +2,7 @@ package com.nuvolect.deepdive.webserver;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.CrypUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Omni;
@@ -139,6 +139,7 @@ public class CrypServer extends NanoHTTPD{
                 || get(uniqueId, CConst.AUTHENTICATED, "0").contentEquals( "1");
 
         Method method = session.getMethod();
+
         Map<String, String> params = session.getParms();
         String uri = session.getUri();
         String fileExtension = FilenameUtils.getExtension(uri).toLowerCase(Locale.US);

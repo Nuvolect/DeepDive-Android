@@ -1,30 +1,69 @@
+/*
+ * Copyright (c) 2017. Nuvolect LLC
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Contact legal@nuvolect.com for a less restrictive commercial license if you would like to use the
+ * software without the GPLv3 restrictions.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not,
+ * see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.nuvolect.deepdive.util;//
 
 import android.content.Context;
 import android.os.Environment;
+import android.widget.Toast;
+
+import com.nuvolect.deepdive.main.App;
+import com.nuvolect.deepdive.main.CConst;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 /**
- * Omni provides a elFinder compatible thin layer between the app and native file utilities.
+ * Omni provides a layer between the app and native file utilities.
  * It allows common code to interact with volumes of different types such
  * as clear text volumes, encrypted volumes and (future) network volumes.
+ * It provides methods that can operate between clear-text and encrypted files.
  * It provides an abstraction for the root path of a file system.
  *
  * An physical file path is derived from two parts, a volumeId and a path.
  * The volumeId represents root of the path upto the root '/';
  * The path is appended to the root to make the full physical path.
  *
+ * A volume hash has two parts, the volume ID follwed by a path with
+ * '_' underscore separator.
+ *
+ * The volumeId is one or more alpha characters followed by one more more
+ * integer digits. When combined with a hashed path, the volume ID is followed
+ * by an underscore '_' character.
+ *
  * A volume can be an entire disk or a sub-tree inside a filesystem.
  * The volume root can be hidden and inaccessable from the user interface.
- * For example userVolumeId "u0_" can be positioned at:
- *     /Users/mattkraus/.deep_dive/
+ *
+ * For example on Linux or OSX userVolumeId "u0" can be positioned at:
+ *     /Users/auser/.deep_dive/
  * The path /com.company.appname combined with the volume root makes:
- *     /Users/mattkraus/.deep_dive/com.company.appname
+ *     /Users/auser/.deep_dive/com.company.appname
  * Browsing the filesystem the user only sees /com.company.appname.
+ *
+ * On Android
+ *   o localVolume is external storage and often on the sdcard
+ *   o userVolume is maintained inside the app and is private to the app.
+ *   o cryptoVolume is local to the app like the userVolume, but it is encrypted with IOCipher.
  *
  * Class organization
  * Omni.java - This is the base class for the Omni system with a few utilities to access Omni member data
@@ -41,12 +80,13 @@ public class Omni {
     private static JSONObject volName; // key: vId, value: volume name
     private static JSONObject volHash; // key: vHash, value: vId
 
-    public static String localVolumeId = "l0_"; // Local Volume 0, sdcard on Android, root on Linux
-    public static String userVolumeId = "u0_"; // User Volume 0, relative to user file
-    public static String cryptoVolumeId = "c0_"; // Encrypted Volume 0
-    private  static String[] allVolumeIds = {localVolumeId, userVolumeId, cryptoVolumeId};
-    private  static String[] allVolumeNames = {"sdcard", "private", "crypto"};
-    private  static String[] activeVolumeIds = {};
+    public static String localVolumeId = "l0"; // Local Volume 0, sdcard on Android, root on Linux
+    public static String userVolumeId = "u0"; // User Volume 0, relative to user file
+    public static String cryptoVolumeId = "c0"; // Encrypted Volume 0
+    /**
+     * Give the user three volumes, the SDCARD a private volume and an encrypted volume
+     */
+    private  static String[] activeVolumeIds = { localVolumeId, userVolumeId, cryptoVolumeId};
     public static String localRoot;
     public static String userRoot;
     public static String crypRoot;
@@ -59,6 +99,23 @@ public class Omni {
      */
     public static boolean init(Context ctx) {
 
+        if( ! App.hasPermission( WRITE_EXTERNAL_STORAGE)){
+
+            activeVolumeIds = new String[] { userVolumeId, cryptoVolumeId};
+        }
+
+        /**
+         * Create the virtual file system as necessary and keep a reference too it.
+         */
+        String FILESYSTEM_NAME = "/cryp_filesystem";
+        String password32 = "01234567890123456789012345678901";
+
+        String path = ctx.getDir("vfs", Context.MODE_PRIVATE).getAbsolutePath() + FILESYSTEM_NAME;
+        try {
+            StorageManager.mountStorage( ctx, path, password32.getBytes());
+        } catch (Exception e) {
+            Toast.makeText( ctx, "Unable to mount Crypto volume",Toast.LENGTH_LONG).show();
+        }
         /**
          * Each root starts and ends with SLASH
          */
@@ -72,54 +129,37 @@ public class Omni {
         volHash = new JSONObject();
 
         try {
-            volRoot.put( localVolumeId, localRoot);
-            volRoot.put( userVolumeId, userRoot);
+            volRoot.put( localVolumeId,  localRoot);
+            volRoot.put( userVolumeId,   userRoot);
             volRoot.put( cryptoVolumeId, crypRoot);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            volName.put( localVolumeId,  "sdcard");
+            volName.put( userVolumeId,   "private");
+            volName.put( cryptoVolumeId, "crypto");
 
-        try {
-            for( int i = 0; i < allVolumeIds.length; i++){
+            volHash.put( localVolumeId  + "_" + OmniHash.encode( CConst.ROOT), localVolumeId);
+            volHash.put( userVolumeId   + "_" + OmniHash.encode( CConst.ROOT), userVolumeId);
+            volHash.put( cryptoVolumeId + "_" + OmniHash.encode( CConst.ROOT), cryptoVolumeId);
 
-                String id = allVolumeIds[i];
-                // Save a logical name for each volume
-                volName.put( id, allVolumeNames[i]);
-
-                // Save the hash of each volume
-                volHash.put( id + OmniHash.encode( CConst.ROOT ),  id);
-            }
-
-            /**
-             * Give the user two volumes, the SDCARD and a private volume
-             */
-            activeVolumeIds = new String[]{ localVolumeId, userVolumeId};
-            /**
-             * Create thumbnail folder for each volume if necessary.
-             */
-            for ( String volumeId : activeVolumeIds) {
-
-                /*
-                 * mkdirs() method creates the directory mentioned by this abstract
-                 * pathname including any necessary but nonexistent parent directories.
-                 *
-                 * Accordingly it will return TRUE or FALSE if directory created
-                 * successfully or not. If this operation fails it may have
-                 * succeeded in creating some of the necessary parent directories.
-                 */
-                OmniFile f = new OmniFile( volumeId, THUMBNAIL_FOLDER_PATH);
-
-                boolean folderCreated = f.mkdirs();
-                if( folderCreated)
-                    LogUtil.log( Omni.class, "Thumbnail folder created: "+volumeId + f.getPath());
-                else
-                    LogUtil.log( Omni.class, "Thumbnail folder exists: " +volumeId+ f.getPath());
-            }
         } catch (JSONException e) {
             e.printStackTrace();
             success = false;
-            LogUtil.log( Omni.class, "Volume JSON exception");
+        }
+
+        for( String volumeId : activeVolumeIds){
+
+            OmniFile f = new OmniFile( volumeId, THUMBNAIL_FOLDER_PATH);
+
+            boolean folderCreated = f.mkdirs();
+            if( folderCreated)
+                LogUtil.log( Omni.class, "Thumbnail folder created: "+volumeId + f.getPath());
+            else
+                LogUtil.log( Omni.class, "Thumbnail folder exists: " +volumeId+ f.getPath());
+
+            if( ! f.exists()){
+                success = false;
+                break;
+            }
         }
 
         return success;
@@ -140,6 +180,9 @@ public class Omni {
      * @return
      */
     public static boolean isActiveVolume( String volumeId){
+
+        if( volumeId == null || volumeId.isEmpty())
+            return false;
 
         for( String vol : activeVolumeIds) {
 
@@ -172,8 +215,8 @@ public class Omni {
      * <pre>
      * Get the root path of a volume terminated with '/'.
      * Examples:
-     * l0_ /storage/emulated/0/
-     * c0_ /
+     * l0 /storage/emulated/0/
+     * c0 /
      * @param volumeId
      * @return
      * </pre>
@@ -199,7 +242,7 @@ public class Omni {
         if( segments.length == 0)
             return "";
 
-        String volumeId = segments[0] + "_";
+        String volumeId = segments[0];
 
         /**
          * Identify the volumeId by testing if it is a key in the map.
@@ -227,7 +270,7 @@ public class Omni {
     }
 
     /**
-     * Determine if a file is a root directory.
+     * Determine if a volume hash is a root directory.
      * Examples for root: l0_Lw, m0_lw
      *
      * @param volumeHash : volumeId followed by the encoded short path
@@ -254,7 +297,7 @@ public class Omni {
      * Return volumeId of a of a mixed hash/path uri.
      * Example:
      * http://10.0.1.25:8218/l0_L3N0b3JhZ2UvZW11bGF0ZWQvMC9Eb3dubG9hZA/Download/frozen%20rose.jpg
-     * returns: l0_
+     * returns: l0
      * @param uri
      * @return
      */
@@ -313,5 +356,7 @@ public class Omni {
         return path;
     }
 
-
+    public static String getDefaultVolumeId() { //TODO confirm correct volumeId is returned.
+        return localVolumeId;
+    }
 }

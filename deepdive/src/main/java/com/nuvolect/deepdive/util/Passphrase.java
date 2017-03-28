@@ -3,6 +3,7 @@ package com.nuvolect.deepdive.util;
 import android.content.Context;
 
 import com.nuvolect.deepdive.license.LicenseUtil;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.survey.DeviceSurvey;
 
 public class Passphrase {

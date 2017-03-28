@@ -2,7 +2,7 @@ package com.nuvolect.deepdive.probe;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.util.OmniFile;

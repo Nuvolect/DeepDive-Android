@@ -32,7 +32,6 @@
 package org.jf.dexlib2.dexbacked;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
 
 import org.jf.dexlib2.base.reference.BaseMethodReference;
 import org.jf.dexlib2.dexbacked.raw.MethodIdItem;
@@ -46,6 +45,7 @@ import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.util.AbstractForwardSequentialList;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -181,7 +181,10 @@ public class DexBackedMethod extends BaseMethodReference implements Method {
         if (methodImpl != null) {
             return methodImpl.getParameterNames(null);
         }
-        return Iterators.emptyIterator();
+        // Not public, cannot be accessed from outside package
+//        return Iterators.emptyIterator();
+        Iterator<String> emptyIterator = Collections.emptyIterator();
+        return emptyIterator;
     }
 
     @Nonnull

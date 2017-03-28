@@ -3,7 +3,6 @@ package com.nuvolect.deepdive.main;
 //TODO create class description
 //
 
-import com.nuvolect.deepdive.util.CConst;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.util.OmniFile;

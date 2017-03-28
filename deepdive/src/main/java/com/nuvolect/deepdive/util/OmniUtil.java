@@ -1,8 +1,26 @@
+/*
+ * Copyright (c) 2017. Nuvolect LLC
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Contact legal@nuvolect.com for a less restrictive commercial license if you would like to use the
+ * software without the GPLv3 restrictions.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not,
+ * see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.nuvolect.deepdive.util;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.webserver.MimeUtil;
 
 import org.apache.commons.io.FilenameUtils;
@@ -29,8 +47,7 @@ public class OmniUtil {
         try {
 
             if( request.isCryp())
-                return null;//new info.guardianproject.iocipher.FileInputStream(
-//                        request.getCryFile());
+                return new info.guardianproject.iocipher.FileInputStream( request.getCryFile());
             else
                 return new java.io.FileInputStream( request.getStdFile());
 
@@ -63,8 +80,11 @@ public class OmniUtil {
      */
     public static OmniFile getFileFromHash(String hash) {
 
+        if( hash.startsWith("/"))
+            hash = hash.substring(1);
+
         String segments[] = hash.split("_");
-        String volumeId = segments[0] + "_";
+        String volumeId = segments[0];
 
         String path = OmniHash.decode(segments[1]);
         OmniFile targetFile = new OmniFile( volumeId, path );
@@ -297,7 +317,7 @@ public class OmniUtil {
                 out.close();
         }
         catch (IOException e) {
-            LogUtil.log( FileUtil.class, "File write failed: " + e.toString());
+            LogUtil.log( OmniUtil.class, "File write failed: " + e.toString());
             success = false;
         }
         return success;
@@ -317,7 +337,7 @@ public class OmniUtil {
 
         String file_content = "";
         if( volumeId.isEmpty())
-            volumeId = App.getUser().getDefaultVolumeId();
+            volumeId = Omni.getDefaultVolumeId();
 
         OmniFile omniFile = new OmniFile( volumeId, path );
 

@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.nuvolect.deepdive.license.AppSpecific;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.LogUtil.LogType;
 
 import java.io.BufferedOutputStream;

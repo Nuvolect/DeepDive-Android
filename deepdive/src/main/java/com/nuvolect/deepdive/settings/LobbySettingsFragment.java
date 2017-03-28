@@ -27,7 +27,7 @@ import com.nuvolect.deepdive.license.AppSpecific;
 import com.nuvolect.deepdive.license.LicensePersist;
 import com.nuvolect.deepdive.main.UserManager;
 import com.nuvolect.deepdive.util.ActionBarUtil;
-import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.DeviceInfo;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.PermissionManager;
