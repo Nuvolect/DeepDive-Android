@@ -1,5 +1,26 @@
+/*
+ * Copyright (c) 2017. Nuvolect LLC
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Contact legal@nuvolect.com for a less restrictive commercial license if you would like to use the
+ * software without the GPLv3 restrictions.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not,
+ * see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.nuvolect.deepdive.util;//
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,12 +39,32 @@ public class OmniFiles {
 
         boolean success = true;
         try {
-
             copyFile(fromFile.getFileInputStream(), toFile.getOutputStream());
             toFile.setLastModified( fromFile.lastModified());
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.logException(OmniFiles.class, e);
+            success = false;
+        }
+        return success;
+    }
+
+    /**
+     * Mixed File to Omni file copy. This is used for files that cannot be accessed by Omni
+     * such as app/cache/NanoHttp file uploads.
+     * @param fromFile
+     * @param toFile
+     * @return
+     */
+    public static boolean copyFile(File fromFile, OmniFile toFile) {
+        boolean success = true;
+        try {
+            FileInputStream fis = new FileInputStream( fromFile);
+            copyFile( fis, toFile.getOutputStream());
+            toFile.setLastModified( fromFile.lastModified());
+
+        } catch (IOException e) {
+            LogUtil.logException(OmniFiles.class, e);
             success = false;
         }
         return success;
@@ -43,7 +84,7 @@ public class OmniFiles {
             copyFolder(srcDir, destDir);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.logException(OmniFiles.class, e);
             success = false;
         }
         return success;

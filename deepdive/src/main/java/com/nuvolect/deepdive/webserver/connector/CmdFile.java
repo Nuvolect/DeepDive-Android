@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2017. Nuvolect LLC
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Contact legal@nuvolect.com for a less restrictive commercial license if you would like to use the
+ * software without the GPLv3 restrictions.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not,
+ * see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.nuvolect.deepdive.webserver.connector;//
 
 import com.nuvolect.deepdive.util.LogUtil;
@@ -33,13 +52,6 @@ public class CmdFile {
             OmniFile targetFile = OmniUtil.getFileFromHash(target);
             LogUtil.log(LogUtil.LogType.CMD_FILE, "Target " + targetFile.getPath());
 
-            /**
-             * download parameter referenced in CrypServer
-             */
-//        boolean download = false;
-//        if( params.containsKey("download"))
-//            download = params.get("download").contentEquals("1");
-
             InputStream is = null;
             try {
 
@@ -60,7 +72,7 @@ public class CmdFile {
             String path  = params.get("path");
             InputStream is = null;
             try {
-                File file = new java.io.File( path );
+                File file = new File( path );
                 is = new java.io.FileInputStream( file );
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

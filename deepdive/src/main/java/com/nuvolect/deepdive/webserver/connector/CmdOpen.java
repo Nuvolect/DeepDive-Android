@@ -1,10 +1,30 @@
+/*
+ * Copyright (c) 2017. Nuvolect LLC
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Contact legal@nuvolect.com for a less restrictive commercial license if you would like to use the
+ * software without the GPLv3 restrictions.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not,
+ * see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.nuvolect.deepdive.webserver.connector;//
 
-import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.main.App;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.main.App;
+import com.nuvolect.deepdive.webserver.WebUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -129,7 +149,12 @@ public class CmdOpen {
         if( params.containsKey("tree"))
             tree = params.get("tree").contentEquals("1");
 
-        String httpIpPort = params.get("url");
+        String httpIpPort;
+        if( params.containsKey("url")){
+            httpIpPort = params.get("url");
+        }else{
+            httpIpPort = WebUtil.getServerUrl(App.getContext());
+        }
 
         String volumeId = "";
         JSONObject wrapper = new JSONObject();
@@ -161,7 +186,7 @@ public class CmdOpen {
              * The path starts with the volume appended with an encoded path.
              */
             if( target.isEmpty()){
-                volumeId = App.getUser().getDefaultVolumeId();
+                volumeId = Omni.getDefaultVolumeId();
                 targetFile = new OmniFile(volumeId, CConst.ROOT);
                 if( DEBUG)
                     LogUtil.log(LogUtil.LogType.CMD_OPEN,"Target empty: "+targetFile.getPath());
@@ -175,6 +200,10 @@ public class CmdOpen {
                 if( DEBUG)
                     LogUtil.log(LogUtil.LogType.CMD_OPEN,"Target: "+targetFile.getPath());
             }
+            /**
+             * Make sure the thumbnail directory exists
+             */
+            new OmniFile( volumeId, Omni.THUMBNAIL_FOLDER_PATH).mkdirs();
             /**
              * Add files that are in the target directory
              *

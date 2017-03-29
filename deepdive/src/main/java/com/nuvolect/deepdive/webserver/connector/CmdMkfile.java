@@ -1,7 +1,25 @@
+/*
+ * Copyright (c) 2017. Nuvolect LLC
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Contact legal@nuvolect.com for a less restrictive commercial license if you would like to use the
+ * software without the GPLv3 restrictions.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not,
+ * see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.nuvolect.deepdive.webserver.connector;//
 
 import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniUtil;
 
@@ -14,33 +32,43 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-//TODO create class description
-//
+/**
+ * Create a new blank file.
+ *
+ * Arguments:
+ *
+ * cmd : mkfile
+ * target : hash of target directory,
+ * name : New file name
+ * Response:
+ *
+ * added : (Array) Array with a single object - a new file. Information about File/Directory
+ */
 public class CmdMkfile {
 
     public static InputStream go(Map<String, String> params) {
 
-        String target = "";// Target is a hashed volume and path
+        String targetDirHash = "";// Target is a hashed volume and directory path
         if( params.containsKey("target"))
-            target = params.get("target");
+            targetDirHash = params.get("target");
 
-        String httpIpPort = params.get("url");
+        String serverUrl = params.get("url");
 
         /**
-         * TargetFile is the directory that will own the new file.
+         * TargetFile is the new file.
          */
-        OmniFile targetFile = OmniUtil.getFileFromHash(target);
-        LogUtil.log(LogUtil.LogType.CMD_MKFILE, "Target " + targetFile.getPath());
+        OmniFile targetDir = OmniUtil.getFileFromHash(targetDirHash);
+        String volumeId = targetDir.getVolumeId();
+        LogUtil.log(LogUtil.LogType.CMD_MKFILE, "Target dir" + targetDir.getPath());
 
         String name = "";
         if( params.containsKey("name"))
             name = params.get("name");
 
-        String volumeId = Omni.getVolumeId(target);
-        String path = targetFile.getPath();
+        String path = targetDir.getPath();
 
-        OmniFile file = new OmniFile(volumeId, path+"/"+name);
-        boolean success = file.createNewFile();
+        OmniFile targetFile = new OmniFile(volumeId, path+"/"+name);
+        boolean success = targetFile.createNewFile();
 
         JSONArray added = new JSONArray();
         JSONObject wrapper = new JSONObject();
@@ -48,7 +76,7 @@ public class CmdMkfile {
         try {
 
             if( success ){
-                JSONObject newDir = FileObj.makeObj( volumeId, file, httpIpPort);
+                JSONObject newDir = FileObj.makeObj( volumeId, targetFile, serverUrl);
                 added.put( newDir);
             }
             wrapper.put("added", added);

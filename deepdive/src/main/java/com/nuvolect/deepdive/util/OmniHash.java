@@ -1,9 +1,29 @@
+/*
+ * Copyright (c) 2017. Nuvolect LLC
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Contact legal@nuvolect.com for a less restrictive commercial license if you would like to use the
+ * software without the GPLv3 restrictions.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not,
+ * see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.nuvolect.deepdive.util;//
 
 
 import android.content.Context;
 import android.util.Base64;
 
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.webserver.WebUtil;
 
 import java.io.UnsupportedEncodingException;
@@ -76,6 +96,47 @@ public class OmniHash {
 
         return decoded;
     }
+    /**
+     * Decode volume file/directory hash
+     * @param volumeHash
+     * @return
+     */
+    public static String decodeVolumeHash(String volumeHash){
+
+        String hash = "";
+        String segments[] = volumeHash.split("_");
+        if( segments.length > 1){
+            hash = segments[1];
+        }
+
+        hash = hash.replace('-','+'); // Reverse encoding substitutions
+        hash = hash.replace('.','/');
+
+        String decoded = null;
+        try {
+            decoded = new String( Base64.decode(hash, Base64.DEFAULT), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return decoded;
+    }
+
+    /**
+     * Decode file/directory hash with exception
+     * @param hash
+     * @return
+     */
+    public static String decodeWithException(String hash) throws UnsupportedEncodingException {
+
+        hash = hash.replace('-','+'); // Reverse encoding substitutions
+        hash = hash.replace('.','/');
+
+        String decoded = null;
+            decoded = new String( Base64.decode(hash, Base64.DEFAULT), "UTF-8");
+
+        return decoded;
+    }
 
     /**
      * Return the volume hash by passing the the volume and a path.
@@ -102,10 +163,48 @@ public class OmniHash {
                 volumeId,
                 path);
         String url = WebUtil.getServerUrl(ctx)
-                +CConst.ELFINDER_PAGE
+                + CConst.ELFINDER_PAGE
                 +"#"
                 +CConst.ELF_
                 +hashedUrl;
         return url;
     }
+
+    /**
+     * Inexpensive test to determine if a URI is an OMNI hash.
+     * Expecting in this order
+     * 1. optional /
+     * 2. volume ID
+     * 3. '_' underscore
+     * 4. base64 hash, length greather than 0
+     *
+     * Method does not test to see if the file reference actually exists.
+     * @param uri
+     * @return
+     */
+    public static boolean isHash(String uri) {
+
+        String hash = uri;
+        if( hash == null || hash.isEmpty())
+            return false;
+
+        if( hash.startsWith("/"))
+            hash = hash.substring(1);
+
+        String segments[] = hash.split("_");
+        if( segments.length > 1 && Omni.isActiveVolume( segments[0])
+                && segments[1].length() > 0)
+            return true;
+        else
+            return false;
+    }
 }
+
+
+
+
+
+
+
+
+

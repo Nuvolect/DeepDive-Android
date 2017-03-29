@@ -3,7 +3,7 @@ package com.nuvolect.deepdive.webserver.connector;//
 import android.content.Context;
 
 import com.nuvolect.deepdive.main.UserManager;
-import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.webserver.CrypServer;
 

@@ -3,6 +3,8 @@ package com.nuvolect.deepdive.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.nuvolect.deepdive.main.CConst;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

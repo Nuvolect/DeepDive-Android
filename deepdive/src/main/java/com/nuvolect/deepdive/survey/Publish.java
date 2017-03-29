@@ -7,7 +7,7 @@ import android.os.Build;
 
 import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.AnalyticsThrottle;
-import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.JsonUtil;
 
 import org.json.JSONException;

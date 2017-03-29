@@ -1,5 +1,10 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">DeepDive</string>
     <string name="default_port">8020</string>
+    <string name="default_ip_port">0.0.0.0:8020</string>
     <string name="APP_PUBLIC_FOLDER_RELATIVE_PATH">/DeepDive</string>
+
+    <string name="app_signature">com.nuvolect.deepdive-debug</string>
+    <string name="app_authorities">com.nuvolect.deepdive.debug</string>
+    <string name="verbose_logging">false</string>
 </resources>

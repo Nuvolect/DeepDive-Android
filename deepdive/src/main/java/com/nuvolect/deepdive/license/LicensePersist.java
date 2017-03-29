@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.nuvolect.deepdive.util.SymmetricCrypto;
-import com.nuvolect.deepdive.util.CConst;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.CrypUtil;
 import com.nuvolect.deepdive.util.JsonUtil;
 import com.nuvolect.deepdive.util.TimeUtil;

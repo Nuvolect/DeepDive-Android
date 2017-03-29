@@ -3,29 +3,29 @@ package com.nuvolect.deepdive.main;//
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.commonsware.cwac.security.RuntimePermissionUtils;
 import com.nuvolect.deepdive.R;
-import com.nuvolect.deepdive.util.ActionBarUtil;
-import com.nuvolect.deepdive.util.Analytics;
-import com.nuvolect.deepdive.util.CConst;
-import com.nuvolect.deepdive.util.DialogUtil;
-import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.license.AppSpecific;
 import com.nuvolect.deepdive.license.LicenseManager;
 import com.nuvolect.deepdive.license.LicensePersist;
 import com.nuvolect.deepdive.settings.LobbySettingsActivity;
+import com.nuvolect.deepdive.util.ActionBarUtil;
+import com.nuvolect.deepdive.util.Analytics;
+import com.nuvolect.deepdive.util.DialogUtil;
+import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.webserver.WebService;
 import com.nuvolect.deepdive.webserver.WebUtil;
 
@@ -44,7 +44,6 @@ public class MainActivity extends FragmentActivity {
     Activity m_act;
     Context m_ctx;
     private Bundle m_savedInstanceState;
-    private RuntimePermissionUtils utils;
     private final static boolean DEBUG = LogUtil.DEBUG;
 
     APP_STATE appState = APP_STATE.LOBBY;
@@ -68,8 +67,6 @@ public class MainActivity extends FragmentActivity {
         ActionBarUtil.homeAsUpEnabled(m_act, true);
 
         setContentView(R.layout.simple_frame_layout);
-
-        utils=new RuntimePermissionUtils(this);
 
         Intent serverIntent = new Intent(m_ctx, WebService.class);
         m_ctx.startService(serverIntent);
@@ -155,7 +152,7 @@ public class MainActivity extends FragmentActivity {
 
     private void startGui() {
 
-        if (!haveNecessaryPermissions() && utils.useRuntimePermissions()) {
+        if (!haveNecessaryPermissions()) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(PERMS_ALL, 0);
@@ -199,9 +196,14 @@ public class MainActivity extends FragmentActivity {
     }
 
     private boolean haveNecessaryPermissions() {
-        return(utils.hasPermission(GET_ACCOUNTS) &&
-                utils.hasPermission(WRITE_EXTERNAL_STORAGE));
+        return(hasPermission(GET_ACCOUNTS) &&
+               hasPermission(WRITE_EXTERNAL_STORAGE));
     }
+
+    private boolean hasPermission(String perm) {
+        return(ContextCompat.checkSelfPermission(this, perm)== PackageManager.PERMISSION_GRANTED);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
