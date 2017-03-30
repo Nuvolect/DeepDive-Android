@@ -5,8 +5,8 @@
 
 * Header design, developer menu
 
-* Include common header.html 
-* Include common footer.html
+* Include common header.htm 
+* Include common footer.htm
 
 ** Update ? help with working examples
 * Clear upload package name from dialog
@@ -14,7 +14,7 @@
 
 # Backlog
  
-* apps.html, show "No current working apps" when there are none
+* apps.htm, show "No current working apps" when there are none
 * Indexing... eliminate multiple lines Indexing: /DeepDive/[package name]
 * Test refactoring of file links and preview
 * Add Probe and ProbeMgr classes, convert Decompile.java to be an instance of Probe

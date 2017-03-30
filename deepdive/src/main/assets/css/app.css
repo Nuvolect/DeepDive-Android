@@ -1,6 +1,7 @@
 @charset "utf-8";
 /* CSS Document */
 
+
 body {
   margin: 0;
   height: 100%;
@@ -8,6 +9,31 @@ body {
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
+}
+
+.navbar-default {
+  background: none;
+  font-size: 1.3em !important;
+  line-height:64px;
+  color: grey;
+}
+.navbar-nav li > a {
+  padding:0 15px;
+  line-height:64px;
+}
+.navbar-header a {
+  padding:0 15px;
+  line-height:64px;
+}
+.btn-secondary-transparent {
+  background-color: transparent;
+  font-size: 1.0em !important;
+  color: grey;
+}
+.dropdown-menu > li > a {
+  font-size: 1.3em !important;
+  color: grey;
+  line-height:32px;
 }
 
 table.card {

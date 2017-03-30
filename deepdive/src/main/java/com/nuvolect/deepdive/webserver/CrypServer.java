@@ -159,14 +159,14 @@ public class CrypServer extends NanoHTTPD{
                      * Minimal files for login page { /, /login.htm, .js, .css, .png, .ico,
                      * /connector cmd == login, cmd == logout}
                      */
-                    if( uri.contentEquals("/") || uri.contentEquals("/login.html")) {
+                    if( uri.contentEquals("/") || uri.contentEquals("/login.htm")) {
 
-                        is = m_ctx.getAssets().open("login.html");
+                        is = m_ctx.getAssets().open("login.htm");
                         return new Response(HTTP_OK, MimeUtil.MIME_HTML, is, -1);
 
-                    } else if( uri.contentEquals("/logout.html")) {
+                    } else if( uri.contentEquals("/logout.htm")) {
 
-                        is = m_ctx.getAssets().open( "logout.html");
+                        is = m_ctx.getAssets().open( "logout.htm");
                         return new Response(HTTP_OK, MimeUtil.MIME_HTML, is, -1);
 
                     } else if (fileExtension.contentEquals("js")) {
@@ -246,7 +246,7 @@ public class CrypServer extends NanoHTTPD{
                  */
                 if( uri.contentEquals("/")){
 
-                    is = m_ctx.getAssets().open( "lobby.html");
+                    is = m_ctx.getAssets().open( "lobby.htm");
                     return new Response(HTTP_OK, MimeUtil.MIME_HTML, is, -1);
                 }
 

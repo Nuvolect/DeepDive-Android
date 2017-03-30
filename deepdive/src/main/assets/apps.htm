@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="myController">
+<head>
+    <title>Apps</title>
+
+    <script src="/js/angular.min.js"></script>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/probe.css" rel="stylesheet">
+
+</head>
+
+<body>
+<!-- Bootstrap core JavaScript -->
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<div ng-include="'./navbar.htm'"></div>
+
+<div class="container">
+
+    <div align="center">
+        <h2>Working Apps</h2>
+    </div>
+
+    <div ng-show="show_package_list" align="center">
+
+        <p style="color: Black"><input type="text" ng-model="folder_search" placeholder="Search apps">#{{ (package_list|filter:folder_search).length }}</p>
+
+        <table class="card">
+            <tr>
+                <td></td>
+                <td></td>
+                <td align="left">
+                    <strong>Uploaded App</strong>
+                </td>
+            </tr>
+            <tr style="vertical-align:middle" ng-repeat="p in package_list | orderBy: 'name' | filter : folder_search ">
+                <td>
+                    <a href="/decompile.htm?packageName={{ p.name }}&appName={{ p.name }}">
+                        <span class="glyphicon glyphicon-cog" style="font-size:1.8em"></span>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ p.url }}"><span class="glyphicon glyphicon-folder-open" style="font-size:1.5em"></span></a>
+                </td>
+                <td>
+                    <a href="https://play.google.com/store/apps/details?id={{ p.name }}">{{ p.name }}</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <div align="center">
+        <a ng-click="exposePackageInput()" style="color: Black"><span class="glyphicon glyphicon-upload" style="font-size:1.8em; color: Black"></span> Upload APK</a>
+    </div>
+    <br>
+    <div align="center" ng-show="show_input_package">
+        <form class="form-inline" ng-submit="addFolder()">
+            <div class="form-group" style="color: Black">
+                Package name:
+                <input type="text" ng-model="package_name" name="package_name" placeholder="Enter package name">
+            </div>
+            <button type="submit" class="btn btn-default" ng-click="addFolder()">Submit</button>
+            <div style="text-align: center;">
+                <div style="display: inline-block; text-align: left; color: Black">
+                    <br>
+                    <p>1. Enter app package name, example: a.b.c</p>
+                    <p>2. Select <span class="glyphicon glyphicon-folder-open" style="font-size:1.2em"></span>, and upload app APK file</p>
+                    <p>3. Rename to package_name.apk, example: a.b.c.apk</p>
+                    <p>4. Select decompile <span class="glyphicon glyphicon-cog" style="font-size:1.2em"></span></p>
+                    <br>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div><!-- /card-container -->
+
+<br>
+<br>
+<div align="center">
+
+    <h2>Installed Apps</h2>
+
+    <p><input type="text" ng-model="app_search" placeholder="Search apps">#{{ (apps|filter:app_search).length }}</p>
+
+    <table class="card">
+        <tr>
+            <td></td>
+            <td></td>
+            <td align="left">
+                <strong>Installed App</strong>
+            </td>
+            <td>
+                <strong>Package</strong>
+            </td>
+            <td>
+                <strong>Version</strong>
+            </td>
+        </tr>
+        <tr style="vertical-align:middle" ng-repeat="a in apps | orderBy: 'name' | filter : app_search ">
+            <td>
+                <a href="/app.htm?package={{ a.package}}">
+                    <span class="glyphicon glyphicon-info-sign" style="font-size:1.8em"></span>
+                </a>
+            </td>
+            <td>
+                <a href="/decompile.htm?packageName={{ a.package }}&appName={{ a.name }}">
+                    <span class="glyphicon glyphicon-cog" style="font-size:1.8em"></span>
+                </a>
+            </td>
+            <td>{{ a.name }}</td>
+            <td><a href="https://play.google.com/store/apps/details?id={{a.package}}">{{ a.package }}</a></td>
+            <td>{{ a.version_name }}</td>
+        </tr>
+    </table>
+</div>
+<br>
+<br>
+<div ng-include="'footer.htm'"></div>
+
+<script>
+
+var app = angular.module('myApp', []);
+app.controller('myController', function($scope, $http, $parse) {
+
+     $scope.year = new Date().getFullYear(); // footer copyright year
+     $scope.show_input_package = false;
+
+     $http.get("/probe/installed_apps")
+       .then(function (response) {
+
+        // List is currently a string, convert it to JSON
+        $scope.apps = $.parseJSON( response.data.apps );
+
+        $scope.exposePackageInput = function(){
+
+            $scope.show_input_package = true;
+        };
+        $scope.addFolder = function(){
+
+            $http.get("/probe/create_package?package_name="+this.package_name)
+                .then(function (response) {
+
+                // List is currently a string, convert it to JSON, assign it to display with AngularJS
+                var response = $.parseJSON( response.data.result );
+                $scope.package_list = response.list;
+
+                $scope.show_package_list = $scope.package_list.length > 0;
+             });
+        };
+        $scope.removeFolder = function( folder ){
+
+            $http.get("/probe/delete_package?package_name="+folder)
+                .then(function (response) {
+
+                // List is currently a string, convert it to JSON, assign it to display with AngularJS
+                var response = $.parseJSON( response.data.result );
+                $scope.package_list = response.list;
+
+                $scope.show_package_list = $scope.package_list.length > 0;
+             });
+        };
+
+        $http.get("/probe/get_package_list")
+            .then(function (response) {
+
+            // List is currently a string, convert it to JSON, assign it to display with AngularJS
+            var response = $.parseJSON( response.data.result );
+            $scope.package_list = response.list;
+
+            $scope.show_package_list = $scope.package_list.length > 0;
+         });
+     });
+});
+
+</script>
+</body>
+</html>

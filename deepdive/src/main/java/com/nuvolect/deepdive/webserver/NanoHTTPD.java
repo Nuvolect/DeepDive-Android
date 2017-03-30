@@ -663,13 +663,13 @@ public abstract class NanoHTTPD {
 
                 StringTokenizer st = new StringTokenizer(inLine);
                 if (!st.hasMoreTokens()) {
-                    throw new ResponseException(Response.Status.BAD_REQUEST, "BAD REQUEST: Syntax error. Usage: GET /example/file.html");
+                    throw new ResponseException(Response.Status.BAD_REQUEST, "BAD REQUEST: Syntax error. Usage: GET /example/file.htm");
                 }
 
                 pre.put("method", st.nextToken());
 
                 if (!st.hasMoreTokens()) {
-                    throw new ResponseException(Response.Status.BAD_REQUEST, "BAD REQUEST: Missing URI. Usage: GET /example/file.html");
+                    throw new ResponseException(Response.Status.BAD_REQUEST, "BAD REQUEST: Missing URI. Usage: GET /example/file.htm");
                 }
 
                 String uri = st.nextToken();
@@ -1130,7 +1130,7 @@ public abstract class NanoHTTPD {
                         String boundary = contentType.getBoundary();
                         if (boundary == null) {
                             throw new ResponseException(Response.Status.BAD_REQUEST,
-                                    "BAD REQUEST: Content type is multipart/form-data but boundary missing. Usage: GET /example/file.html");
+                                    "BAD REQUEST: Content type is multipart/form-data but boundary missing. Usage: GET /example/file.htm");
                         }
                         decodeMultipartFormData(contentType, fbuf, this.parms, files);
                     } else {

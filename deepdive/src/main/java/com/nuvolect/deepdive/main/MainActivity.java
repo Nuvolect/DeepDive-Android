@@ -35,8 +35,8 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 /**
  * The internal user may require authentication to use the the web server.
  * Internal users use a entry passphrase/keypad or YubiKey for entry,
- * are automatically authenticated and do not use the login.html page.
- * External users go through a login.html page if the system is not wide open.
+ * are automatically authenticated and do not use the login.htm page.
+ * External users go through a login.htm page if the system is not wide open.
  */
 
 public class MainActivity extends FragmentActivity {

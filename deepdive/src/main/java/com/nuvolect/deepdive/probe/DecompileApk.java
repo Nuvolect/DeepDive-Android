@@ -163,8 +163,7 @@ public class DecompileApk {
         if (!m_appFolder.exists()) {
             m_appFolder.mkdirs();
         }
-        m_appFolderUrl = OmniHash.getHashedServerUrl(m_ctx,
-                m_volumeId, m_appFolderPath);
+        m_appFolderUrl = OmniHash.getHashedServerUrl(m_ctx, m_volumeId, m_appFolderPath);
 
         m_appApkPath = m_appFolderPath+m_packageName+".apk";
         m_apkFile           = new OmniFile( m_volumeId, m_appApkPath);

@@ -1,0 +1,66 @@
+<html ng-app="myApp" ng-controller="logoutController">
+<head>
+    <title>DeepDive</title>
+
+    <script src="/js/angular.min.js"></script>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+</head>
+
+<body>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<div class="container">
+    <br>
+    <br>
+    <div align="center">
+        <img src="/img/icon_64.png">
+        <h1>DeepDive</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            <br>
+            <br>
+            <br>
+            <h3>{{confirmation}}</h3>
+            <br>
+            <br>
+            <p class="lead">We recommend closing your browser once you're through. The information screens will remain in the browser's memory until the browser is closed.</p>
+            <br>
+            <br>
+            <br>
+            <h4>
+                <a href="/">Login again</a>
+            </h4>
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+    <div ng-include="'footer.htm'"></div>
+
+</div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('logoutController', function($scope, $http) {
+
+       $scope.year = new Date().getFullYear(); // footer copyright year
+
+        <!--response.data is the wrapper json object-->
+       $http.get("/connector/?cmd=logout")
+           .then(function (response) {
+
+                $scope.confirmation = response.data.confirmation;
+       });
+    });
+</script>
+</body>
+</html>
