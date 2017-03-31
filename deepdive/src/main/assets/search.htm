@@ -13,7 +13,7 @@
 </head>
 
 <body>
-<!-- Bootstrap core JavaScript -->
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <div ng-include="'./navbar.htm'"></div>
@@ -22,6 +22,8 @@
 
     <div align="center">
         <h1>Search</h1>
+        <a href="search_list.htm?search_path={{ search_path }}">
+            <span class="glyphicon glyphicon-th-list"></span></a>
         <input ng-model="search_path" ng-keypress="changePath($event)"
                placeholder="Path" type="text" size="50" ng-trim="false" >
         {{ indexed_docs | number }} docs
@@ -92,6 +94,8 @@ function myOnClick( fileName, filePath){
 var app = angular.module('myApp', ['ngSanitize']);
 app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
 
+debugger;
+
     $scope.year = new Date().getFullYear(); // footer copyright year
 
     var search_query = getURLParameter('search_query');
@@ -131,6 +135,7 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
     }
 
     $scope.viewFileModal = function( file_name, file_path ){
+    console.log("viewFile path: "+file_path);
 debugger;
         $http.get("/omni/get_text/?path="+file_path)
           .then(function (response) {
@@ -146,6 +151,7 @@ debugger;
 
     $scope.getContent = function( line ){
 
+debugger;
 <!--console.log( "getContent:"+line +", typeof:"+ typeof line );-->
 
         if( typeof line === 'string'){

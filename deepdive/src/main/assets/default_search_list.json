@@ -1,47 +1,47 @@
 [
   {
-    "query": "black hat",
-    "description":"Common search for password"
+    "query": "password",
+    "description":"Common security key"
   },
   {
-    "query": "botnet",
-    "description":"Common search for password"
+    "query": "passphrase",
+    "description":"Common security key"
   },
   {
-    "query": "cyber hack",
-    "description":"Common search for password"
+    "query": "keystore.bks",
+    "description":"Bouncy Castle Keystore"
   },
   {
-    "query": "data mining",
-    "description":"Common search for password"
+    "query": "keystore.bc",
+    "description":"Bouncy Castle Keystore"
   },
   {
-    "query": "ddos",
-    "description":"Common search for password"
+    "query": "CertAndKeyGen",
+    "description":"Method for storing private key"
   },
   {
-    "query": "sneakernet",
-    "description":"Common search for password"
+    "query": "KeyPairGenerator",
+    "description":"Android keystore"
   },
   {
-    "query": "nsa",
-    "description":"Common search for password"
+    "query": "CipherOutputStream",
+    "description":"Javax.crypto library"
   },
   {
     "query": "whitelist",
-    "description":"Common search for password"
+    "description":"Key for tracking users"
   },
   {
     "query": "blacklist",
-    "description":"Common search for password"
+    "description":"Key for tracking users"
   },
   {
-    "query": "white hat",
-    "description":"Common search for password"
+    "query": "AES/CBC/PKCS5Padding",
+    "description":"Encryption methodology "
   },
   {
-    "query": "password",
-    "description":"Common search for password"
+    "query": "SecretKeySpec",
+    "description":"Java crypto"
   },
   {
     "query": "http:\\",
