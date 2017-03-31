@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="myController">
+
+<head>
+    <title>{{file_name}}</title>
+
+    <script src="/js/angular.min.js"></script>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/probe.css" rel="stylesheet">
+
+</head>
+
+<body>
+<!-- Bootstrap core JavaScript -->
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<div ng-include="'./navbar.htm'"></div>
+
+<div class="container">
+
+<br>
+<br>
+<div align="center">
+  <h1>{{file_name}}</h1>
+</div>
+<br>
+
+<div>
+<pre>
+{{file_content}}
+</pre>
+</div>
+<div align="center">
+{{file_relative_path}}
+</div>
+
+</div><!-- /card-container -->
+
+<br>
+<br>
+
+<div ng-include="'footer.htm'"></div>
+
+<script>
+
+var app = angular.module('myApp', []);
+app.controller('myController', function($scope, $http, $parse) {
+
+    $scope.year = new Date().getFullYear(); // footer copyright year
+
+    function getURLParameter(name) {
+      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+    }
+
+    var file_path = getURLParameter('path');
+
+    $http.get("/omni/get_text/?path="+file_path)
+       .then(function (response) {
+
+        // Returned data is currently a string, convert it to JSON
+        var result = $.parseJSON( response.data.result );
+
+        $scope.file_name = result.file_name;
+        $scope.file_content = result.file_content;
+        $scope.file_relative_path = result.file_relative_path;
+     });
+});
+
+</script>
+</body>
+</html>

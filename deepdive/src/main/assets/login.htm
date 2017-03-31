@@ -1,0 +1,115 @@
+<html ng-app="myApp" ng-controller="myController as postCtrl" class="ng-scope">
+
+<head>
+    <title>DeepDive</title>
+
+    <script src="/js/angular.min.js"></script>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/login.css" rel="stylesheet">
+</head>
+
+<body>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+// Page does not have a navbar
+
+<div class="container">
+    <br>
+
+    <div class="row" align="center">
+
+        <img src="/img/icon_64.png" style="padding:10px;"/>
+        <br>
+        <span style="font-size:18px; color:grey;">DeepDive</span>
+    </div>
+    <div class="card card-container">
+
+        <form class="login-form ng-pristine ng-invalid-required" ng-submit="postCtrl.postForm()">
+
+            <h2>Please sign in</h2>
+
+            <label for="inputUsername" class="sr-only">Username</label>
+            <input type="text" id="inputUsername"
+                   class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched"
+                   placeholder="Username" required="" autofocus=""
+                   ng-model="postCtrl.inputData.username">
+
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword"
+                   class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required"
+                   placeholder="Password" required=""
+                   ng-model="postCtrl.inputData.password">
+            <br>
+            <div class="alert alert-danger ng-binding ng-hide" role="alert" ng-show="errorMsg">{{errorMsg}}</div>
+
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
+        </form><!-- /form -->
+        <a href="https://nuvolect.com/deepdive_help" target="_blank" class="forgot-password">
+            Need help?
+        </a>
+    </div>
+
+    <br>
+    <br>
+
+    <div ng-include="'footer.htm'"></div>
+
+</div><!-- /container -->
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<script>
+	function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+    }
+    return "";
+    }
+    </script>
+<script>
+
+	var app = angular.module('myApp', []);
+	app.controller('myController', ['$scope', '$http', function($scope, $http) {
+
+    $scope.year = new Date().getFullYear(); // footer copyright year
+
+		this.postForm = function() {
+
+			var encodedString =
+			    'cmd=login' +
+			    '&unique_id=' + getCookie("unique_id") +
+			    '&username=' + encodeURIComponent(this.inputData.username) +
+				'&password=' + encodeURIComponent(this.inputData.password);
+
+			$http({
+				method: 'POST',
+				url: '/connector?cmd=login',
+				data: encodedString,
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			})
+			.success(function(data, status, headers, config) {
+
+				if ( data.user_confirmed) {
+				    console.log("user confirmed");
+					window.location.href = '/';
+				} else {
+
+					$scope.errorMsg = "Login not correct";
+				}
+			})
+			.error(function(data, status, headers, config) {
+				$scope.errorMsg = 'Unable to submit form';
+			})
+		}
+	}]);
+
+</script>
+</body>
+</html>

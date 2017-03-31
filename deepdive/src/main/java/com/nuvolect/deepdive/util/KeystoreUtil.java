@@ -167,7 +167,7 @@ public class KeystoreUtil {
             try {
                 Calendar start = Calendar.getInstance();
                 Calendar end = Calendar.getInstance();
-                end.add(Calendar.YEAR, 1);
+                end.add(Calendar.YEAR, 100);
 
                 KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(ctx)
                         .setAlias(key_alias)

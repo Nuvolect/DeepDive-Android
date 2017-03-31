@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="myController">
+
+<head>
+    <title>Logcat</title>
+
+    <script src="/js/angular.min.js"></script>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/probe.css" rel="stylesheet">
+
+</head>
+
+<body>
+<!-- Bootstrap core JavaScript -->
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<div ng-include="'./navbar.htm'"></div>
+
+<div class="container">
+
+    <div align="center">
+        <h1>Logcat</h1>
+    </div>
+    <br>
+
+    <div align="center">
+
+        <table class="card">
+            <tr>
+                <td>
+                    <input placeholder="Search" type="text" ng-model="search"> # {{ (logcat|filter:search).length }}
+                    <button ng-click="refreshLog()"><span class="glyphicon glyphicon-refresh"></span></button>
+                    <button ng-click="clearLog()"><span class="glyphicon glyphicon-remove"></span></button>
+                    <br>
+                </td>
+            </tr>
+            <tr ng-repeat="line in logcat | filter : search track by $index">
+                <td style="padding: 2px 0;"> {{ line }} </td>
+            </tr>
+        </table>
+    </div>
+
+
+</div><!-- /card-container -->
+
+<br>
+<br>
+
+<div ng-include="'footer.htm'"></div>
+
+<script>
+
+var app = angular.module('myApp', []);
+app.controller('myController', function($scope, $http, $parse) {
+
+     $scope.logcat = [];
+
+     $http.get("/device/logcat")
+       .then(function (response) {
+
+        // Returned data is currently a string, convert it to JSON
+        var logIncrement = $.parseJSON( response.data.logcat );
+
+        $scope.logcat = logIncrement;
+     });
+
+     $scope.refreshLog = function(){
+
+         $http.get("/device/logcat")
+           .then(function (response) {
+
+            // Returned data is currently a string, convert it to JSON
+            var logIncrement = $.parseJSON( response.data.logcat );
+
+            $scope.logcat = logIncrement;
+         });
+     };
+     $scope.clearLog = function(){
+
+        $scope.logcat = [];
+     };
+});
+
+</script>
+</body>
+</html>

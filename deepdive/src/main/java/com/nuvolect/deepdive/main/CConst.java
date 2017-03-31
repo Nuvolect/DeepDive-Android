@@ -2,7 +2,7 @@ package com.nuvolect.deepdive.main;
 
 public class CConst {
 
-    public static final String APPS_PAGE                          = "/apps.html";
+    public static final String APPS_PAGE                          = "/apps.htm";
     public static final String APP_SIGNATURE                      = "com.nuvolect.deepdive";
     public static final String AUTHENTICATED                      = "authenticated";
     public static final String BLOG_URL                           = "https://nuvolect.com/blog";
@@ -11,8 +11,8 @@ public class CConst {
     public static final String DEFAULT_ACCOUNT                    = "Default_account";
     public static final String DEFAULT_IP_PORT                    = "0.0.0.0:0000";
     public static final String DEFAULT_PASSPHRASE                 = "WhenAllElseFails";
-    public static final String DEVICE_PAGE                        = "/device.html";
-    public static final String ELFINDER_PAGE                      = "/elFinder-2.1.18/elfinder.html";
+    public static final String DEVICE_PAGE                        = "/device.htm";
+    public static final String ELFINDER_PAGE                      = "/elFinder-2.1.22/finder.html";
     public static final String ELF_                               = "elf_";
     public static final String EMBEDDED_USER                      = "embedded_user";
     public static final String FIELD_CONTENT                      = "content";
@@ -21,6 +21,7 @@ public class CConst {
     public static final String FIELD_VOLUME                       = "volume_id";
     public static final String FILE_NAME                          = "file_name";
     public static final String FILE_PATH                          = "file_path";
+    public static final String NO_PASSPHRASE                      = "no-passphrase";
     public static final String OK                                 = "ok";
     public static final String PERMISSION_MANAGER                 = "permission_manager";
     public static final String PORT                               = "port";
@@ -30,8 +31,9 @@ public class CConst {
     public static final String RESPONSE_CODE                      = "response_code";
     public static final String ROOT                               = "/";
     public static final String SLASH                              = "/";
-    public static final String SEARCH_MANAGER_PAGE                = "/search_manager.html";
+    public static final String SEARCH_MANAGER_PAGE                = "/search_manager.htm";
     public static final String SEC_TOK                            = "sec_tok";
+    public static final String STRING32                           = "01234567890123456789012345678901";
     public static final String SHOW_TIPS                          = "show_tips";
     public static final String THREAD_STACK_SIZE                  = "thread_stack_size";
     public static final String TMP                                = "tmp";

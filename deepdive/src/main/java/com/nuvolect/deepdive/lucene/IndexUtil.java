@@ -196,7 +196,7 @@ public class IndexUtil {
 
     public static String getCacheDirPath(String volumeId, String searchPath) {
 
-        String hashedSearchPath = volumeId+OmniHash.encode(searchPath);
+        String hashedSearchPath = volumeId+"_"+OmniHash.encode(searchPath);
         return INDEX_FOLDER + hashedSearchPath;
     }
 
@@ -226,7 +226,7 @@ public class IndexUtil {
 
         String error = "";
         int count = 0;
-        String encodedPath = volumeId+OmniHash.encode( path);
+        String encodedPath = volumeId+"_"+OmniHash.encode( path);
         OmniFile indexFolder = new OmniFile( volumeId, INDEX_FOLDER+encodedPath);
 
         if( indexFolder.exists() && indexFolder.isDirectory()){

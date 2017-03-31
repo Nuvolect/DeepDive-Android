@@ -219,7 +219,7 @@ public class UserManager {
      * The internal user may require authentication to use the the web server.
      * Internal users already have an entry passphrase/keypad or YubiKey for entry,
      * are automatically authenticated and do not use the login page.
-     * External users go through a login.html page if the system is not wide open.
+     * External users go through a login.htm page if the system is not wide open.
      */
     public void validateWebUser(Activity act){
 

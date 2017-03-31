@@ -147,7 +147,7 @@ public class OmniHash {
     public static String getVolumeHash(String volumeId, String path) {
 
         String pathWithRoot = path.replace("//","/");
-        return volumeId + encode(pathWithRoot);
+        return volumeId +"_"+ encode(pathWithRoot);
     }
 
     /**

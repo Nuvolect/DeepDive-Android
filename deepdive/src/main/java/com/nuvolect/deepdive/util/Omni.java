@@ -105,16 +105,31 @@ public class Omni {
         }
 
         /**
-         * Create the virtual file system as necessary and keep a reference too it.
+         * Create the virtual file system and keep a reference too it.
          */
         String FILESYSTEM_NAME = "/cryp_filesystem";
-        String password32 = "01234567890123456789012345678901";
+        DbPassphrase.createDbKeystore( ctx);
+        String password32 = DbPassphrase.getDbPassphrase( ctx);//TODO consider returning byte[32]
+        boolean failure = false;
 
         String path = ctx.getDir("vfs", Context.MODE_PRIVATE).getAbsolutePath() + FILESYSTEM_NAME;
         try {
             StorageManager.mountStorage( ctx, path, password32.getBytes());
         } catch (Exception e) {
-            Toast.makeText( ctx, "Unable to mount Crypto volume",Toast.LENGTH_LONG).show();
+            failure = true;
+        }
+        /**
+         * Failure can be a beta database or failed keystore encryption.
+         */
+        if( failure ){
+
+            try {
+                password32 = CConst.STRING32;
+                StorageManager.mountStorage( ctx, path, password32.getBytes());
+            } catch (Exception e) {
+                Toast.makeText( ctx, "Unable to mount Crypto volume",Toast.LENGTH_LONG).show();
+                LogUtil.logException( Omni.class, e);
+            }
         }
         /**
          * Each root starts and ends with SLASH

@@ -1,7 +1,4 @@
 package com.nuvolect.deepdive.webserver;
-//
-//TODO create class description
-//
 
 import android.content.Context;
 
@@ -22,6 +19,9 @@ import java.util.Map;
 
 import static com.nuvolect.deepdive.lucene.Index.interrupt;
 
+/**
+ * Provide REST search support.
+ */
 public class SearchRest {
 
     private enum CMD_ID {
