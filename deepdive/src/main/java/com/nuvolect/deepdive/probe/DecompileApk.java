@@ -121,7 +121,7 @@ public class DecompileApk {
     private String FERN_THREAD = "FernFlower jar to java thread";
     private List<String> ignoredLibs = new ArrayList();
     private String OPTIMIZED_CLASSES = "optimized_classes";
-    private String OPTIMIZED_CLASSES_EXCLUSION_FILENAME = "/optimized_classes_exclusion.txt";
+    private String OPTIMIZED_CLASSES_EXCLUSION_FILENAME = "/dex_class_exclusion.txt";
     private String[] m_dexFileNames = {}; // Generated list of candidate dex file names
 
     // Time when a process is started
@@ -860,10 +860,11 @@ public class DecompileApk {
                 File jarFile = null;
                 String jarFileName = "";
 
-                for(int i = 1; i < m_dexFileNames.length; i++) {
+                for(int i = 0; i < m_dexFileNames.length; i++) {
 
                     jarFileName = m_dexFileNames[i]+".jar";
-                    jarFile = new File(m_appFolderPath + "/" + jarFileName);
+                    OmniFile jarOmniFile = new OmniFile( m_volumeId, m_appFolderPath + "/" + jarFileName);
+                    jarFile = jarOmniFile.getStdFile();
 
                     if( jarFile.exists() && jarFile.isFile()) {
 
