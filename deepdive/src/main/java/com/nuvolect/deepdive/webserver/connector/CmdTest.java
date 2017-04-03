@@ -22,8 +22,7 @@ import java.util.Map;
  */
 public class CmdTest {
 
-    private static Context m_ctx;
-    private static long testFileSize = 10 * 1024 * 1024;
+    private static final long testFileSize = 10 * 1024 * 1024;
 
     enum TEST_ID {
         write_sdcard_test_file,
@@ -41,8 +40,6 @@ public class CmdTest {
     }
 
     public static ByteArrayInputStream go(Context ctx, Map<String, String> params) {
-
-        m_ctx = ctx;
 
         try {
             JSONObject wrapper = new JSONObject();
@@ -93,10 +90,10 @@ public class CmdTest {
                         delete_crypto_test_file();
                         break;
                     case delete_sdcard_test_folder:
-                        delete_sdcard_test_folder();
+                        delete_sdcard_test_folder( ctx);
                         break;
                     case delete_crypto_test_folder:
-                        delete_crypto_test_folder();
+                        delete_crypto_test_folder( ctx);
                         break;
                     default:
                         error = "Invalid test: "+test_id;
@@ -121,16 +118,16 @@ public class CmdTest {
         return null;
     }
 
-    private static void delete_crypto_test_folder() {
+    private static void delete_crypto_test_folder( Context ctx) {
         String path = "/_pvtest";
         OmniFile file = new OmniFile(Omni.cryptoVolumeId, path);
-        CmdRm.delete(m_ctx, file);
+        CmdRm.delete( ctx, file);
     }
 
-    private static void delete_sdcard_test_folder() {
+    private static void delete_sdcard_test_folder( Context ctx) {
         String path = "/_pvtest";
         OmniFile file = new OmniFile(App.getUser().getDefaultVolumeId(), path);
-        CmdRm.delete(m_ctx, file);
+        CmdRm.delete( ctx, file);
     }
 
     private static void delete_crypto_test_file() {

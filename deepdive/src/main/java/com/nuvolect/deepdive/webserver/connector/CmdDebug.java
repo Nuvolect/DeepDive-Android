@@ -32,8 +32,6 @@ import java.util.Map;
  */
 public class CmdDebug {
 
-    private static Context m_ctx;
-
     enum TEST_ID {
         decode_hash,
         encode_hash,
@@ -41,8 +39,6 @@ public class CmdDebug {
     }
 
     public static ByteArrayInputStream go(Context ctx, Map<String, String> params) {
-
-        m_ctx = ctx;
 
         try {
             JSONObject wrapper = new JSONObject();

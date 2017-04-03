@@ -44,7 +44,6 @@ public class Search {
         /**
          * The WhitespaceAnalyzer is case sensitive.
          */
-//        m_analyzer = new org.apache.lucene.analysis.core.WhitespaceAnalyzer();
         m_analyzer = new org.apache.lucene.analysis.core.SimpleAnalyzer();
 
         OmniFile luceneDir = IndexUtil.getCacheDir( volumeId, searchPath);
@@ -121,15 +120,16 @@ public class Search {
             }
             String filePath = hitDoc.get(( CConst.FIELD_PATH));
 
-            if( hitCounts.containsKey(filePath))
+            if( hitCounts.containsKey(filePath)){
+
                 hitCounts.put( filePath, hitCounts.get( filePath) + 1);
+            }
             else{
                 hitCounts.put( filePath, 1);
                 hitIndexes.put( filePath, ii);
             }
         }
 
-//        String rootPath = Omni.getRoot(volumeId);
         /**
          * Iterate over each unique hit and save the results
          */
@@ -146,16 +146,12 @@ public class Search {
             String file_path = hitDoc.get(( CConst.FIELD_PATH));
             File parentFolder = new File( file_path).getParentFile();
             try {
-//                String folder_path = parentFolder.getCanonicalPath();
-//                String relative_path = file_path.replaceFirst( rootPath, "/");
-//                String folder_url = OmniHash.getHashedServerUrl( ctx, volumeId, folder_path);
                 String folder_url = OmniHash.getHashedServerUrl( ctx, volumeId, file_path);
 
                 JSONObject hitObj = new JSONObject();
                 hitObj.put("volume_id", volumeId);
                 hitObj.put("file_path", file_path);
                 hitObj.put("file_name", file_name);
-//                hitObj.put("relative_path", relative_path);
                 hitObj.put("folder_url", folder_url);
                 hitObj.put("num_hits", hitCounts.get(file_path));
                 hitObj.put("error", error);
