@@ -76,6 +76,8 @@ import jadx.api.JadxDecompiler;
  * running: compile process is running
  * stopped: comple process has stopped, folder exists
  * null: compile process is not running, folder does not exist
+ *
+ * FernFlower will only work with standard java File, i.e, only /sdcard or /private
  */
 public class DecompileApk {
 
@@ -198,7 +200,7 @@ public class DecompileApk {
 
         try {
 
-            wrapper.put("copy_apk_status", apkFileExists ?1:0);
+            wrapper.put("extract_apk_status", apkFileExists ?1:0);
             wrapper.put("app_folder_url", m_appFolderUrl);
             wrapper.put("app_folder_path", m_appFolderPath);
 
@@ -330,13 +332,13 @@ public class DecompileApk {
      * Return a link to the parent folder.
      * @return
      */
-    public JSONObject copyApk() {
+    public JSONObject extractApk() {
 
         JSONObject wrapper = new JSONObject();
 
         try {
-            wrapper.put("copy_apk_status", 0);// 0==Start with failed file copy
-            m_progressStream.putStream("Copy APK starting");
+            wrapper.put("extract_apk_status", 0);// 0==Start with failed file copy
+            m_progressStream.putStream("Extract APK starting");
 
             PackageManager pm = m_ctx.getPackageManager();
             ApplicationInfo applicationInfo = pm.getApplicationInfo( m_packageName, PackageManager.GET_META_DATA);
@@ -348,15 +350,15 @@ public class DecompileApk {
             int bytes_copied = Util.copyFile( inputStream, outputStream);
             String formatted_count = NumberFormat.getNumberInstance(Locale.US).format(bytes_copied);
 
-            m_progressStream.putStream("Copy APK complete, "+formatted_count+" bytes");
+            m_progressStream.putStream("Extract APK complete, "+formatted_count+" bytes");
 
-            wrapper.put("copy_apk_status", 1); // Change to success if we get here
-            wrapper.put("copy_apk_url", m_appFolderUrl);
+            wrapper.put("extract_apk_status", 1); // Change to success if we get here
+            wrapper.put("extract_apk_url", m_appFolderUrl);
 
         } catch (PackageManager.NameNotFoundException | JSONException | IOException e) {
             LogUtil.logException(LogUtil.LogType.DECOMPILE, e);
             m_progressStream.putStream(e.toString());
-            m_progressStream.putStream("Copy APK failed");
+            m_progressStream.putStream("Extract APK failed");
         }
 
         return wrapper;
@@ -447,7 +449,7 @@ public class DecompileApk {
                         }
                     }else{
 
-                        m_progressStream.putStream("APK not found. Select Copy APK.");
+                        m_progressStream.putStream("APK not found. Select Extract APK.");
                     }
 
                 } catch (Exception | StackOverflowError e) {
@@ -833,7 +835,8 @@ public class DecompileApk {
     }
 
     /**
-     * FernFlower converts JAR files to a zipped decompiled JAR file
+     * FernFlower converts JAR files to a zipped decompiled JAR file then
+     * it unzips the JAR file.
      */
     private JSONObject fern_flower() {// https://github.com/fesh0r/fernflower
 
@@ -857,20 +860,20 @@ public class DecompileApk {
 
                 File javaOutputDir = m_srcFernFolder.getStdFile();
 
-                File jarFile = null;
-                String jarFileName = "";
+                File inputJarFile = null;
+                String inputJarFileName = "";
 
                 for(int i = 0; i < m_dexFileNames.length; i++) {
 
-                    jarFileName = m_dexFileNames[i]+".jar";
-                    OmniFile jarOmniFile = new OmniFile( m_volumeId, m_appFolderPath + "/" + jarFileName);
-                    jarFile = jarOmniFile.getStdFile();
+                    inputJarFileName = m_dexFileNames[i]+".jar";
+                    OmniFile inputJarOmniFile = new OmniFile( m_volumeId, m_appFolderPath + "/" + inputJarFileName);
+                    inputJarFile = inputJarOmniFile.getStdFile();
 
-                    if( jarFile.exists() && jarFile.isFile()) {
+                    if( inputJarFile.exists() && inputJarFile.isFile()) {
 
                         boolean success = true;
                         try {
-                            m_progressStream.putStream("FernFlower starting: "+ jarFileName);
+                            m_progressStream.putStream("FernFlower starting: "+ inputJarFileName);
                             PrintStream printStream = new PrintStream(m_progressStream);
                             System.setErr(printStream);
                             System.setOut(printStream);
@@ -879,23 +882,23 @@ public class DecompileApk {
                             final Map<String, Object> mapOptions = new HashMap<>();
                             ConsoleDecompiler decompiler = new ConsoleDecompiler(
                                     m_srcFernFolder.getStdFile() , mapOptions, logger);
-                            decompiler.addSpace( jarFile, true);
+                            decompiler.addSpace(inputJarFile, true);
 
-                            m_progressStream.putStream("FernFlower decompiler.addSpace complete: "+jarFileName);
+                            m_progressStream.putStream("FernFlower decompiler.addSpace complete: "+ inputJarFileName);
                             decompiler.decompileContext();
-                            m_progressStream.putStream("FernFlower decompiler.decompileContext complete: "+jarFileName);
+                            m_progressStream.putStream("FernFlower decompiler.decompileContext complete: "+ inputJarFileName);
 
-                            String decompiledJarFileName = m_appFolderPath + ".jar_"+jarFileName;
-                            OmniFile decompiledJarFile = new OmniFile( m_volumeId,  decompiledJarFileName);
+                            String decompiledJarFilePath = m_srcFernFolderPath + "/"+ inputJarFileName;
+                            OmniFile decompiledJarFile = new OmniFile( m_volumeId, decompiledJarFilePath);
                             success = OmniZip.unzipFile( decompiledJarFile, m_srcFernFolder, null, null);
 
                             if (success)
-                                m_progressStream.putStream("FernFlower decompiler.unpack complete: "+jarFileName);
+                                m_progressStream.putStream("FernFlower decompiler.unpack complete: "+ inputJarFileName);
                             else
-                                m_progressStream.putStream("FernFlower decompiler.unpack failed: "+jarFileName);
+                                m_progressStream.putStream("FernFlower decompiler.unpack failed: "+ inputJarFileName);
                         } catch (Exception e) {
                             String str = LogUtil.logException(LogUtil.LogType.FERNFLOWER, e);
-                            m_progressStream.putStream("FernFlower exception "+jarFileName);
+                            m_progressStream.putStream("FernFlower exception "+ inputJarFileName);
                             m_progressStream.putStream(str);
                             success = false;
                         }
@@ -908,7 +911,7 @@ public class DecompileApk {
                             if( of.exists()){
 
                                 ApkZipUtil.unzip( of, m_srcFernFolder, m_progressStream);
-                                m_progressStream.putStream("FernFlower utility unzip complete with errors: "+jarFileName);
+                                m_progressStream.putStream("FernFlower utility unzip complete with errors: "+ inputJarFileName);
                             }
                             else
                                 m_progressStream.putStream("File does not exist: "+of.getAbsolutePath());

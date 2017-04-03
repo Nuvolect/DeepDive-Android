@@ -27,7 +27,7 @@ public class ProbeRest {
     private enum CMD_ID {
         NIL,
         clear_log,
-        copy_apk,
+        extract_apk,
         create_package,
         decompile_action,
         delete_package,
@@ -72,9 +72,9 @@ public class ProbeRest {
                     decompiler.clearStream();
                     break;
                 }
-                case copy_apk:{
+                case extract_apk:{
                     DecompileApk decompile = ProbeMgr.getProbe( ctx, package_name).getDecompiler();
-                    JSONObject status = decompile.copyApk();
+                    JSONObject status = decompile.extractApk();
                     wrapper.put("status", status.toString());
                     break;
                 }

@@ -46,7 +46,7 @@
             <tr>
                 <td>
                     <input ng-model="search_entry" ng-keypress="changeSearch($event)"
-                           placeholder="Expression" type="text" size="50" autofocus ng-trim="false" >
+                           placeholder="Expression" type="text" size="50" autofocus ng-trim="false">
                     # {{ (log_array|filter:number).length }}
                     <button ng-click="clearLog()"><span class="glyphicon glyphicon-remove"></span></button>
                 </td>
@@ -61,7 +61,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" role="dialog">
+<div class="modal fade" id="viewFileModal" data-backdrop="false" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -91,12 +91,27 @@ function myOnClick( fileName, filePath){
     console.log("got to myOnClick(): "+fileName+ filePath);
 }
 
+// Workaround for accessing $scope from within ng-repeat
+// $parent is not working, ng-click() is never called
+
+var myScope;
+
+function getCtrlScope() {
+
+    return myScope;
+}
+
+function saveCtrlScope( ctrlScope ) {// mkk
+
+    myScope = ctrlScope;
+}
+
 var app = angular.module('myApp', ['ngSanitize']);
 app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
 
-debugger;
-
     $scope.year = new Date().getFullYear(); // footer copyright year
+
+    saveCtrlScope( $scope );
 
     var search_query = getURLParameter('search_query');
     if( search_query )
@@ -134,9 +149,12 @@ debugger;
         Array.prototype.unshift.apply( $scope.log_array, arrayEntries);
     }
 
-    $scope.viewFileModal = function( file_name, file_path ){
+    // Inject contents of a text file into a modal
+    //
+    $scope.addModalContent = function( file_name, file_path ){
+
     console.log("viewFile path: "+file_path);
-debugger;
+<!--debugger;-->
         $http.get("/omni/get_text/?path="+file_path)
           .then(function (response) {
 
@@ -149,24 +167,26 @@ debugger;
         });
     };
 
-    $scope.getContent = function( line ){
+// Return html for a single line in the log_array with multiple options to view result
+// Options include:
+//   Modal of the file contents
+//   Link to view_text_file page
+//   Link to Finder of the file folder
+//   Path to the file
 
-debugger;
-<!--console.log( "getContent:"+line +", typeof:"+ typeof line );-->
+    $scope.getContent = function( line ){
 
         if( typeof line === 'string'){
 
             var hash = CryptoJS.MD5( line);
             var cachedLine = logCache[ hash ];
             if( cachedLine ){
-<!--console.log("string cache hit:"+cachedLine);-->
                 return cachedLine;
             }
 
             logCache[hash] = line;
             cachedLine = logCache[hash];// always return same cached object
 
-<!--console.log("string cache miss:"+cachedLine);-->
             return cachedLine;
         }
         else {
@@ -175,17 +195,11 @@ debugger;
             var cachedLine = logCache[ hash ];
             if( cachedLine ){
 
-<!--console.log("my_html cache hit:"+hash+":"+cachedLine);-->
                 return $sce.trustAsHtml(cachedLine);
             }
 
-            <!--var file_name =-->
-                <!--"<a data-toggle=\"modal\" data-target=\"#myModal\" onclick=\"myOnClick('" +line.file_name+'\',\''+line.file_path+"\')\">"-->
-                <!--+line.file_name+"</a>";-->
-
-<!--FIXME ng-click inside ng-repeat is never called and the modal is not populated-->
-            var file_name =
-                "<a data-toggle=\"modal\" data-target=\"#myModal\" ng-click=\"$parent.viewFileModal(\'"
+            var file_name_modal = // mkk
+                "<a data-toggle=\"modal\" data-target=\"#viewFileModal\" onclick=\"getCtrlScope().addModalContent(\'"
                 +line.file_name+'\',\''+line.file_path+"\')\">"
                 +line.file_name+"</a>";
 
@@ -202,9 +216,7 @@ debugger;
                         "<span class=\"glyphicon glyphicon-folder-open\"></span></a>";
 
             var hit_path = "<br><p>"+line.file_path+"</p>";
-            var my_line = file_name+", "+num_hits+hits_str+file_url+"  "+folder_url+hit_path;
-
-<!--console.log("my_html cache miss:"+hash+":"+my_line);-->
+            var my_line = file_name_modal+", "+num_hits+hits_str+file_url+"  "+folder_url+hit_path;
 
             logCache[hash] = my_line;
             cachedLine = logCache[hash];// always return same cached object
@@ -334,7 +346,7 @@ debugger;
     $scope.changeSearch = function ($event) {
 
         var keyCode = $event.which || $event.keyCode;
-        if (keyCode === 13) {
+        if (keyCode === 13) { // return or enter key
 
             search_query = $scope.search_entry.toLowerCase();
             if( !search_query || 0 == search_query.length )

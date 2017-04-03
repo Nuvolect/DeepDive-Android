@@ -36,10 +36,10 @@
             <tr>
                 <td>1</td>
                 <td>
-                    <button ng-click="copyApk()">Copy APK</button>
+                    <button ng-click="copyApk()">Extract APK</button>
                 </td>
                 <td align="center">
-                    {{ copy_apk_status | checkmark }}
+                    {{ extract_apk_status | checkmark }}
                 </td>
                 <td align="center">
                     <a href={{app_folder_url}} target="_blank">
@@ -263,7 +263,7 @@
             $scope.jadx_url = status.jadx_url;
             $scope.fern_url = status.fern_url;
 
-            $scope.copy_apk_status = status.copy_apk_status;
+            $scope.extract_apk_status = status.extract_apk_status;
             $scope.optimize_dex_status = status.optimize_dex_status;
 
             $scope.unpack_apk_thread   = getProcessState( status.unpack_apk_thread);
@@ -328,7 +328,7 @@
 
      $scope.copyApk = function(){
 
-         $http.get("/probe/copy_apk/?package_name="+$scope.packageName)
+         $http.get("/probe/extract_apk/?package_name="+$scope.packageName)
            .then(function (response) {
 
             $scope.getLog();
