@@ -2,17 +2,18 @@ package com.nuvolect.deepdive.lucene;
 
 import android.content.Context;
 
+import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniHash;
-import com.nuvolect.deepdive.main.App;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.Explanation;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -24,10 +25,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.lukhnos.portmobile.file.Paths;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 
 /**
@@ -85,12 +86,12 @@ public class Search {
             error += e.toString();
         }
         IndexSearcher isearcher = new IndexSearcher(ireader);
+        Query query = null;
 
         try {
 
             // Parse a simple query that searches for "text":
             QueryParser parser = new QueryParser( CConst.FIELD_CONTENT, m_analyzer);
-            Query query = null;
             query = parser.parse(searchQuery);
             TopScoreDocCollector collector = TopScoreDocCollector.create( MAX_HITS);
             isearcher.search( query, collector);
@@ -107,13 +108,30 @@ public class Search {
         /**
          * First iterate the hit list and count duplicates based on file path.
          */
-        // TODO Find a Lucene query that does not produce duplicates on same file
-        // This will save computation too
         for (int ii = 0; scoreDocs != null && ii < scoreDocs.length; ++ii) {
 
             Document hitDoc = null;
+            int fileHits = 1;
             try {
                 hitDoc = isearcher.doc(scoreDocs[ii].doc);
+
+                Explanation explanation = isearcher.explain( query, scoreDocs[ii].doc);
+                Explanation[] details = explanation.getDetails();
+                String description = details[0].getDescription();
+
+                /**
+                 * FIXME, find a better way to count hits in each file
+                 */
+                if( description.contains("=")){
+
+                    String[] lineParts = description.split("=");
+                    String[] elementParts = lineParts[2].split(Pattern.quote(")"));
+                    if( elementParts.length > 0){
+
+                        fileHits = ((int) Double.parseDouble(elementParts[0]));
+                    }
+                }
+
             } catch (IOException e) {
                 LogUtil.logException( Search.class, e);
                 error += e.toString();
@@ -122,10 +140,10 @@ public class Search {
 
             if( hitCounts.containsKey(filePath)){
 
-                hitCounts.put( filePath, hitCounts.get( filePath) + 1);
+                hitCounts.put( filePath, hitCounts.get( filePath) + fileHits);
             }
             else{
-                hitCounts.put( filePath, 1);
+                hitCounts.put( filePath, fileHits);
                 hitIndexes.put( filePath, ii);
             }
         }
@@ -144,7 +162,6 @@ public class Search {
             }
             String file_name = hitDoc.get(( CConst.FIELD_FILENAME));
             String file_path = hitDoc.get(( CConst.FIELD_PATH));
-            File parentFolder = new File( file_path).getParentFile();
             try {
                 String folder_url = OmniHash.getHashedServerUrl( ctx, volumeId, file_path);
 

@@ -22,6 +22,7 @@ package com.nuvolect.deepdive.webserver.connector;//
 import android.content.Context;
 
 import com.nuvolect.deepdive.main.CConst;
+import com.nuvolect.deepdive.util.FileUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniFiles;
@@ -41,6 +42,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.nuvolect.deepdive.util.LogUtil.logException;
+
 
 /**
  * <pre>
@@ -238,6 +240,16 @@ public class CmdUpload {
                     String uploadFileName = postUpload.getString(CConst.FILE_NAME);
                     String filePath = postUpload.getString(CConst.FILE_PATH);
 
+                    /**
+                     * When filePath is empty, a file with zero bytes was uploaded.
+                     */
+                    if( filePath.isEmpty()){
+
+                        filePath = ctx.getApplicationInfo().dataDir+"/.empty_file.txt";
+                        File emptyFile = new File( filePath);
+                        FileUtil.writeFile( emptyFile, "");
+                    }
+
                     File srcFile = new File(filePath);
                     OmniFile destFile = new OmniFile(targetVolumeId, destPath + "/" + uploadFileName);
 
@@ -277,7 +289,7 @@ public class CmdUpload {
  * "cid" -> "697767115"
  * "upload_path[]" -> "l0_L3Rlc3QvdG1w"
  * "range" -> "0,10485760,60323475"
- x "post_uploads" -> "[{"file_path":"\/data\/user\/0\/com.nuvolect.deepdive.debug\/cache\/NanoHTTPD-340250228","file_name":"blob"}]"
+ x "post_uploads" -> "[{"file_path":"\/data\/user\/0\/com.nuvolect.securesuite.debug\/cache\/NanoHTTPD-340250228","file_name":"blob"}]"
  * "dropWith" -> "0"
  * "chunk" -> "kepler_7_weeks.mp4.0_5.part"
  x "target" -> "l0_L3Rlc3QvdG1w"

@@ -10,6 +10,7 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
+import android.webkit.WebStorage;
 import android.webkit.WebView;
 
 import com.nuvolect.deepdive.util.ActionBarUtil;
@@ -56,6 +57,8 @@ public class WebFragment extends MyWebViewFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View result=super.onCreateView(inflater, container, savedInstanceState);
+
+        WebStorage.getInstance().deleteAllData();
 
         WebView webView = getWebView();
         WebSettings settings = webView.getSettings();

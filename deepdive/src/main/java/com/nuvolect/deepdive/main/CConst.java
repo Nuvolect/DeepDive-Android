@@ -12,7 +12,7 @@ public class CConst {
     public static final String DEFAULT_IP_PORT                    = "0.0.0.0:0000";
     public static final String DEFAULT_PASSPHRASE                 = "WhenAllElseFails";
     public static final String DEVICE_PAGE                        = "/device.htm";
-    public static final String ELFINDER_PAGE                      = "/elFinder-2.1.22/finder.html";
+    public static final String ELFINDER_PAGE                      = "/elFinder-2.1.11/finder.html";
     public static final String ELF_                               = "elf_";
     public static final String EMBEDDED_USER                      = "embedded_user";
     public static final String FIELD_CONTENT                      = "content";
