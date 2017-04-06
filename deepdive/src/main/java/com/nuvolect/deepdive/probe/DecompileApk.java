@@ -505,7 +505,8 @@ public class DecompileApk {
 
                 Scanner s = null;
                 try {
-                    s = new Scanner( new File(m_appFolderPath+ OPTIMIZED_CLASSES_EXCLUSION_FILENAME));
+                    OmniFile omniFile = new OmniFile( m_volumeId, m_appFolderPath+ OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
+                    s = new Scanner( omniFile.getStdFile());
                     while (s.hasNext()){
                         String excludeClass = s.next();
                         ignoredLibs.add(excludeClass);
@@ -542,6 +543,7 @@ public class DecompileApk {
                 Set<? extends ClassDef> classSet = dexFile.getClasses();
 
                 for (org.jf.dexlib2.iface.ClassDef classDef : classSet) {
+
                     if (!isIgnored(classDef.getType())) {
                         final String currentClass = classDef.getType();
                         m_progressStream.putStream("Optimizing_class: " + currentClass);
@@ -572,7 +574,9 @@ public class DecompileApk {
     }
 
     private boolean isIgnored(String className) {
+
         for (String ignoredClass : ignoredLibs) {
+
             if (className.startsWith(ignoredClass)) {
                 return true;
             }

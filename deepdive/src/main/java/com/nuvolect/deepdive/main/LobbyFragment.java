@@ -117,7 +117,7 @@ public class LobbyFragment extends Fragment {
         String ipAddress = WebUtil.getServerUrl(getActivity());
 
         // Creates a new text clip to put on the clipboard
-        ClipData clip = ClipData.newPlainText("CrypSafe IP address", ipAddress);
+        ClipData clip = ClipData.newPlainText("App IP address", ipAddress);
 
         // Set the clipboard's primary clip.
         clipboard.setPrimaryClip(clip);

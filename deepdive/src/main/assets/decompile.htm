@@ -7,13 +7,12 @@
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/probe.css" rel="stylesheet">
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 
 </head>
 
 <body>
-<!-- Bootstrap core JavaScript -->
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
 <div ng-include="'./navbar.htm'"></div>
 
 <div class="container">
@@ -24,17 +23,18 @@
     <br>
 
     <div align="center">
+        <button type="button" class="btn btn-link" data-toggle="modal" data-target=".help-modal">Help</button>
 
         <table class="card">
             <tr>
-                <td title="Run steps in order 1, 2, 3"><strong>Step (?)</strong></td>
+                <td><strong>Step</strong></td>
                 <td><strong>Action</strong></td>
                 <td><strong>Status</strong></td>
                 <td><strong>Finder</strong></td>
                 <td><strong>Search</strong></td>
             </tr>
             <tr>
-                <td>1</td>
+                <td>1.</td>
                 <td>
                     <button ng-click="copyApk()">Extract APK</button>
                 </td>
@@ -53,7 +53,7 @@
                 </td>
             </tr>
             <tr>
-                <td>2</td>
+                <td>2.</td>
                 <td>
                     <button ng-click="unpackApk()">Unpack APK</button>
                 </td>
@@ -70,70 +70,9 @@
                 </td>
             </tr>
             <tr>
-                <td>3.1 CFR</td>
+                <td>3. Jadx</td>
                 <td>
-                    <button ng-click="optimizeDex()">Optimize DEX (optional)</button>
-                </td>
-                <td align="center">
-                    {{ optimize_dex_thread }}
-                    <button ng-show="optimize_dex_show_button" ng-click="stopThread('optimize_dex')">Stop</button>
-                </td>
-            </tr>
-            <tr ng-show="optimize_dex_show_time">
-                <td></td>
-                <td></td>
-                <td>
-                    {{ optimize_dex_time }}
-                </td>
-            </tr>
-            <tr>
-                <td>3.2 CFR</td>
-                <td>
-                    <button ng-click="dex2jar()">DEX to JAR</button>
-                </td>
-                <td align="center">
-                    {{ dex2jar_thread }}
-                    <button ng-show="dex2jar_show_button" ng-click="stopThread('dex2jar')">Stop</button>
-                </td>
-            </tr>
-            <tr ng-show="dex2jar_show_time">
-                <td></td>
-                <td></td>
-                <td>
-                    {{ dex2jar_time }}
-                </td>
-            </tr>
-            <tr>
-                <td>3.3 CFR</td>
-                <td>
-                    <button ng-click="startCfr()">Decompile with CFR 0.119</button>
-                </td>
-                <td align="center">
-                    {{ cfr_thread }}
-                    <button ng-show="cfr_show_button" ng-click="stopThread('cfr')">Stop</button>
-                </td>
-                <td align="center">
-                    <a href={{cfr_url}} target="_blank">
-                        <span class="glyphicon glyphicon-folder-open" style="font-size:1.5em"></span>
-                    </a>
-                </td>
-                <td align="center">
-                    <a href="/search.htm?search_path={{app_folder_path}}/srcCfr">
-                        <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
-                    </a>
-                </td>
-            </tr>
-            <tr ng-show="cfr_show_time">
-                <td></td>
-                <td></td>
-                <td>
-                    {{ cfr_time }}
-                </td>
-            </tr>
-            <tr>
-                <td>3 Jadx</td>
-                <td>
-                    <button ng-click="startJadx()">Decompile with Jadx 0.6.1</button>
+                    <button ng-click="startJadx()">Decompile with Jadx</button>
                 </td>
                 <td align="center">
                     {{ jadx_thread }}
@@ -158,7 +97,68 @@
                 </td>
             </tr>
             <tr>
-                <td>3 FernFlower</td>
+                <td>3.1</td>
+                <td>
+                    <button ng-click="optimizeDex()">Optimize DEX</button> (optional)
+                </td>
+                <td align="center">
+                    {{ optimize_dex_thread }}
+                    <button ng-show="optimize_dex_show_button" ng-click="stopThread('optimize_dex')">Stop</button>
+                </td>
+            </tr>
+            <tr ng-show="optimize_dex_show_time">
+                <td></td>
+                <td></td>
+                <td>
+                    {{ optimize_dex_time }}
+                </td>
+            </tr>
+            <tr>
+                <td>3.2</td>
+                <td>
+                    <button ng-click="dex2jar()">DEX to JAR</button>
+                </td>
+                <td align="center">
+                    {{ dex2jar_thread }}
+                    <button ng-show="dex2jar_show_button" ng-click="stopThread('dex2jar')">Stop</button>
+                </td>
+            </tr>
+            <tr ng-show="dex2jar_show_time">
+                <td></td>
+                <td></td>
+                <td>
+                    {{ dex2jar_time }}
+                </td>
+            </tr>
+            <tr>
+                <td>3.3 CFR</td>
+                <td>
+                    <button ng-click="startCfr()">Decompile with CFR</button>
+                </td>
+                <td align="center">
+                    {{ cfr_thread }}
+                    <button ng-show="cfr_show_button" ng-click="stopThread('cfr')">Stop</button>
+                </td>
+                <td align="center">
+                    <a href={{cfr_url}} target="_blank">
+                        <span class="glyphicon glyphicon-folder-open" style="font-size:1.5em"></span>
+                    </a>
+                </td>
+                <td align="center">
+                    <a href="/search.htm?search_path={{app_folder_path}}/srcCfr">
+                        <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
+                    </a>
+                </td>
+            </tr>
+            <tr ng-show="cfr_show_time">
+                <td></td>
+                <td></td>
+                <td>
+                    {{ cfr_time }}
+                </td>
+            </tr>
+            <tr>
+                <td>3.3 FernFlower</td>
                 <td>
                     <button ng-click="startFernFlower()">Decompile with FernFlower</button>
                 </td>
@@ -205,10 +205,43 @@
             </tr>
         </table>
     </div>
-
-
 </div><!-- /card-container -->
 
+
+<div class="modal fade help-modal" role="dialog" data-backdrop="false" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">How to decompile an App</h4>
+            </div>
+            <div class="modal-body">
+                <ol>
+                    <li>Extract APK file</li>
+                    <li>Unpack APK file</li>
+                    <li>Decompile app</li>
+                </ol>
+                <p>After step 2 use Finder or Search to explore app assets and manifest.</p>
+                <p>Step 3 is different for each decompiler. Jadx can decompile the DEX file directly.
+                    CFR and FernFlower require DEX conversion to JAR. Optionally, DEX files can be
+                    optimized to prior to decompiling to reduce computation time or bypass decompilation errors.
+                    This is done by adding classes to the dex_class_exclusion.txt via "Finder Edit file",
+                    then select 3.1) Optional: Optimize DEX.
+                </p>
+                <pre>
+                Example decompile with FernFlower:
+                    1. Extract APK
+                    2. Unpack APK
+                    3.2 DEX to JAR
+                    3.3 Decompile with FernFlower
+                </pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <br>
 <br>
 

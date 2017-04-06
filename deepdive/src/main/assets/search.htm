@@ -154,7 +154,7 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
     $scope.addModalContent = function( file_name, file_path ){
 
     console.log("viewFile path: "+file_path);
-<!--debugger;-->
+
         $http.get("/omni/get_text/?path="+file_path)
           .then(function (response) {
 
