@@ -25,9 +25,16 @@ def versionPatch = 3
 def versionBuild = 1
 
 // Load keystore
-def keystorePropertiesFile = System.getProperty("user.home")+"/.gradle/keystore.properties"
+def keystorePropertiesPath = System.getProperty("user.home")+"/.gradle/keystore.properties"
 def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+try {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesPath))
+} catch (FileNotFoundException exception) {
+    keystoreProperties.setProperty('DD_keyAlias','dummy')
+    keystoreProperties.setProperty('DD_storeFile','dummy')
+    keystoreProperties.setProperty('DD_storePassword','dummy')
+    keystoreProperties.setProperty('DD_keyPassword','dummy')
+}
 
 android {
     signingConfigs {

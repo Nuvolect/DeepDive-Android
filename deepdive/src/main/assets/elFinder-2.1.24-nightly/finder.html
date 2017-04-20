@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-
-<html>
+<html ng-app="myApp" ng-controller="myController">
 <head>
     <meta charset="utf-8">
     <title>SecureSuite</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/angular-sanitize.min.js"></script>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 
     <!-- jQuery and jQuery UI (REQUIRED) -->
     <link rel="stylesheet" type="text/css" href="/css/jquery-ui.css">
@@ -28,11 +34,31 @@
 					lang: 'en',          // language (OPTIONAL)
 					docked: true,
 					defaultView: 'list',
-                    uiOptions : {
-	                    toolbarExtra : {
-		                    autoHideUA: []
-	                    }
-                    }
+uiOptions : {
+	toolbar : [
+		['back', 'forward'],
+		['mkdir', 'mkfile', 'upload'],
+		['open', 'download'],
+		['info', 'quicklook'],
+		['copy', 'cut', 'paste'],
+		['rm'],
+		['duplicate', 'rename', 'edit'],
+		['extract', 'archive'],
+		['search'],
+		['view', 'sort'],
+		['help'],
+		['fullscreen'],
+		// extra options
+		{
+			// also displays the text label on the button (true / false)
+			displayTextLabel: false,
+			// Exclude `displayTextLabel` setting UA type
+			labelExcludeUA: [],
+			// auto hide on initial open
+			autoHideUA: []
+		}
+	]
+}
 				});
 			});
         </script>
@@ -58,9 +84,20 @@
     <!-- added for full screen-->
 </head>
 <body>
+<div ng-include="'../navbar.htm'"></div>
 
 <!-- Element where elFinder will be created (REQUIRED) -->
 <div id="elfinder"></div>
 
+<div ng-include="'../footer.htm'"></div>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myController', function($scope, $http, $parse) {
+
+    $scope.year = new Date().getFullYear(); // footer copyright year
+
+});
+</script>
 </body>
 </html>

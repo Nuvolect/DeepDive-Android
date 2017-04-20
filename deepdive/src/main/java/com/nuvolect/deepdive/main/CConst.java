@@ -37,7 +37,6 @@ public class CConst {
     public static final String SHOW_TIPS                          = "show_tips";
     public static final String THREAD_STACK_SIZE                  = "thread_stack_size";
     public static final String TMP                                = "tmp";
-    public static final String USER_FOLDER_NAME                   = "Deep Dive";
     public static final String USER_FOLDER_PATH                   = "/DeepDive/";
     public static final String UNIQUE_ID                          = "unique_id";
     public static final String USERS                              = "users";
