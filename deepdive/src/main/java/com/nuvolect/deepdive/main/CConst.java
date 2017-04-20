@@ -8,7 +8,6 @@ public class CConst {
     public static final String BLOG_URL                           = "https://nuvolect.com/blog";
     public static final String CHUNK                              = "/chunk/";
     public static final String COMPANION_IP_PORT                  = "companion_ip_port";//Match settings.xml
-    public static final String DEFAULT_ACCOUNT                    = "Default_account";
     public static final String DEFAULT_IP_PORT                    = "0.0.0.0:0000";
     public static final String DEFAULT_PASSPHRASE                 = "WhenAllElseFails";
     public static final String DEVICE_PAGE                        = "/device.htm";
@@ -26,7 +25,6 @@ public class CConst {
     public static final String PERMISSION_MANAGER                 = "permission_manager";
     public static final String PORT                               = "port";
     public static final String PORT_NUMBER                        = "port_number";
-    public static final String QUERY_STRING                       = "query_string";
     public static final String RANDOM_EDGE                        = "h0!U9#Wfnx";// Validates security certificate
     public static final String RESPONSE_CODE                      = "response_code";
     public static final String ROOT                               = "/";

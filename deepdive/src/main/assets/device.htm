@@ -86,11 +86,6 @@
                 <td> <strong>SSL</strong> </td>
                 <td> {{ ssl }} </td>
             </tr>
-            <tr ng-repeat="account in accounts">
-                <td></td>
-                <td> <strong>Account</strong> </td>
-                <td> {{ account }} </td>
-            </tr>
             <tr ng-repeat="wifi in wifiList">
                 <td></td>
                 <td> <strong>Wifi SSID</strong> </td>
@@ -124,7 +119,6 @@ app.controller('myController', function($scope, $http, $parse) {
         $scope.security_patch = device.security_patch;
         $scope.uniqueInstallId = device.uniqueInstallId;
         $scope.ssl = device.ssl;
-        $scope.accounts = device.accounts;
         $scope.wifiList = device.wifiList;
 
         $scope.externalStorageAvailable = device.externalStorageAvailable;

@@ -54,38 +54,8 @@ public class Whitelist {
 		private static final long serialVersionUID = 1L;
 	{
 		add("bfdcdf9d4013bd90"); // Matt's nexus 9
-//		add("matt.kraus@nuvolect.com");
-//		add("goknightro@gmail.com");
+        add("d5e36d9ee98729a6"); // Matt's samsung 9
 
-//		add("hewmeister@gmail.com");
-//		add("kenny.kraus@gmail.com");
-//		add("rosellenk@gmail.com");
-//		add("keira.kraus@gmail.com");
-//		add("mr.matt.kraus@gmail.com");
-
-//		add("freelancer.amitabh@gmail.com");
-//		add("roelmedia@gmail.com");
-//		add("rpalloj@gmail.com");
-//		add("susovan.mga@gmail.com");
-//		add("susovan.santra@gmail.com");
-//		add("kelcamer@gmail.com");
-//
-//		add("tom.trocine@gmail.com");
-//		add("tom.trocine@amd.com");
-//		add("mark@oviedojunto.org");
-//		add("mark@schulmans.com");
-//		add("tomt@venutek.com");
-
-//		add(    "dad@my-guardian-angels.com");
-//		add(    "mom@my-guardian-angels.com");
-//		add(    "ann@my-guardian-angels.com");
-//		add(   "jack@my-guardian-angels.com");
-//		add("grandma@my-guardian-angels.com");
-////
-//		add("support@my-guardian-angels.com");
-//		add("development@my-guardian-angels.com");
-//		add("marketing@my-guardian-angels.com");
-////
 	}};
 
 }

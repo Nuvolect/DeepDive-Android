@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.nuvolect.deepdive.util.SymmetricCrypto;
-import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.CrypUtil;
 import com.nuvolect.deepdive.util.JsonUtil;
 import com.nuvolect.deepdive.util.TimeUtil;
@@ -26,7 +24,6 @@ public class LicensePersist {
     private static final String EARLY_ADOPTER          = "early_adopter";
     private static final String PREMIUM_USER           = "premium_user";
     private static final String LEGAL_AGREE_TIME       = "legal_agree_time";
-    private static final String LICENSE_ACCOUNT_NAME   = "license_account_name";
     private static final String LICENSE_RESULT         = "license_result";
     private static final String LAST_NAG_TIME          = "last_nag_time";
     public static final CharSequence APP_LICENSE       = "app_license";// match settings.xml
@@ -50,27 +47,6 @@ public class LicensePersist {
         final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
         pref.edit().putBoolean(LEGAL_AGREE, legalAgree).commit();
         pref.edit().putLong(LEGAL_AGREE_TIME, System.currentTimeMillis()).commit();
-    }
-
-    public static void setLicenseAccount(Context ctx, String accountName){
-        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
-        String cryptAccount = SymmetricCrypto.encrypt(ctx, accountName);
-        pref.edit().putString(LICENSE_ACCOUNT_NAME, cryptAccount).commit();
-    }
-
-    /**
-     * Get account that is associated with the license
-     */
-    public static String getLicenseAccount(Context ctx) {
-        final SharedPreferences pref = ctx.getSharedPreferences( PERSIST_NAME, Context.MODE_PRIVATE);
-        String cryptAccount = pref.getString(LICENSE_ACCOUNT_NAME, "");
-        if( cryptAccount.isEmpty())
-            return CConst.DEFAULT_ACCOUNT;
-        else{
-            String clearText = SymmetricCrypto.decrypt(ctx, cryptAccount);
-
-            return clearText;
-        }
     }
 
     /**
@@ -184,7 +160,7 @@ public class LicensePersist {
                 }
             }else{
                 /**
-                 * First time, definately time to nag the user
+                 * First time, definitely time to nag the user
                  */
                 object.put(key, currentTime);
                 pref.edit().putString(LAST_NAG_TIME, object.toString()).commit();

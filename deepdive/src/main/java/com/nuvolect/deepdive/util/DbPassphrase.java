@@ -21,7 +21,6 @@ package com.nuvolect.deepdive.util;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.license.LicensePersist;
 import com.nuvolect.deepdive.license.LicenseUtil;
 import com.nuvolect.deepdive.main.CConst;
 
@@ -84,10 +83,9 @@ public class DbPassphrase {
 
                 /**
                  * Keystore failed. Fallback and use symmetric encryption.
-                 * Create a 32 hex char key by combining a random key with the users account.
+                 * Use a static 32 hex char static key.
                  */
-                String account = LicensePersist.getLicenseAccount(ctx);
-                String md5Key = LicenseUtil.md5( CConst.RANDOM_EDGE+account);
+                String md5Key = LicenseUtil.md5( CConst.RANDOM_EDGE);
                 clearPassphrase = SymmetricCrypto.decrypt( md5Key, cryptPassphrase);
             }
 
@@ -122,8 +120,7 @@ public class DbPassphrase {
              */
             if( cryptPassphrase.isEmpty()){
 
-                String account = LicensePersist.getLicenseAccount(ctx);
-                String md5Key = LicenseUtil.md5( CConst.RANDOM_EDGE+account);
+                String md5Key = LicenseUtil.md5( CConst.RANDOM_EDGE);
                 cryptPassphrase = SymmetricCrypto.encrypt( md5Key, clearPassphrase);
             }
 

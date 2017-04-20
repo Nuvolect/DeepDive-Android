@@ -1,19 +1,12 @@
 package com.nuvolect.deepdive.survey;//
 
-import android.Manifest;
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.StatFs;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-
-import com.nuvolect.deepdive.util.PermissionUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +19,6 @@ import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 import javax.net.ssl.SSLContext;
 
@@ -84,7 +76,6 @@ public class DeviceSurvey {
      * model
      * uniqueInstalledId
      * ssl
-     * accounts
      * wifiList
      * logCat
      *
@@ -97,7 +88,6 @@ public class DeviceSurvey {
 
         try {
             int API = android.os.Build.VERSION.SDK_INT;
-            object.put("accounts", getAccounts(ctx));
             object.put("deviceInfo", com.nuvolect.deepdive.util.DeviceInfo.getDeviceInfo(ctx));
             object.put("externalStorageAvailable", externalMemoryAvailable());
             object.put("externalStorageSize", getExternalStorageDescription());
@@ -151,33 +141,6 @@ public class DeviceSurvey {
         details += ", " + sslContext.getProvider().toString();
 
         return details;
-    }
-
-    private static JSONArray getAccounts(Context ctx) {
-
-        JSONArray accounts = new JSONArray();
-
-        if (PermissionUtil.canGetAccounts(ctx)) {
-
-            if (ActivityCompat.checkSelfPermission( ctx, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return new JSONArray();
-            }
-            Account[] myAccounts = AccountManager.get(ctx).getAccounts();
-
-            for (Account myAccount : myAccounts) {
-
-                String account = myAccount.name.toLowerCase(Locale.US).trim();
-                accounts.put( account);
-            }
-        }
-        return accounts;
     }
 
     public static JSONArray getLogCat(){
