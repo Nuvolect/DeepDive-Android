@@ -123,7 +123,7 @@ public class DecompileApk {
     private String FERN_THREAD = "FernFlower jar to java thread";
     private List<String> ignoredLibs = new ArrayList();
     private String OPTIMIZED_CLASSES = "optimized_classes";
-    private String OPTIMIZED_CLASSES_EXCLUSION_FILENAME = "/dex_class_exclusion.txt";
+    private String OPTIMIZED_CLASSES_EXCLUSION_FILENAME = "dex_class_exclusion.txt";
     private String[] m_dexFileNames = {}; // Generated list of candidate dex file names
 
     // Time when a process is started
@@ -169,14 +169,14 @@ public class DecompileApk {
 
         m_appApkPath = m_appFolderPath+m_packageName+".apk";
         m_apkFile           = new OmniFile( m_volumeId, m_appApkPath);
-        m_dexFile           = new OmniFile( m_volumeId, m_appFolderPath+"/classes.dex");
-        m_optimizedDexFile  = new OmniFile( m_volumeId, m_appFolderPath+"/optimized_classes.dex");
-        m_jarFile           = new OmniFile( m_volumeId, m_appFolderPath+"/classes.jar");
-        m_srcCfrFolderPath  = m_appFolderPath+"/srcCfr";
+        m_dexFile           = new OmniFile( m_volumeId, m_appFolderPath+"classes.dex");
+        m_optimizedDexFile  = new OmniFile( m_volumeId, m_appFolderPath+"optimized_classes.dex");
+        m_jarFile           = new OmniFile( m_volumeId, m_appFolderPath+"classes.jar");
+        m_srcCfrFolderPath  = m_appFolderPath+"srcCfr";
         m_srcCfrFolder      = new OmniFile( m_volumeId, m_srcCfrFolderPath);
-        m_srcJadxFolderPath = m_appFolderPath+"/srcJadx";
+        m_srcJadxFolderPath = m_appFolderPath+"srcJadx";
         m_srcJadxFolder     = new OmniFile( m_volumeId, m_srcJadxFolderPath);
-        m_srcFernFolderPath = m_appFolderPath+"/srcFern";
+        m_srcFernFolderPath = m_appFolderPath+"srcFern";
         m_srcFernFolder     = new OmniFile( m_volumeId, m_srcFernFolderPath);
     }
 
@@ -396,7 +396,7 @@ public class DecompileApk {
                         List<String> paths = OmniZip.getFilesList( m_apkFile);
                         for( String path : paths){
 
-                            OmniFile file = new OmniFile( m_volumeId,m_appFolderPath+"/"+path);
+                            OmniFile file = new OmniFile( m_volumeId,m_appFolderPath+path);
                             OmniUtil.forceMkdirParent( file);
 
                             String extension = FilenameUtils.getExtension( path);
@@ -410,7 +410,7 @@ public class DecompileApk {
                         }
                         // Write over manifest with unencoded version
                         String manifestXml = apkParser.getManifestXml();
-                        OmniFile manifestFile = new OmniFile( m_volumeId, m_appFolderPath+"/AndroidManifest.xml");
+                        OmniFile manifestFile = new OmniFile( m_volumeId, m_appFolderPath+"AndroidManifest.xml");
                         OmniUtil.writeFile(manifestFile, manifestXml);
                         m_progressStream.putStream("Translated and parsed: "+"AndroidManifest.xml");
 
@@ -522,7 +522,7 @@ public class DecompileApk {
                  * FIXME: Optimizing DEX appears to only read the first classes.dex.
                  * The problem is the classes{n}.dex files are ignored and not all classes can be decompiled.
                  */
-//                File dFile = new File( m_appFolderPath +"/classes.dex" );
+//                File dFile = new File( m_appFolderPath +"classes.dex" );
 //                try {
 //                    DexFile df = new DexFile( dFile);
 //                    Enumeration<String> e = df.entries();
@@ -618,7 +618,7 @@ public class DecompileApk {
 
                 for( String fileName : m_dexFileNames){
 
-                    dexFile = new OmniFile( m_volumeId, m_appFolderPath + "/" + fileName+".dex");
+                    dexFile = new OmniFile( m_volumeId, m_appFolderPath + fileName+".dex");
 
                     if( dexFile.exists() && dexFile.isFile()){
 
@@ -626,7 +626,7 @@ public class DecompileApk {
                         m_progressStream.putStream("DEX to JAR processing: "+dexFile.getName()+", "+size);
 
                         DexExceptionHandlerMod dexExceptionHandlerMod = new DexExceptionHandlerMod();
-                        jarFile = new OmniFile( m_volumeId, m_appFolderPath + "/" + fileName + ".jar");
+                        jarFile = new OmniFile( m_volumeId, m_appFolderPath + fileName + ".jar");
 
                         if( jarFile.exists())
                             jarFile.delete();
@@ -708,7 +708,7 @@ public class DecompileApk {
                 try {
                     for (String fileName : m_dexFileNames) {
 
-                        jarFile = new OmniFile( m_volumeId, m_appFolderPath + "/" + fileName + ".jar");
+                        jarFile = new OmniFile( m_volumeId, m_appFolderPath + fileName + ".jar");
 
                         if( jarFile.exists() && jarFile.isFile()){
 
@@ -792,7 +792,7 @@ public class DecompileApk {
 
                 for (String fileName : m_dexFileNames) {
 
-                    OmniFile dexFile = new OmniFile( m_volumeId, m_appFolderPath + "/" + fileName + ".dex");
+                    OmniFile dexFile = new OmniFile( m_volumeId, m_appFolderPath + fileName + ".dex");
 
                     if( dexFile.exists() && dexFile.isFile()) {
 
@@ -870,7 +870,7 @@ public class DecompileApk {
                 for(int i = 0; i < m_dexFileNames.length; i++) {
 
                     inputJarFileName = m_dexFileNames[i]+".jar";
-                    OmniFile inputJarOmniFile = new OmniFile( m_volumeId, m_appFolderPath + "/" + inputJarFileName);
+                    OmniFile inputJarOmniFile = new OmniFile( m_volumeId, m_appFolderPath + inputJarFileName);
                     inputJarFile = inputJarOmniFile.getStdFile();
 
                     if( inputJarFile.exists() && inputJarFile.isFile()) {

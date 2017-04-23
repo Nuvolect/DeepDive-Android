@@ -1,4 +1,4 @@
-package com.nuvolect.deepdive.webserver.connector;//
+package com.nuvolect.deepdive.webserver.admin;//
 
 import android.content.Context;
 

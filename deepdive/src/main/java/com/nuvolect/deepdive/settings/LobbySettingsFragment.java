@@ -100,7 +100,7 @@ public class LobbySettingsFragment extends PreferenceFragment
 
         if (!WebUtil.getServerIp(m_act).contentEquals(CConst.DEFAULT_IP_PORT)) {
 
-            final String thisDeviceUrl = WebUtil.getServerUrl(m_act)+"/connector?cmd=ping";
+            final String thisDeviceUrl = WebUtil.getServerUrl(m_act)+"/admin?cmd=ping";
 
             Comm.sendPostUi(m_act, thisDeviceUrl, parameters, new Comm.CommPostCallbacks() {
                 @Override

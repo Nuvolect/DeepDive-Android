@@ -92,6 +92,26 @@
                 <td> {{ wifi }} </td>
             </tr>
         </table>
+        <h3>Private storage</h3>
+        <table class="card">
+            <th>Name</th>
+            <th>Path</th>
+            <th>Read</th>
+            <th>Write</th>
+            <th>Removable</th>
+            <th>Total space</th>
+            <th>Free space</th>
+
+            <tr ng-repeat="storage in storagePrivate">
+                <td>{{storage.name}}</td>
+                <td>{{storage.path}}</td>
+                <td align="center">{{storage.can_read | checkmark}}</td>
+                <td align="center">{{storage.can_write | checkmark}}</td>
+                <td align="center">{{storage.removable | checkmark}}</td>
+                <td>{{storage.total_space | bytes}}</td>
+                <td>{{storage.free_space | bytes}}</td>
+            </tr>
+        </table>
     </div>
 
 </div><!-- /card-container -->
@@ -121,6 +141,8 @@ app.controller('myController', function($scope, $http, $parse) {
         $scope.ssl = device.ssl;
         $scope.wifiList = device.wifiList;
 
+        $scope.storagePrivate = device.storagePrivate;
+
         $scope.externalStorageAvailable = device.externalStorageAvailable;
         $scope.internalMemorySize = device.internalMemorySize;
         $scope.externalStorageSize = device.externalStorageSize;
@@ -133,6 +155,22 @@ app.controller('myController', function($scope, $http, $parse) {
 
      });
 });
+
+app.filter('bytes', function() {
+	return function(bytes, precision) {
+		if (bytes==0 || isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
+		if (typeof precision === 'undefined') precision = 1;
+		var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
+			number = Math.floor(Math.log(bytes) / Math.log(1024));
+		return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
+	}
+});
+app.filter('checkmark', function() {
+ return function getCheckmark(input) {
+    return input ? '\u2713' : '\u2718';
+  };
+});
+
 
 </script>
 </body>

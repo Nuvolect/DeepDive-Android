@@ -17,7 +17,7 @@ import com.nuvolect.deepdive.webserver.WebUtil;
 public class ShowItemWebFragment extends MyWebViewFragment {
 
     private static String m_item_url;
-    private static final String SHOW_ITEM_FILE = "/show-item.html";
+    private static final String SHOW_ITEM_FILE = "/show-item.htm";
     private static Activity m_act;
 
 

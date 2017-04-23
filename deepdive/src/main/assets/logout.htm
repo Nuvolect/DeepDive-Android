@@ -55,7 +55,7 @@
        $scope.year = new Date().getFullYear(); // footer copyright year
 
         <!--response.data is the wrapper json object-->
-       $http.get("/connector/?cmd=logout")
+       $http.get("/admin/?cmd=logout")
            .then(function (response) {
 
                 $scope.confirmation = response.data.confirmation;

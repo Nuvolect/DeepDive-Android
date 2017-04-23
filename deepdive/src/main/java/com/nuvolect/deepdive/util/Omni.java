@@ -102,6 +102,10 @@ public class Omni {
         if( ! App.hasPermission( WRITE_EXTERNAL_STORAGE)){
 
             activeVolumeIds = new String[] { userVolumeId, cryptoVolumeId};
+
+            String s = "Access to local storage denied";
+            Toast.makeText(ctx, s, Toast.LENGTH_SHORT).show();
+            LogUtil.log( Omni.class, s);
         }
 
         /**

@@ -1,11 +1,12 @@
-package com.nuvolect.deepdive.webserver.connector;//
+package com.nuvolect.deepdive.webserver.admin;//
 
 import android.content.Context;
 
+import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniFiles;
-import com.nuvolect.deepdive.main.App;
+import com.nuvolect.deepdive.webserver.connector.CmdRm;
 
 import org.json.JSONException;
 import org.json.JSONObject;

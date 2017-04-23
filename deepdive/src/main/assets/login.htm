@@ -7,13 +7,13 @@
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/login.css" rel="stylesheet">
+
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-// Page does not have a navbar
+<!--Page does not have a navbar-->
 
 <div class="container">
     <br>
@@ -22,7 +22,7 @@
 
         <img src="/img/icon_64.png" style="padding:10px;"/>
         <br>
-        <span style="font-size:18px; color:grey;">DeepDive</span>
+        <br>
     </div>
     <div class="card card-container">
 
@@ -54,31 +54,30 @@
     <br>
     <br>
 
-    <div ng-include="'footer.htm'"></div>
+    <div ng-include="'/footer.htm'"></div>
 
-</div><!-- /container -->
-
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+</div>
 
 <script>
 	function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
     }
-    return "";
-    }
-    </script>
+</script>
+
 <script>
 
 	var app = angular.module('myApp', []);
 	app.controller('myController', ['$scope', '$http', function($scope, $http) {
 
-    $scope.year = new Date().getFullYear(); // footer copyright year
+    $scope.year = new Date().getFullYear();
 
 		this.postForm = function() {
 
@@ -90,23 +89,22 @@
 
 			$http({
 				method: 'POST',
-				url: '/connector?cmd=login',
+				url: '/admin?cmd=login',
 				data: encodedString,
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 			})
-			.success(function(data, status, headers, config) {
+			.then(function( response ) {
 
-				if ( data.user_confirmed) {
-				    console.log("user confirmed");
+				if ( response.data.user_confirmed) {
 					window.location.href = '/';
 				} else {
 
 					$scope.errorMsg = "Login not correct";
 				}
-			})
-			.error(function(data, status, headers, config) {
+			},
+			function( response ) {
 				$scope.errorMsg = 'Unable to submit form';
-			})
+			});
 		}
 	}]);
 

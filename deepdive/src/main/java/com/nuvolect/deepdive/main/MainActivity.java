@@ -29,7 +29,6 @@ import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.webserver.WebService;
 import com.nuvolect.deepdive.webserver.WebUtil;
 
-import static android.Manifest.permission.GET_ACCOUNTS;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 /**
@@ -51,7 +50,6 @@ public class MainActivity extends FragmentActivity {
     enum APP_STATE { APP_LIST, DEVICE, FILE_MANAGER, LOBBY, SETTINGS, SEARCH_MANAGER, }
 
     private static final String[] PERMS_ALL={
-            GET_ACCOUNTS,
             WRITE_EXTERNAL_STORAGE
     };
 
@@ -158,7 +156,7 @@ public class MainActivity extends FragmentActivity {
                 requestPermissions(PERMS_ALL, 0);
             }
             else
-                Toast.makeText(m_act,"Require permissions",Toast.LENGTH_SHORT).show();
+                Toast.makeText(m_act,"Request permission storage",Toast.LENGTH_SHORT).show();
         }
 
         // savedInstanceState is non-null when there is fragment state
@@ -196,8 +194,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private boolean haveNecessaryPermissions() {
-        return(hasPermission(GET_ACCOUNTS) &&
-               hasPermission(WRITE_EXTERNAL_STORAGE));
+        return( hasPermission(WRITE_EXTERNAL_STORAGE));
     }
 
     private boolean hasPermission(String perm) {

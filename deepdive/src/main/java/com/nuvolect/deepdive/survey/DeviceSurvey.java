@@ -8,6 +8,8 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.provider.Settings;
 
+import com.nuvolect.deepdive.util.StoragePrivate;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,6 +101,7 @@ public class DeviceSurvey {
             object.put("ssl", getSslDetails());
             object.put("uniqueInstallId", getUniqueInstallId(ctx));
             object.put("wifiList", getWifiConfigured(ctx));
+            object.put("storagePrivate", StoragePrivate.getStoragePrivate(ctx));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -123,9 +126,12 @@ public class DeviceSurvey {
             WifiManager wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
             List<WifiConfiguration> wifiConfiguredList = wifiManager.getConfiguredNetworks();
 
-            for (WifiConfiguration wifi : wifiConfiguredList) {
+            if( wifiConfiguredList != null){
 
-                wifiList.put(wifi.SSID);
+                for (WifiConfiguration wifi : wifiConfiguredList) {
+
+                    wifiList.put(wifi.SSID);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

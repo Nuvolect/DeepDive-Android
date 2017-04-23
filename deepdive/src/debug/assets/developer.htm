@@ -8,19 +8,18 @@
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/probe.css" rel="stylesheet">
 
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<!-- Bootstrap core JavaScript -->
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+<div ng-include="'./navbar.htm'"></div>
 
 <div class="container">
 
     <br>
     <br>
     <div align="center">
-        <a href="/"><img src="/img/icon_64.png"></a>
         <h1>Developer</h1>
     </div>
     <br>
@@ -94,40 +93,23 @@
         </table>
 
     </div>
-
-
 </div>
 
 <br>
 <br>
-<br>
 
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
-    <p>
-        &copy;
-        <script>
-			var d = new Date();
-			document.write(d.getFullYear());
-		</script>
-        Nuvolect LLC -
-        <a href="https://nuvolect.com/deepdive_terms/" target="_blank">Terms</a>
-        -
-        <a href="https://nuvolect.com/privacy/" target="_blank">Privacy</a>
-        -
-        <a href="https://nuvolect.com/deepdive_help/" target="_blank">Help</a>
-    </p>
-</div>
-
-</div>
+<div ng-include="'footer.htm'"></div>
 
 <script>
 
 var app = angular.module('myApp', []);
 app.controller('myController', function($scope, $http, $parse) {
 
+  $scope.year = new Date().getFullYear(); // footer copyright year
+
   $scope.runTest = function( id, data ){
 
-     $http.get("/connector/?cmd=debug&test_id="+id+"&data="+data)
+     $http.get("/admin/?cmd=debug&test_id="+id+"&data="+data)
        .then(function (response) {
 
         // test_id the test name and is bound to the Angular result variable

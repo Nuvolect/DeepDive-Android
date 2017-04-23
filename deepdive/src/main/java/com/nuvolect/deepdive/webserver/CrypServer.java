@@ -10,6 +10,7 @@ import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniUtil;
 import com.nuvolect.deepdive.util.Passphrase;
 import com.nuvolect.deepdive.main.UserManager;
+import com.nuvolect.deepdive.webserver.admin.AdminCmd;
 import com.nuvolect.deepdive.webserver.connector.CmdZipdl;
 import com.nuvolect.deepdive.webserver.connector.ServeCmd;
 
@@ -157,7 +158,7 @@ public class CrypServer extends NanoHTTPD{
 
                     /**
                      * Minimal files for login page { /, /login.htm, .js, .css, .png, .ico,
-                     * /connector cmd == login, cmd == logout}
+                     * /admin cmd == login, cmd == logout}
                      */
                     if( uri.contentEquals("/") || uri.contentEquals("/login.htm")) {
 
@@ -167,6 +168,11 @@ public class CrypServer extends NanoHTTPD{
                     } else if( uri.contentEquals("/logout.htm")) {
 
                         is = m_ctx.getAssets().open( "logout.htm");
+                        return new Response(HTTP_OK, MimeUtil.MIME_HTML, is, -1);
+
+                    } else if( uri.contentEquals("/footer.htm")) {
+
+                        is = m_ctx.getAssets().open( "footer.htm");
                         return new Response(HTTP_OK, MimeUtil.MIME_HTML, is, -1);
 
                     } else if (fileExtension.contentEquals("js")) {
@@ -185,7 +191,7 @@ public class CrypServer extends NanoHTTPD{
                         is = m_ctx.getAssets().open(uri.substring(1));
                         return new Response(HTTP_OK, MimeUtil.MIME_ICO, is, -1);
 
-                    } else if (uri.startsWith("/connector") &&
+                    } else if (uri.startsWith("/admin") &&
                             params.containsKey("cmd") &&
                             (params.get("cmd").contentEquals("login") ||
                                     params.get("cmd").contentEquals("logout"))) {
@@ -200,7 +206,7 @@ public class CrypServer extends NanoHTTPD{
                         params.put("postBody", postBody);
                         params.put(CConst.UNIQUE_ID, uniqueId);
 
-                        is = ServeCmd.process(m_ctx, params);
+                        is = AdminCmd.process(m_ctx, params);
                         return new Response(HTTP_OK, MimeUtil.MIME_HTML, is, -1);
 
                     } else{
@@ -215,7 +221,7 @@ public class CrypServer extends NanoHTTPD{
                  * 2. volume + hash + path
                  *    // /l0_L3N0b3JhZ2UvZW11bGF0ZWQvMC90ZXN0L3JldmVhbC5qcy1tYXN0ZXI/test/reveal.js-master/css/reveal.css
                  * 3. /  root file is lobby.htm
-                 * 4. RESTFul: /connector /omni /probe /search
+                 * 4. RESTFul: /admin /connector /omni /probe /search
                  * 5. file in /assets
                  */
 
@@ -359,6 +365,10 @@ public class CrypServer extends NanoHTTPD{
                 }
                 if (uri.startsWith("/search/")) {
                     InputStream stream = SearchRest.process(m_ctx, params);
+                    return new Response(HTTP_OK, MimeUtil.MIME_HTML, stream, -1);
+                }
+                if (uri.startsWith("/admin/")) {
+                    InputStream stream = AdminCmd.process(m_ctx, params);
                     return new Response(HTTP_OK, MimeUtil.MIME_HTML, stream, -1);
                 }
 

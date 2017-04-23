@@ -190,7 +190,7 @@ public class UserManager {
         if( isWideOpen())
             return;
 
-        String thisDeviceUrl = WebUtil.getServerUrl(m_ctx)+"/connector?cmd=login";
+        String thisDeviceUrl = WebUtil.getServerUrl(m_ctx)+"/admin?cmd=login";
         Map<String, String> params = new HashMap<String, String>();
         try {
             JSONObject user = users.getJSONObject(0);
@@ -235,7 +235,7 @@ public class UserManager {
 
     private String getLoginUrl() {
 
-        return WebUtil.getServerUrl(m_ctx)+"/connector?cmd=login";
+        return WebUtil.getServerUrl(m_ctx)+"/admin?cmd=login";
     }
 
     private String getPostData() {

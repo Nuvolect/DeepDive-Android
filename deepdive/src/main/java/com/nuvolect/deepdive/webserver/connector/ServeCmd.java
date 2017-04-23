@@ -118,9 +118,6 @@ public class ServeCmd {
             case paste:
                 inputStream = CmdPaste.go(params);
                 break;
-            case ping:
-                inputStream = CmdPing.go(params);
-                break;
             case put:
                 inputStream = CmdPut.go(params);
                 break;

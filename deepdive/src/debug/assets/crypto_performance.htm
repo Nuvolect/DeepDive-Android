@@ -1,26 +1,44 @@
 <!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. Nuvolect LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+  ~ General Public License as published by the Free Software Foundation, either version 3 of the License,
+  ~ or (at your option) any later version.
+  ~
+  ~ Contact legal@nuvolect.com for a less restrictive commercial license if you would like to use the
+  ~ software without the GPLv3 restrictions.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+  ~ even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with this program.  If not,
+  ~ see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
 <html ng-app="myApp" ng-controller="testController">
 <head>
-    <title>MM Test</title>
+    <title>Crypto Performance</title>
 
     <script src="/js/angular.min.js"></script>
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/probe.css" rel="stylesheet">
 
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<!-- Bootstrap core JavaScript -->
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+<div ng-include="'./navbar.htm'"></div>
 
 <div class="container">
 
     <br>
     <br>
     <div align="center">
-        <img src="/img/icon_64.png">
         <h1>Performance Test</h1>
     </div>
     <br>
@@ -106,35 +124,24 @@
                 </td>
             </tr>
         </table>
+        <br>
+        <p>Requires write external storage permission.</p>
     </div>
 
 
-</div><!-- /card-container -->
-
-<br>
-<br>
-<br>
-
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
-    <p>
-        &copy;
-        <script>
-			var d = new Date();
-			document.write(d.getFullYear());
-		</script>
-        Nuvolect LLC -
-        <a href="https://nuvolect.com/deepdive_terms/" target="_blank">Terms</a>
-        -
-        <a href="https://nuvolect.com/privacy/" target="_blank">Privacy</a>
-        -
-        <a href="https://nuvolect.com/deepdive_help/" target="_blank">Help</a>
-    </p>
 </div>
+
+<br>
+<br>
+
+<div ng-include="'/footer.htm'"></div>
 
 <script>
 
 var app = angular.module('myApp', []);
 app.controller('testController', function($scope, $http, $parse) {
+
+  $scope.year = new Date().getFullYear();// footer copyright year
 
   var tests = [
   "write_sdcard_test_file",
@@ -153,7 +160,7 @@ app.controller('testController', function($scope, $http, $parse) {
 
   function runTest( i ){
 
-     $http.get("/connector/?cmd=test&test_id="+tests[ i ])
+     $http.get("/admin/?cmd=test&test_id="+tests[ i ])
        .then(function (response) {
 
         // test_id the test name and is bound to the Angular result variable

@@ -8,12 +8,12 @@
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/probe.css" rel="stylesheet">
 
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<!-- Bootstrap core JavaScript -->
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+
 <div ng-include="'./navbar.htm'"></div>
 
 <div class="container">
@@ -21,7 +21,9 @@
     <div align="center">
         <h2>Working Apps</h2>
     </div>
-
+    <div align="center" ng-hide="show_package_list">
+        <h5>No working folders yet</h5>
+    </div>
     <div ng-show="show_package_list" align="center">
 
         <p style="color: Black"><input type="text" ng-model="folder_search" placeholder="Search apps">#{{ (package_list|filter:folder_search).length }}</p>
