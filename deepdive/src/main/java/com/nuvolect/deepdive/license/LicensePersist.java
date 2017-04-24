@@ -74,12 +74,12 @@ public class LicensePersist {
                 summary = "License: Whitelist"
                         +"\nUser accepted terms "+TimeUtil.friendlyTimeString(legalAgreeTime);
                 break;
-            case EARLY_ADOPTER:
-                summary = "License: Early Adopter"
+            case APPRECIATED_USER:
+                summary = "License: Appreciated User"
                         +"\nUser accepted terms "+TimeUtil.friendlyTimeString(legalAgreeTime);
                 break;
-            case PREMIUM_USER:
-                summary = "License: Premium User"
+            case PRO_USER:
+                summary = "License: Pro User"
                         +"\nUser accepted terms "+TimeUtil.friendlyTimeString(legalAgreeTime);
                 break;
             default:

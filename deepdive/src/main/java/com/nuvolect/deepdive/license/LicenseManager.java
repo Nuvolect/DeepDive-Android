@@ -40,7 +40,7 @@ public class LicenseManager {
      * License type is saved in the ordinal position, do not reorder this list.
      */
     public enum LicenseResult { NIL,
-        REJECTED_TERMS, WHITELIST_USER, EARLY_ADOPTER, EVALUATION_USER, PREMIUM_USER, EXPIRED_EVALUATION }
+        REJECTED_TERMS, WHITELIST_USER, APPRECIATED_USER, PRO_USER}
 
     private Context m_ctx;
     private Activity m_act;
@@ -157,13 +157,13 @@ public class LicenseManager {
 
         if( LicensePersist.isEarlyAdopter(m_act)){
 
-            mListener.licenseResult( LicenseResult.EARLY_ADOPTER);
+            mListener.licenseResult( LicenseResult.APPRECIATED_USER);
             mLicenseSummary = "Premium user";
             mIsPremium = true;
         }else{
            // All new users are currently early adopters
             LicensePersist.setIsEarlyAdopter(m_ctx, true);
-            mListener.licenseResult( LicenseResult.EARLY_ADOPTER);
+            mListener.licenseResult( LicenseResult.APPRECIATED_USER);
             mLicenseSummary = "Premium user";
             mIsPremium = true;
         }
@@ -176,13 +176,12 @@ public class LicenseManager {
 
         if( LicensePersist.isPremiumUser(m_act)) {
 
-            mListener.licenseResult(LicenseResult.EARLY_ADOPTER);
+            mListener.licenseResult(LicenseResult.APPRECIATED_USER);
             mLicenseSummary = "Premium user";
             mIsPremium = true;
         }else{
 
-            //TODO check how much time has past.  If in evaluation preiod user is premium.
-            mListener.licenseResult(LicenseResult.EVALUATION_USER);
+            mListener.licenseResult(LicenseResult.APPRECIATED_USER);
             mLicenseSummary = "Evaluation user";
             mIsPremium = true;
         }

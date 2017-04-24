@@ -103,7 +103,7 @@ public class UserManager {
                 e.printStackTrace();
             }
         }
-        return summary.isEmpty()?"Select to add web app users":summary;
+        return summary.isEmpty()?"Select to add web app user":summary;
     }
 
     /**

@@ -25,19 +25,15 @@ import android.widget.Toast;
 import com.nuvolect.deepdive.R;
 import com.nuvolect.deepdive.license.AppSpecific;
 import com.nuvolect.deepdive.license.LicensePersist;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.main.UserManager;
 import com.nuvolect.deepdive.util.ActionBarUtil;
-import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.DeviceInfo;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.PermissionManager;
-import com.nuvolect.deepdive.webserver.Comm;
 import com.nuvolect.deepdive.webserver.WebUtil;
 
 import org.json.JSONException;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LobbySettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -95,33 +91,7 @@ public class LobbySettingsFragment extends PreferenceFragment
 
         // Display current IP address
         final Preference ipPref = findPreference("ip_address");
-        ipPref.setSummary(WebUtil.getServerUrl(m_act) + " OFFLINE");
-        Map<String, String> parameters = new HashMap<String, String>();
-
-        if (!WebUtil.getServerIp(m_act).contentEquals(CConst.DEFAULT_IP_PORT)) {
-
-            final String thisDeviceUrl = WebUtil.getServerUrl(m_act)+"/admin?cmd=ping";
-
-            Comm.sendPostUi(m_act, thisDeviceUrl, parameters, new Comm.CommPostCallbacks() {
-                @Override
-                public void success(String jsonString) {
-
-                    /**
-                     * A non-web view call is not authenticated generating a 401 error.
-                     * This is ok. This demonstrates that the server is alive.
-                     */
-                    String summary = WebUtil.getServerUrl(m_act) + " ONLINE";
-                    ipPref.setSummary(summary);
-                }
-
-                @Override
-                public void fail(String error) {
-
-                    String summary = WebUtil.getServerUrl(m_act) + " OFFLINE";
-                    ipPref.setSummary(summary);
-                }
-            });
-        }
+        ipPref.setSummary(WebUtil.getServerUrl(m_act));
 
         // Set license summary
         mLicenseSummary = LicensePersist.getLicenseSummary(m_act);

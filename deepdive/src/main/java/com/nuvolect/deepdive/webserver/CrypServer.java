@@ -93,7 +93,6 @@ public class CrypServer extends NanoHTTPD{
 
         CookieHandler cookies = session.getCookies();
         String uniqueId = cookies.read(CConst.UNIQUE_ID);
-//        log(LogUtil.LogType.CRYP_SERVER, "uniqueId: "+uniqueId);
 
         if( uniqueId == null ){
 

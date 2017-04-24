@@ -119,8 +119,8 @@ public class MainActivity extends FragmentActivity {
                 m_act.finish();
                 break;
             case WHITELIST_USER:
-            case PREMIUM_USER:
-            case EARLY_ADOPTER: {
+            case PRO_USER:
+            case APPRECIATED_USER: {
 
                 startGui();
                 break;
