@@ -50,5 +50,6 @@ public class CConst {
 
     public static final String APP_TOC_HREF_URL = "<a href='http://nuvolect.com/deepdive_terms'>Terms and Conditions</a>";
     public static final String APP_PP_HREF_URL = "<a href='http://nuvolect.com/privacy'>Privacy Policy</a>";
-    public static final String APP_GOOGLE_PLAY_HREF_URL = "<a href='https://play.google.com/store/apps/details?id=com.nuvolect.deepdive'>DeepDive at Google Play</a>";
+    public static final String APP_GOOGLE_PLAY_HREF_URL = "<a href='https://play.google.com/store/apps/details?id=com.nuvolect.deepdive'>Google Play</a>";
+    public static final String APP_NUVOLECT_HREF_URL = "<a href='https://nuvolect.com/deepdive/deepdive_nuvolect.apk'>Nuvolect</a>";
 }

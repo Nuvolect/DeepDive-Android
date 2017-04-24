@@ -20,15 +20,15 @@ import com.nuvolect.deepdive.util.LogUtil;
  *
  1. Test for first time startup, if so
  1.a Prompt for concurrence with terms and conditions, LicenseResult.REJECT_TERMS
- 2 Check for whitelist user, LicenseResult.WHITELIST_USER
 
- // Currently anyone who is not whitelist is an early adopter
- 3 Check for premium user, LicenseResult.EARLY_ADOPTER
+ 2 Confirm app version has not expired. LicenseResult.APP_EXPIRED
 
- // Users not white_list or early adopter will be an Evaluation User for an evaluation period
- 4 Check for premium user, LicenseResult.PREMIUM_USER
+ 3 Check for whitelist user, LicenseResult.WHITELIST_USER
 
- 5 User is an evaluation user for a specific period, otherwise LicenseResult.EXPIRED_EVALUATION.
+ 4.a Check for pro user, license not expired, LicenseResult.PRO_USER
+ 4.b Check for pro user, license expired, LicenseResult.PRO_USER_EXPIRED
+
+ 5 User not white_list or pro user is an appreciated user, LicenseResult.APPRECIATED_USER
  *
  *</pre>
  */
@@ -36,17 +36,27 @@ public class LicenseManager {
 
     private final boolean DEBUG = LogUtil.DEBUG;
 
+    public static void upgradeLicense(Activity act) {//SPRINT implement
+
+    }
+
     /**
      * License type is saved in the ordinal position, do not reorder this list.
      */
     public enum LicenseResult { NIL,
-        REJECTED_TERMS, WHITELIST_USER, APPRECIATED_USER, PRO_USER}
+        REJECTED_TERMS,
+        APP_EXPIRED,
+        WHITELIST_USER,
+        PRO_USER,
+        PRO_USER_EXPIRED,  // Read access external storage, otherwise same as APPERCIATED_USER
+        APPRECIATED_USER,
+    }
 
     private Context m_ctx;
     private Activity m_act;
     private static LicenseManager sInstance;
 
-    private static boolean mIsPremium = false; // Is the license process valid, we have a user?
+    private static boolean mIsProUser = false; // Is the license process valid, we have a user?
     public static boolean mIsWhitelistUser = false; // Is the user on the developer whitelist?
 
     /** Short description of current license for the Settings page */
@@ -139,7 +149,7 @@ public class LicenseManager {
 
         if( ! whiteListAccount.isEmpty()) {
 
-            mIsPremium = true;
+            mIsProUser = true;
             mIsWhitelistUser = true;
             mLicenseSummary = "Whitelist user: " +whiteListAccount;
             mListener.licenseResult( LicenseResult.WHITELIST_USER);
@@ -158,32 +168,32 @@ public class LicenseManager {
         if( LicensePersist.isEarlyAdopter(m_act)){
 
             mListener.licenseResult( LicenseResult.APPRECIATED_USER);
-            mLicenseSummary = "Premium user";
-            mIsPremium = true;
+            mLicenseSummary = "Pro user";
+            mIsProUser = true;
         }else{
            // All new users are currently early adopters
             LicensePersist.setIsEarlyAdopter(m_ctx, true);
             mListener.licenseResult( LicenseResult.APPRECIATED_USER);
-            mLicenseSummary = "Premium user";
-            mIsPremium = true;
+            mLicenseSummary = "Pro user";
+            mIsProUser = true;
         }
-//        else step_4_check_for_premium_user();
+//        else step_4_check_for_pro_user();
     }
 
-    void step_4_check_for_premium_user(){
+    void step_4_check_for_pro_user(){
 
-        if (DEBUG) LogUtil.log("LicenseManager: step_4_check_for_premium_user");
+        if (DEBUG) LogUtil.log("LicenseManager: step_4_check_for_pro_user");
 
         if( LicensePersist.isPremiumUser(m_act)) {
 
             mListener.licenseResult(LicenseResult.APPRECIATED_USER);
-            mLicenseSummary = "Premium user";
-            mIsPremium = true;
+            mLicenseSummary = "Pro user";
+            mIsProUser = true;
         }else{
 
             mListener.licenseResult(LicenseResult.APPRECIATED_USER);
             mLicenseSummary = "Evaluation user";
-            mIsPremium = true;
+            mIsProUser = true;
         }
     }
 }

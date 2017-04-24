@@ -54,7 +54,8 @@ public class DialogUtil {
     }
     public static void confirmDialog(
             Activity act,
-            String title, String message, String confirmButtonText,
+            String title, String message,
+            String confirmButtonText,
             final DialogCallback dialogCallback) {
 
         final AlertDialog.Builder alert = new AlertDialog.Builder(act);

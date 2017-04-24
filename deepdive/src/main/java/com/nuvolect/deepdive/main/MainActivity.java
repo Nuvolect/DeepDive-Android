@@ -125,10 +125,29 @@ public class MainActivity extends FragmentActivity {
                 startGui();
                 break;
             }
-            case EXPIRED_EVALUATION:{
+            case PRO_USER_EXPIRED:{
                 DialogUtil.confirmDialog(m_act,
-                        "EVALUATION EXPIRED",
-                        "The evaluation period has expired, write data has been disabled",
+                        "App License Expired",
+                        "The app license has expired. To enable Pro features please upgrade your license.\n",
+                        "Exit",
+                        new DialogUtil.DialogCallback() {
+                            @Override
+                            public void confirmed() {
+                                LicenseManager.upgradeLicense(m_act);
+                            }
+
+                            @Override
+                            public void canceled() {
+                                startGui();
+                            }
+                        });
+            }
+            case APP_EXPIRED:{
+                DialogUtil.confirmDialog(m_act,
+                        "App Version Expired",
+                        "This app version has expired and is no longer supported.\n"+
+                        "Please update the app from "+CConst.APP_GOOGLE_PLAY_HREF_URL+
+                        " or "+CConst.APP_NUVOLECT_HREF_URL+".",
                         "Exit",
                         new DialogUtil.DialogCallback() {
                             @Override
