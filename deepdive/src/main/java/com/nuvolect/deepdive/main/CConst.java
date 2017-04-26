@@ -4,16 +4,16 @@ import com.nuvolect.deepdive.R;
 
 public class CConst {
 
-    public static final String APPS_PAGE            = "/apps.htm";
     public static final String APP_SIGNATURE        = "com.nuvolect.deepdive";
+    public static final String APPS_PAGE            = "/apps.htm";
     public static final String AUTHENTICATED        = "authenticated";
     public static final String CHUNK                = "/chunk/";
     public static final String COMPANION_IP_PORT    = "companion_ip_port";//Match settings.xml
     public static final String DEFAULT_IP_PORT      = "0.0.0.0:0000";
     public static final String DEFAULT_PASSPHRASE   = "WhenAllElseFails";
     public static final String DEVICE_PAGE          = "/device.htm";
-    public static final String ELFINDER_PAGE        = "/elFinder-2.1.24-nightly/finder.html";
     public static final String ELF_                 = "elf_";
+    public static final String ELFINDER_PAGE        = "/elFinder-2.1.24-nightly/finder.html";
     public static final String EMBEDDED_USER        = "embedded_user";
     public static final String FALSE                = "false";
     public static final String FIELD_CONTENT        = "content";
@@ -31,20 +31,20 @@ public class CConst {
     public static final String RANDOM_EDGE          = "h0!U9#Wfnx";// Validates security certificate
     public static final String RESPONSE_CODE        = "response_code";
     public static final String ROOT                 = "/";
-    public static final String SLASH                = "/";
     public static final String SEARCH_MANAGER_PAGE  = "/search_manager.htm";
     public static final String SEC_TOK              = "sec_tok";
-    public static final String STRING32             = "01234567890123456789012345678901";
     public static final String SHOW_TIPS            = "show_tips";
+    public static final String SLASH                = "/";
+    public static final String STRING32             = "01234567890123456789012345678901";
     public static final String TARGET               = "target";
     public static final String THREAD_STACK_SIZE    = "thread_stack_size";
     public static final String TMP                  = "tmp";
     public static final String TRUE                 = "true";
-    public static final String USER_FOLDER_PATH     = "/DeepDive/";
     public static final String UNIQUE_ID            = "unique_id";
     public static final String URL                  = "url";
-    public static final String USERS                = "users";
+    public static final String USER_FOLDER_PATH     = "/DeepDive/";
     public static final String USER_MANAGER         = "user_manager";
+    public static final String USERS                = "users";
 
     public final static int SMALL_ICON              = R.drawable.icon_64;
     public static final int IP_TEST_TIMEOUT_MS      = 8000;// Time for testing for companion device IP
