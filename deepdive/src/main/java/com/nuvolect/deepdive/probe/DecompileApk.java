@@ -209,24 +209,27 @@ public class DecompileApk {
                         m_volumeId, m_srcCfrFolderPath);
                 wrapper.put("cfr_url", url);
             }
-            else
+            else{
                 wrapper.put("cfr_url", m_appFolderUrl);
+            }
 
             if(jadxFolderExists){
                 String url = OmniHash.getHashedServerUrl(m_ctx,
                         m_volumeId, m_srcJadxFolderPath);
                 wrapper.put("jadx_url", url);
             }
-            else
+            else{
                 wrapper.put("jadx_url", m_appFolderUrl);
+            }
 
             if(fernFolderExists){
                 String url = OmniHash.getHashedServerUrl(m_ctx,
                         m_volumeId, m_srcFernFolderPath);
                 wrapper.put("fern_url", url);
             }
-            else
+            else{
                 wrapper.put("fern_url", m_appFolderUrl);
+            }
 
             wrapper.put("optimize_dex_status", optimizedDexExists?1:0);
 
@@ -447,8 +450,8 @@ public class DecompileApk {
                             OmniUtil.writeFile( optimizedDex, "");
                             m_progressStream.putStream("File created: "+OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
                         }
-                    }else{
-
+                    }
+                    else{
                         m_progressStream.putStream("APK not found. Select Extract APK.");
                     }
 
@@ -457,10 +460,12 @@ public class DecompileApk {
                 }
                 String time = TimeUtil.deltaTimeHrMinSec(m_unpack_apk_time);
                 m_unpack_apk_time = 0;
-                if( success)
+                if( success){
                     m_progressStream.putStream("Unpack APK complete: "+time);
-                else
+                }
+                else{
                     m_progressStream.putStream("Unpack APK failed: "+time);
+                }
             }
         }, UNZIP_APK_THREAD, STACK_SIZE);
 
@@ -650,12 +655,12 @@ public class DecompileApk {
                             success = false;
                         }
                         if( success ){
-
                             size = NumberFormat.getNumberInstance(Locale.US).format(jarFile.length());
                             m_progressStream.putStream("DEX to JAR succeeded: "+jarFile.getName()+", "+size);
                         }
-                        else
+                        else{
                             m_progressStream.putStream("Exception thrown, file cannot be decompiled: "+dexFile.getPath());
+                        }
                     }
                 }
                 if( jarFile == null)
@@ -896,10 +901,12 @@ public class DecompileApk {
                             OmniFile decompiledJarFile = new OmniFile( m_volumeId, decompiledJarFilePath);
                             success = OmniZip.unzipFile( decompiledJarFile, m_srcFernFolder, null, null);
 
-                            if (success)
+                            if (success){
                                 m_progressStream.putStream("FernFlower decompiler.unpack complete: "+ inputJarFileName);
-                            else
+                            }
+                            else{
                                 m_progressStream.putStream("FernFlower decompiler.unpack failed: "+ inputJarFileName);
+                            }
                         } catch (Exception e) {
                             String str = LogUtil.logException(LogUtil.LogType.FERNFLOWER, e);
                             m_progressStream.putStream("FernFlower exception "+ inputJarFileName);
@@ -917,8 +924,9 @@ public class DecompileApk {
                                 ApkZipUtil.unzip( of, m_srcFernFolder, m_progressStream);
                                 m_progressStream.putStream("FernFlower utility unzip complete with errors: "+ inputJarFileName);
                             }
-                            else
+                            else{
                                 m_progressStream.putStream("File does not exist: "+of.getAbsolutePath());
+                            }
                         }
                     }
                 }
@@ -943,10 +951,6 @@ public class DecompileApk {
     private JSONObject processWrapper( String processKey, String urlKey){
 
         JSONObject wrapper = new JSONObject();
-//        String url = "";
-//        String processKey = "undef";
-//        String processStatus = null;
-//        String urlKey = "";
 
         try {
             wrapper.put("url", m_appFolderUrl);
@@ -996,26 +1000,6 @@ public class DecompileApk {
         }
 
         return getStatus();
-//
-//        if( myThread != null) {
-//            if( myThread.isInterrupted())
-//                m_progressStream.putStream( "Process is interrupted: "+ myThreadName);
-//            else
-//            if( myThread.isAlive())
-//                m_progressStream.putStream( "Process is alive: "+ myThreadName);
-//            else
-//                m_progressStream.putStream( "Process is not alive: "+ myThreadName);
-//        }
-//        else
-//            m_progressStream.putStream( "Process is null: "+ myThreadName);
-//
-//        JSONObject status = new JSONObject();
-//        try {
-//            status.put("stop", myThread != null && myThread.isAlive()?1:0);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return status;
     }
 
     private class DexExceptionHandlerMod implements DexExceptionHandler {

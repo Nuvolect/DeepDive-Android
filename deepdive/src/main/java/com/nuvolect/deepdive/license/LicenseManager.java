@@ -144,7 +144,8 @@ public class LicenseManager {
         }else{
 
             String message = "By using this application you agree to "+AppSpecific.TOC_HREF_URL
-                    +" and "+AppSpecific.PP_HREF_URL;
+                    +" and "+AppSpecific.PP_HREF_URL+". "+
+                    "Use of this software is for education and training only.";
 
             AlertDialog.Builder builder = new AlertDialog.Builder(m_act);
             builder.setTitle("Please confirm Terms and Conditions and Privacy Policy");

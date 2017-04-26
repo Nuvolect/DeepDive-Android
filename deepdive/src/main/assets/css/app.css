@@ -9,17 +9,20 @@ body {
 	background-attachment: fixed;
 }
 
+.navbar .navbar-nav {
+    display: inline-block;
+    float: none;
+}
+
+.navbar .navbar-collapse {
+    text-align: center;
+}
 .navbar-default {
   background: none;
   font-size: 1.2em !important;
   line-height:48px;
   color: grey;
   margin-bottom: 0px;
-
-  float:none;
-  margin: 0 auto;
-  display: table;
-  table-layout: fixed;
   border: transparent;
 }
 .navbar-nav li > a {

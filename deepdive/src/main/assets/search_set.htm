@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="myApp" ng-controller="myController">
 <head>
-    <title>Search List</title>
+    <title>Search Set</title>
 
     <script src="/js/angular.min.js"></script>
     <script src="/js/angular-sanitize.min.js"></script>
@@ -19,7 +19,7 @@
 <div class="container">
 
     <div align="center">
-        <h1>Search List</h1>
+        <h1>Search Set</h1>
         <h3>{{search_path}}</h3>
     </div>
     <br>
@@ -27,31 +27,31 @@
     <div align="center">
 
         <form name="myForm">
-            <label for="current_list">Choose list:</label>
+            <label for="current_set">Choose set:</label>
             <select
-                ng-model="current_list"
+                ng-model="current_set"
                 ng-change="selectChange()"
-                ng-options="x.name for x in lists track by x.name" >
+                ng-options="x.name for x in sets track by x.name" >
             </select>
                 <a ng-show="edit_mode"
-                    href="#" ng-click="showNewListDialog()"><span class="glyphicon glyphicon-plus"></span>
+                    href="#" ng-click="showNewSetDialog()"><span class="glyphicon glyphicon-plus"></span>
                 </a>
                 <a ng-show="edit_mode"
-                   mw-confirm-click="removeList()"
-                   mw-confirm-click-message="You are about to delete a list of queries!! Are you sure?" >
+                   mw-confirm-click="removeSet()"
+                   mw-confirm-click-message="You are about to delete a set of queries!! Are you sure?" >
                    <span class="glyphicon glyphicon-minus"></span></a>
                 </a>
             <button ng-click="startSearch()" ng-disabled="start_button_disabled">Start</button>
         </form>
         <br>
 
-        <div align="center" ng-show="show_new_list_dialog">
+        <div align="center" ng-show="show_new_set_dialog">
             <form class="form-inline">
                 <div class="form-group" style="color: Black">
-                    List name:
-                    <input type="text" ng-model="new_list_name" name="new_list_name" placeholder="Enter new list name">
+                    Set name:
+                    <input type="text" ng-model="new_set_name" name="new_set_name" placeholder="Enter new set name">
                 </div>
-                <button type="submit" class="btn btn-default" ng-click="createList()">Submit</button>
+                <button type="submit" class="btn btn-default" ng-click="createSet()">Submit</button>
             </form>
             <br>
         </div>
@@ -68,7 +68,7 @@
                 <th>Query</th>
                 <th>Description</th>
             </tr>
-            <tr ng-repeat="x in query_list | orderBy: '-num_hits'">
+            <tr ng-repeat="x in query_set | orderBy: '-num_hits'">
                 <td align="right">{{x.num_hits}}</td>
                 <td style="padding: 2px 0;">
                     <a href="search.htm?search_path={{search_path}}&search_query={{x.query}}">{{x.query}}</a>
@@ -81,7 +81,7 @@
                 </a>
                 </td>
             </tr>
-            <tr ng-hide="query_list.length"><td></td><td>No quiries defined</td></tr>
+            <tr ng-hide="query_set.length"><td></td><td>No quiries defined</td></tr>
 
 
             <tr ng-show="edit_mode">
@@ -140,9 +140,9 @@
 
         var search_path = getURLParameter('search_path');
         $scope.search_path = search_path;
-        $scope.show_new_list_dialog = false;
+        $scope.show_new_set_dialog = false;
         $scope.show_new_query_dialog = false;
-        $scope.query_list = [];
+        $scope.query_set = [];
         $scope.searchLength = 0;
         $scope.currentSearch = -1;
         $scope.start_button_disabled = false;
@@ -164,7 +164,7 @@
                 query:$scope.new_query,
                 description:$scope.new_query_description
             };
-            $scope.query_list.push( obj );
+            $scope.query_set.push( obj );
 
             <!--console.log("createQuery(): "+$scope.new_query);-->
             <!--console.log("createQuery(): "+$scope.new_query_description);-->
@@ -176,9 +176,9 @@
             $scope.new_query = "";
             $scope.new_query_description = "";
 
-            var cleanList = angular.toJson( $scope.query_list );
+            var cleanList = angular.toJson( $scope.query_set );
 
-            $http.get("/search/put_list?list="+cleanList+"&name="+$scope.current_list.filename)
+            $http.get("/search/put_set?set="+cleanList+"&name="+$scope.current_set.filename)
                 .then(function (response) {
 
                 // Returned data is currently a string, convert it to JSON
@@ -186,7 +186,7 @@
 
                 if( ! result.success === true){
 
-                    $scope.dangerAlert("Error saving query list");
+                    $scope.dangerAlert("Error saving query set");
                 }
             });
         }
@@ -195,18 +195,18 @@
 
             <!--console.log("removeQuery(): "+query);-->
 
-            // Find index by iterating the list
-            var arrayLength = $scope.query_list.length;
+            // Find index by iterating the set
+            var arrayLength = $scope.query_set.length;
 
             for(var i=0; i < arrayLength; i++){//mkk
 
-               if( $scope.query_list[i].query === query){
+               if( $scope.query_set[i].query === query){
 
-                   $scope.query_list.splice( i, 1);
+                   $scope.query_set.splice( i, 1);
                    break;
                }
             }
-            // Memory list is updated, now save it to server
+            // Memory set is updated, now save it to server
             // mkk
         }
 
@@ -215,7 +215,7 @@
             <!--console.log("startSearch");-->
 
             $scope.start_button_disabled = true;
-            $scope.searchLength = $scope.query_list.length;
+            $scope.searchLength = $scope.query_set.length;
             $scope.currentSearch = -1;
 
             $scope.nextSearch();
@@ -230,7 +230,7 @@
                 <!--console.log("last search complete");-->
                 return;
             }
-            var search_query = $scope.query_list[ $scope.currentSearch ].query;
+            var search_query = $scope.query_set[ $scope.currentSearch ].query;
             <!--console.log("next search: "+search_query);-->
 
             $http.get("/search/search?search_path="+ search_path +"&search_query="+ search_query)
@@ -240,29 +240,29 @@
                 var result = $.parseJSON( response.data.result );
 
                 // Save number of hits and iterate to the next search
-                $scope.query_list[ $scope.currentSearch ].num_hits = result.num_hits;;
+                $scope.query_set[ $scope.currentSearch ].num_hits = result.num_hits;;
 
                 $scope.nextSearch();
             });
         }
 
-        $scope.showNewListDialog = function(){
+        $scope.showNewSetDialog = function(){
 
-            <!--console.log("showNewListDialog");-->
-            $scope.show_new_list_dialog = true;
+            <!--console.log("showNewSetDialog");-->
+            $scope.show_new_set_dialog = true;
         }
 
-        $scope.createList = function(){
+        $scope.createSet = function(){
 
-            <!--console.log("createList: $scope.new_list_name");-->
-            $scope.show_new_list_dialog = false;
+            <!--console.log("createSet: $scope.new_set_name");-->
+            $scope.show_new_set_dialog = false;
 
-            if( $scope.new_list_name ){
+            if( $scope.new_set_name ){
 
-                var emptyListFilename = $scope.new_list_name+".json";
-                $scope.new_list_name = "";// clear input field for next use
+                var emptySetFilename = $scope.new_set_name+".json";
+                $scope.new_set_name = "";// clear input field for next use
 
-                $http.get("/search/put_list?list=[]&name="+emptyListFilename)
+                $http.get("/search/put_set?set=[]&name="+emptySetFilename)
                     .then(function (response) {
 
                     // Returned data is currently a string, convert it to JSON
@@ -271,9 +271,9 @@
                     if( result.success === true){
 
                         // Update name made "safe" by server
-                        emptyListFilename = result.name;
+                        emptySetFilename = result.name;
 
-                        $http.get("/search/set_current_list?name="+emptyListFilename)
+                        $http.get("/search/set_current_set?name="+emptySetFilename)
                             .then(function (response) {
 
                             // Returned data is currently a string, convert it to JSON
@@ -281,19 +281,19 @@
 
                             if( result.success === true){
 
-                                $scope.getLists();
+                                $scope.getSets();
                             }
                         });
                     }
                     else
-                        $scope.dangerAlert("Error creating list");
+                        $scope.dangerAlert("Error creating set");
                 });
             }
         }
 
-        $scope.removeList = function(){
+        $scope.removeSet = function(){
 
-            $http.get("/search/delete_list?name="+$scope.current_list.filename)
+            $http.get("/search/delete_set?name="+$scope.current_set.filename)
                 .then(function (response) {
 
                 // Returned data is currently a string, convert it to JSON
@@ -301,18 +301,18 @@
 
                 if( result.success === true){
 
-                    $scope.getLists();
+                    $scope.getSets();
                 }
                 else
-                    $scope.dangerAlert("Error removing list");
+                    $scope.dangerAlert("Error removing set");
             });
         }
 
         $scope.selectChange = function(){
 
-            if( $scope.current_list ){
+            if( $scope.current_set ){
 
-                $http.get("/search/set_current_list?name="+$scope.current_list.filename)
+                $http.get("/search/set_current_set?name="+$scope.current_set.filename)
                     .then(function (response) {
 
                     // Returned data is currently a string, convert it to JSON
@@ -320,55 +320,55 @@
 
                     if( result.success === true){
 
-                        $scope.getCurrentList();
+                        $scope.getCurrentSet();
                     }
                     else
-                        $scope.dangerAlert("Error changing list");
+                        $scope.dangerAlert("Error changing set");
                 });
             }
         }
 
-        $scope.getCurrentList = function(){
+        $scope.getCurrentSet = function(){
 
-            $http.get("/search/get_current_list")
+            $http.get("/search/get_current_set")
                 .then(function (response) {
 
                 // Returned data is currently a string, convert it to JSON
                 var result = $.parseJSON( response.data.result );
 
-                // Set query list
-                $scope.query_list = result.list;
+                // Set query set
+                $scope.query_set = result.set;
 
-                // Update select menu by iterating all lists and setting current list object
-                var arrayLength = $scope.lists.length;
+                // Update select menu by iterating all sets and setting current set object
+                var arrayLength = $scope.sets.length;
 
                 for(var i=0; i < arrayLength; i++){
 
-                   if( $scope.lists[i].name === result.name){
+                   if( $scope.sets[i].name === result.name){
 
-                       $scope.current_list = $scope.lists[i];
+                       $scope.current_set = $scope.sets[i];
                        break;
                    }
                 }
             });
         }
 
-        // 1. Get the complete set of lists for the select menu
-        // 2. Get the persisted current list
-        $scope.getLists = function(){
+        // 1. Get the complete set of sets for the select menu
+        // 2. Get the persisted current set
+        $scope.getSets = function(){
 
-            $http.get("/search/get_lists")
+            $http.get("/search/get_sets")
                 .then(function (response) {
 
                 // Returned data is currently a string, convert it to JSON
                 var result = $.parseJSON( response.data.result );
 
-                $scope.lists = result.lists;
-                $scope.getCurrentList();
+                $scope.sets = result.sets;
+                $scope.getCurrentSet();
             });
         }
 
-        $scope.getLists();
+        $scope.getSets();
     });
     // http://stackoverflow.com/questions/18313576/confirmation-dialog-on-ng-click-angularjs
     app.directive( "mwConfirmClick", [
