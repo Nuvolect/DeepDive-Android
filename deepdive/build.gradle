@@ -60,6 +60,7 @@ android {
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         multiDexEnabled true
+        buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
     }
     buildTypes {
         debug {
