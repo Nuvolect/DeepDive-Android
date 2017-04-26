@@ -22,6 +22,7 @@ public class CConst {
     public static final String FIELD_VOLUME         = "volume_id";
     public static final String FILE_NAME            = "file_name";
     public static final String FILE_PATH            = "file_path";
+    public static final String NAME                 = "name";
     public static final String NO_PASSPHRASE        = "no-passphrase";
     public static final String OK                   = "ok";
     public static final String PERMISSION_MANAGER   = "permission_manager";
@@ -35,11 +36,13 @@ public class CConst {
     public static final String SEC_TOK              = "sec_tok";
     public static final String STRING32             = "01234567890123456789012345678901";
     public static final String SHOW_TIPS            = "show_tips";
+    public static final String TARGET               = "target";
     public static final String THREAD_STACK_SIZE    = "thread_stack_size";
     public static final String TMP                  = "tmp";
     public static final String TRUE                 = "true";
     public static final String USER_FOLDER_PATH     = "/DeepDive/";
     public static final String UNIQUE_ID            = "unique_id";
+    public static final String URL                  = "url";
     public static final String USERS                = "users";
     public static final String USER_MANAGER         = "user_manager";
 

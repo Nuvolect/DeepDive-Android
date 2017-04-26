@@ -60,7 +60,10 @@ android {
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         multiDexEnabled true
+
         buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
+
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         debug {
@@ -161,6 +164,14 @@ dependencies {
 //    compile files('libs/lucene-misc-5.3.0-mobile-2.jar')
 //    compile files('libs/lucene-sandbox-5.3.0-mobile-2.jar')
 //    compile files('libs/lucene-highlighter-5.3.0-mobile-2.jar')
+
+    // Required for local unit tests (JUnit 4 framework)
+    testCompile 'junit:junit:4.12'
+
+    // Required for instrumented tests
+    androidTestCompile 'com.android.support:support-annotations:25.3.1'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
 }
 //Add to see source code instead of decompiled jar code
 idea {
