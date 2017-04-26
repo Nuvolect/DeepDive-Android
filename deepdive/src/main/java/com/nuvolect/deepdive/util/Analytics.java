@@ -16,7 +16,7 @@ import com.google.analytics.tracking.android.MapBuilder;
 import com.nuvolect.deepdive.R;
 
 
-public class Analytics {
+public class Analytics {//SPRINT review analytics
 
     static EasyTracker easyTracker;
 

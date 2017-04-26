@@ -482,7 +482,7 @@ public class DecompileApk {
      * Build a new DEX file excluding classes in the OPTIMIZED_CLASS_EXCLUSION file
      * @return
      */
-    private JSONObject optimizeDex() {
+    private JSONObject optimizeDex() {//SPRINT complete optimize DEX
 
         final Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler() {
             @Override

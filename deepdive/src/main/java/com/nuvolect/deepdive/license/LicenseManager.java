@@ -8,7 +8,11 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
+import com.nuvolect.deepdive.BuildConfig;
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.LogUtil;
+
+import java.util.Date;
 
 
 /**
@@ -18,30 +22,59 @@ import com.nuvolect.deepdive.util.LogUtil;
  * <pre>
  * Startup process:
  *
- 1. Test for first time startup, if so
- 1.a Prompt for concurrence with terms and conditions, LicenseResult.REJECT_TERMS
-
- 2 Confirm app version has not expired. LicenseResult.APP_EXPIRED
-
- 3 Check for whitelist user, LicenseResult.WHITELIST_USER
-
- 4.a Check for pro user, license not expired, LicenseResult.PRO_USER
- 4.b Check for pro user, license expired, LicenseResult.PRO_USER_EXPIRED
-
- 5 User not white_list or pro user is an appreciated user, LicenseResult.APPRECIATED_USER
+ * 1. Test for first time startup, if so
+ * 1.a Prompt for concurrence with terms and conditions, LicenseResult.REJECT_TERMS
  *
+ * 2 Confirm app version has not expired, note below. LicenseResult.APP_EXPIRED
+ *
+ * 3 Check for whitelist user, LicenseResult.WHITELIST_USER
+ *
+ * 4.a Check for pro user, license not expired, LicenseResult.PRO_USER
+ * 4.b Check for pro user, license expired, LicenseResult.PRO_USER_EXPIRED
+ *      The user will always be a pro user but when license period expires
+ *      the user will lose nearly all pro privileges.
+ *
+ * 5 User not white_list or pro user is an appreciated user, LicenseResult.APPRECIATED_USER
+ *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * About LicenseResult.APP_EXPIRED
+ *
+ * The purpose is to defeat rogue and outdated versions of the app.
+ *
+ * Many illicit copies of the app are made and distributed and even sold outside
+ * of Google Play and outside of the control of Nuvolect. This app is not open source
+ * and is not free, it is for-profit and illicit copies can interfere with Nuvolect's
+ * rights and business models.
+ *
+ * A hard-date will be used to expire a version of the app.
+ *
+ * The user will be notified within 30 days of expiring:
+ *   "This app is getting old and requires update by: mm/dd/yyyy"
+ *
+ * When the app expires a dialog is shown requesting the user to upgrade.
+ *
+ * Each version of the app published has an absolute expire date.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  *</pre>
  */
 public class LicenseManager {
 
     private final boolean DEBUG = LogUtil.DEBUG;
 
-    public static void upgradeLicense(Activity act) {//SPRINT implement
+    /**
+     * Set the user as a pro user.
+     * Set the current time as when user upgrade.
+     *
+     * @param ctx
+     */
+    public static void upgradeLicense(Context ctx) {
 
+        LicensePersist.setIsProUser(ctx, true);
+        LicensePersist.setProUserUpgradeTime(ctx);
     }
 
     /**
-     * License type is saved in the ordinal position, do not reorder this list.
+     * License type is saved in the ordinal position.
      */
     public enum LicenseResult { NIL,
         REJECTED_TERMS,
@@ -52,12 +85,12 @@ public class LicenseManager {
         APPRECIATED_USER,
     }
 
-    private Context m_ctx;
     private Activity m_act;
     private static LicenseManager sInstance;
 
-    private static boolean mIsProUser = false; // Is the license process valid, we have a user?
-    public static boolean mIsWhitelistUser = false; // Is the user on the developer whitelist?
+    public static boolean mIsWhitelistUser;
+    public static boolean mIsProUser;
+    public static boolean mIsProUserExpired;
 
     /** Short description of current license for the Settings page */
     public String mLicenseSummary = "";
@@ -73,12 +106,15 @@ public class LicenseManager {
         if (sInstance == null) {
             //Always pass in the Application Context
             sInstance = new LicenseManager(context.getApplicationContext());
+
+            mIsWhitelistUser = false;// is also a pro user
+            mIsProUser = false;
+            mIsProUserExpired = false;
         }
         return sInstance;
     }
 
     private LicenseManager(Context context) {
-        m_ctx = context;
     }
 
     /**
@@ -103,7 +139,7 @@ public class LicenseManager {
 
         if( LicensePersist.getLegalAgree(m_act)){
 
-            step_2_check_for_whitelist_user();
+            step_2_confirm_version_not_expired();
 
         }else{
 
@@ -121,7 +157,7 @@ public class LicenseManager {
 
                     LicensePersist.setLegalAgree(m_act, true);
 
-                    step_2_check_for_whitelist_user();
+                    step_2_confirm_version_not_expired();
                 }
 
             });
@@ -141,9 +177,25 @@ public class LicenseManager {
             tv.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
+    void step_2_confirm_version_not_expired(){
 
-    void step_2_check_for_whitelist_user(){
-        if(DEBUG)LogUtil.log( "LicenseManager: step_2_check_for_whitelist_user");
+        Date buildDate = new Date(BuildConfig.BUILD_TIMESTAMP);
+        long appBuildTimeDate = buildDate.getTime();
+        long timeAppExpires = appBuildTimeDate + CConst.APP_VALID_DURATION;
+
+        if( System.currentTimeMillis() < timeAppExpires){
+
+            step_3_check_for_whitelist_user(); // app is still valid
+        }else{
+
+            mLicenseSummary = "App version expired";
+            mListener.licenseResult(LicenseResult.APP_EXPIRED);
+            // All done here, calling class will take over with returned result
+        }
+    }
+
+    void step_3_check_for_whitelist_user(){
+        if(DEBUG)LogUtil.log( "LicenseManager: step_3_check_for_whitelist_user");
 
         String whiteListAccount = Whitelist.getWhiteListCredentials(m_act);
 
@@ -156,44 +208,42 @@ public class LicenseManager {
             // All done here, calling class will take over with returned result
         }else{
 
-            step_3_check_for_early_adopter();
+            step_4_check_for_pro_user_license_not_expired();
         }
     }
 
-    /*
-     */
-    void step_3_check_for_early_adopter(){
-        if(DEBUG)LogUtil.log( "LicenseManager: step_3_check_for_early_adopter");
-
-        if( LicensePersist.isEarlyAdopter(m_act)){
-
-            mListener.licenseResult( LicenseResult.APPRECIATED_USER);
-            mLicenseSummary = "Pro user";
-            mIsProUser = true;
-        }else{
-           // All new users are currently early adopters
-            LicensePersist.setIsEarlyAdopter(m_ctx, true);
-            mListener.licenseResult( LicenseResult.APPRECIATED_USER);
-            mLicenseSummary = "Pro user";
-            mIsProUser = true;
-        }
-//        else step_4_check_for_pro_user();
-    }
-
-    void step_4_check_for_pro_user(){
+    void step_4_check_for_pro_user_license_not_expired(){
 
         if (DEBUG) LogUtil.log("LicenseManager: step_4_check_for_pro_user");
 
-        if( LicensePersist.isPremiumUser(m_act)) {
+        if( LicensePersist.isProUser(m_act)) {
 
-            mListener.licenseResult(LicenseResult.APPRECIATED_USER);
-            mLicenseSummary = "Pro user";
-            mIsProUser = true;
+            long timeLastProUpgrade = LicensePersist.getProUserUpgradeTime( m_act);
+            long timeProExpires = timeLastProUpgrade + CConst.PRO_LICENSE_DURATION;
+
+            if( timeProExpires < System.currentTimeMillis()){
+
+                mIsProUser = true;
+                mLicenseSummary = "Pro user";
+                mListener.licenseResult(LicenseResult.PRO_USER);
+                // All done here, calling class will take over with returned result
+            }else{
+
+                mIsProUserExpired = true;
+                mLicenseSummary = "Pro user, license expired";
+                mListener.licenseResult(LicenseResult.PRO_USER_EXPIRED);
+                // All done here, calling class will take over with returned result
+            }
+
         }else{
-
-            mListener.licenseResult(LicenseResult.APPRECIATED_USER);
-            mLicenseSummary = "Evaluation user";
-            mIsProUser = true;
+            step_5_user_is_appreciated_user();
         }
+    }
+
+    private void step_5_user_is_appreciated_user() {
+
+        mLicenseSummary = "Appreciated user";
+        mListener.licenseResult(LicenseResult.APPRECIATED_USER);
+        // All done here, calling class will take over with returned result
     }
 }

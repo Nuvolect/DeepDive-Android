@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.CrypUtil;
 import com.nuvolect.deepdive.util.JsonUtil;
 import com.nuvolect.deepdive.util.TimeUtil;
@@ -19,13 +20,14 @@ public class LicensePersist {
     private static final String PERSIST_NAME           = "license_persist";
 
     // Persist keys
+    private static final String EARLY_ADOPTER          = "early_adopter";
+    private static final String LAST_NAG_TIME          = "last_nag_time";
     private static final String LAST_PITCH             = "last_pitch";
     private static final String LEGAL_AGREE            = "legal_agree";
-    private static final String EARLY_ADOPTER          = "early_adopter";
-    private static final String PREMIUM_USER           = "premium_user";
     private static final String LEGAL_AGREE_TIME       = "legal_agree_time";
     private static final String LICENSE_RESULT         = "license_result";
-    private static final String LAST_NAG_TIME          = "last_nag_time";
+    private static final String PRO_USER               = "pro_user";
+    private static final String PRO_USER_UPGRADE_TIME  = "pro_user_upgrade_time";
     public static final CharSequence APP_LICENSE       = "app_license";// match settings.xml
 
     /**
@@ -79,8 +81,10 @@ public class LicensePersist {
                         +"\nUser accepted terms "+TimeUtil.friendlyTimeString(legalAgreeTime);
                 break;
             case PRO_USER:
+                long proLicenseExpires = getProUserUpgradeTime( ctx)+ CConst.PRO_LICENSE_DURATION;
                 summary = "License: Pro User"
-                        +"\nUser accepted terms "+TimeUtil.friendlyTimeString(legalAgreeTime);
+                        +"\nUser accepted terms "+TimeUtil.friendlyTimeString(legalAgreeTime)
+                        +"\nPro license expires "+TimeUtil.friendlyTimeString(proLicenseExpires);
                 break;
             default:
                 break;
@@ -194,13 +198,32 @@ public class LicensePersist {
         return CrypUtil.get( ctx, EARLY_ADOPTER, "false").contentEquals("true");
     }
 
-    public static boolean isPremiumUser(Context ctx) {
-
-        return CrypUtil.get( ctx, PREMIUM_USER, "false").contentEquals("true");
-    }
-
     public static void setIsEarlyAdopter(Context ctx, boolean b) {
 
         CrypUtil.put( ctx, EARLY_ADOPTER, b?"true":"false");
     }
+
+    public static void setIsProUser(Context ctx, boolean b) {
+
+        CrypUtil.put( ctx, PRO_USER, b?"true":"false");
+    }
+
+    public static boolean isProUser(Context ctx) {
+
+        return CrypUtil.get( ctx, PRO_USER, "false").contentEquals("true");
+    }
+
+
+    public static long getProUserUpgradeTime(Context ctx) {
+
+        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
+        return pref.getLong(PRO_USER_UPGRADE_TIME, 0);
+    }
+
+    public static void setProUserUpgradeTime(Context ctx ){
+
+        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
+        pref.edit().putLong( PRO_USER_UPGRADE_TIME, System.currentTimeMillis()).commit();
+    }
+
 }

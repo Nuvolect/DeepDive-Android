@@ -1,11 +1,12 @@
 package com.nuvolect.deepdive.main;
 
+import com.nuvolect.deepdive.R;
+
 public class CConst {
 
     public static final String APPS_PAGE            = "/apps.htm";
     public static final String APP_SIGNATURE        = "com.nuvolect.deepdive";
     public static final String AUTHENTICATED        = "authenticated";
-    public static final String BLOG_URL             = "https://nuvolect.com/blog";
     public static final String CHUNK                = "/chunk/";
     public static final String COMPANION_IP_PORT    = "companion_ip_port";//Match settings.xml
     public static final String DEFAULT_IP_PORT      = "0.0.0.0:0000";
@@ -29,7 +30,6 @@ public class CConst {
     public static final String RANDOM_EDGE          = "h0!U9#Wfnx";// Validates security certificate
     public static final String RESPONSE_CODE        = "response_code";
     public static final String ROOT                 = "/";
-    public static final String SERVER_ENABLED       = "server_enabled";
     public static final String SLASH                = "/";
     public static final String SEARCH_MANAGER_PAGE  = "/search_manager.htm";
     public static final String SEC_TOK              = "sec_tok";
@@ -43,13 +43,17 @@ public class CConst {
     public static final String USERS                = "users";
     public static final String USER_MANAGER         = "user_manager";
 
+    public final static int SMALL_ICON              = R.drawable.icon_64;
     public static final int IP_TEST_TIMEOUT_MS      = 8000;// Time for testing for companion device IP
 
     public static final long WEEK_MS                = 7 * 24 * 60 * 60 * 1000L;
     public static final long HOURS_24_MS            = 1 * 24 * 60 * 60 * 1000L;// 1 day
+    public static final long PRO_LICENSE_DURATION   = 365 * 24 * 60 * 60 * 1000L;// 1 year
+    public static final long APP_VALID_DURATION     = 182 * 24 * 60 * 60 * 1000L;// 1/2 year
 
-    public static final String APP_TOC_HREF_URL = "<a href='http://nuvolect.com/deepdive_terms'>Terms and Conditions</a>";
-    public static final String APP_PP_HREF_URL = "<a href='http://nuvolect.com/privacy'>Privacy Policy</a>";
+    public static final String BLOG_URL             = "https://nuvolect.com/blog";
+    public static final String APP_TOC_HREF_URL     = "<a href='http://nuvolect.com/deepdive/terms.htm'>Terms and Conditions</a>";
+    public static final String APP_PP_HREF_URL      = "<a href='http://nuvolect.com/privacy'>Privacy Policy</a>";
     public static final String APP_GOOGLE_PLAY_HREF_URL = "<a href='https://play.google.com/store/apps/details?id=com.nuvolect.deepdive'>Google Play</a>";
     public static final String APP_NUVOLECT_HREF_URL = "<a href='https://nuvolect.com/deepdive/deepdive_nuvolect.apk'>Nuvolect</a>";
 }

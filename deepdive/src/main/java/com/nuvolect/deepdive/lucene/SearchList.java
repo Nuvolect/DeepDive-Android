@@ -20,7 +20,7 @@ import java.io.OutputStream;
 /**
  * Manage search lists
  */
-public class SearchList {
+public class SearchList {//SPRINT rename SearchSet
 
     static String SEARCH_LIST_FOLDER_PATH = "/.search_list/";
     static String DEFAULT_SEARCH_LIST_FILENAME = "default_search_list.json";

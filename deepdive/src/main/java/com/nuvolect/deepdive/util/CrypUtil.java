@@ -98,6 +98,12 @@ public class CrypUtil {
             return Integer.valueOf( v );
     }
     /**
+     * Persist the long value referenced by a key.  Return the number of
+     * records updated: 0, first time update, 1, value updated, 2+ error.
+     * @param key
+     * @param val
+     */
+    /**
      * Persist the value referenced by a key.  Return the number of
      * records updated: 0, first time update, 1, value updated, 2+ error.
      * @param key
@@ -106,5 +112,43 @@ public class CrypUtil {
     public static int putInt(Context ctx, String key, int val) {
 
         return put( ctx, key, String.valueOf(val));
+    }
+
+    public static int putLong(Context ctx, String key, long val) {
+
+        return put( ctx, key, String.valueOf(val));
+    }
+    /**
+     * Return the integer value referenced by a key.
+     * Return 0 if the key does not exist.
+     * @param key
+     * @return
+     */
+    public static long getLong(Context ctx, String key) {
+
+        String v = get(ctx, key);
+        if( v.isEmpty())
+            return 0;
+        else
+            return Long.valueOf( v );
+    }
+
+    /**
+     * Return the integer value referenced by a key.
+     * If the key does not exist, save the default as the key and
+     * return it.
+     * @param key
+     * @param defLong
+     * @return
+     */
+    public static long getLong(Context ctx, String key, long defLong) {
+
+        String v = get( ctx, key);
+        if( v.isEmpty()) {
+            putLong( ctx, key, defLong);
+            return defLong;
+        }
+        else
+            return Long.valueOf( v );
     }
 }

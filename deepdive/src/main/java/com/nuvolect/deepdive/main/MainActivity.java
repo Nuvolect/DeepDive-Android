@@ -21,11 +21,13 @@ import com.nuvolect.deepdive.R;
 import com.nuvolect.deepdive.license.AppSpecific;
 import com.nuvolect.deepdive.license.LicenseManager;
 import com.nuvolect.deepdive.license.LicensePersist;
+import com.nuvolect.deepdive.license.LicenseUtil;
 import com.nuvolect.deepdive.settings.LobbySettingsActivity;
 import com.nuvolect.deepdive.util.ActionBarUtil;
 import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.DialogUtil;
 import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.Util;
 import com.nuvolect.deepdive.webserver.WebService;
 import com.nuvolect.deepdive.webserver.WebUtil;
 
@@ -143,20 +145,16 @@ public class MainActivity extends FragmentActivity {
                         });
             }
             case APP_EXPIRED:{
-                DialogUtil.confirmDialog(m_act,
+                DialogUtil.oneButtonMlDialog(m_act,
                         "App Version Expired",
                         "This app version has expired and is no longer supported.\n"+
                         "Please update the app from "+CConst.APP_GOOGLE_PLAY_HREF_URL+
                         " or "+CConst.APP_NUVOLECT_HREF_URL+".",
                         "Exit",
-                        new DialogUtil.DialogCallback() {
+                        new DialogUtil.DialogUtilCallbacks() {
                             @Override
-                            public void confirmed() {
-                               m_act.finish();
-                            }
+                            public void confirmed(boolean confirmed) {
 
-                            @Override
-                            public void canceled() {
                                 m_act.finish();
                             }
                         });
@@ -168,6 +166,18 @@ public class MainActivity extends FragmentActivity {
     };
 
     private void startGui() {
+
+        /**
+         * Detect app upgrade and provide a placeholder for managing upgrades, database changes, etc.
+         */
+        boolean appUpgraded = LicenseUtil.appUpgraded(m_act);
+
+        if(appUpgraded) {
+
+            Toast.makeText(getApplicationContext(), "Application upgraded", Toast.LENGTH_LONG).show();
+
+            // Execute upgrade methods
+        }
 
         if (!haveNecessaryPermissions()) {
 
@@ -241,6 +251,12 @@ public class MainActivity extends FragmentActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
 
+        if( (LicenseManager.mIsWhitelistUser || Boolean.valueOf( m_act.getString(R.string.verbose_logging)))
+                && DeveloperDialog.isEnabled()){
+
+            Util.showMenu( menu, R.id.menu_developer );
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -281,6 +297,10 @@ public class MainActivity extends FragmentActivity {
 
                 Intent i = new Intent(m_act, LobbySettingsActivity.class);
                 startActivity(i);
+                break;
+            }
+            case R.id.menu_developer:{
+                DeveloperDialog.start(m_act);
                 break;
             }
             default:{
