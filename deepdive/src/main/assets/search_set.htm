@@ -3,17 +3,18 @@
 <head>
     <title>Search Set</title>
 
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     <script src="/js/angular.min.js"></script>
     <script src="/js/angular-sanitize.min.js"></script>
+
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/lobby.css" rel="stylesheet">
 </head>
 
 <body>
-<!-- Bootstrap core JavaScript -->
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+
 <div ng-include="'./navbar.htm'"></div>
 
 <div class="container">
@@ -29,18 +30,18 @@
         <form name="myForm">
             <label for="current_set">Choose set:</label>
             <select
-                ng-model="current_set"
-                ng-change="selectChange()"
-                ng-options="x.name for x in sets track by x.name" >
+                    ng-model="current_set"
+                    ng-change="selectChange()"
+                    ng-options="x.name for x in sets track by x.name" >
             </select>
-                <a ng-show="edit_mode"
-                    href="#" ng-click="showNewSetDialog()"><span class="glyphicon glyphicon-plus"></span>
-                </a>
-                <a ng-show="edit_mode"
-                   mw-confirm-click="removeSet()"
-                   mw-confirm-click-message="You are about to delete a set of queries!! Are you sure?" >
-                   <span class="glyphicon glyphicon-minus"></span></a>
-                </a>
+            <a ng-show="edit_mode"
+               href="#" ng-click="showNewSetDialog()"><span class="glyphicon glyphicon-plus"></span>
+            </a>
+            <a ng-show="edit_mode"
+               mw-confirm-click="removeSet()"
+               mw-confirm-click-message="You are about to delete a set of queries!! Are you sure?" >
+                <span class="glyphicon glyphicon-minus"></span></a>
+            </a>
             <button ng-click="startSearch()" ng-disabled="start_button_disabled">Start</button>
         </form>
         <br>
@@ -56,9 +57,18 @@
             <br>
         </div>
 
-        <div ng-show="show_danger_alert" class="alert alert-danger alert-dismissable">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <div ng-show="show_danger_alert" class="alert alert-danger alert-dismissable" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
             <strong>{{danger_alert_message}}</strong>
+        </div>
+
+        <div ng-show="show_success_alert" class="alert alert-success alert-dismissable" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>{{success_alert_message}}</strong>
         </div>
 
         <table class="card" style="border-collapse: separate; border-spacing: 20px 5px;">
@@ -68,7 +78,7 @@
                 <th>Query</th>
                 <th>Description</th>
             </tr>
-            <tr ng-repeat="x in query_set | orderBy: '-num_hits'">
+            <tr ng-repeat="x in search_set | orderBy: '-num_hits'">
                 <td align="right">{{x.num_hits}}</td>
                 <td style="padding: 2px 0;">
                     <a href="search.htm?search_path={{search_path}}&search_query={{x.query}}">{{x.query}}</a>
@@ -78,10 +88,10 @@
                         mw-confirm-click="removeQuery( x.query )"
                         mw-confirm-click-message="You are about to delete a query!! Are you sure?" >
                     <span class="glyphicon glyphicon-minus"></span></a>
-                </a>
+                    </a>
                 </td>
             </tr>
-            <tr ng-hide="query_set.length"><td></td><td>No quiries defined</td></tr>
+            <tr ng-hide="search_set.length"><td></td><td>No queries defined</td></tr>
 
 
             <tr ng-show="edit_mode">
@@ -112,9 +122,7 @@
                 <tr ng-show="show_new_query_dialog">
                     <td></td>
                     <td>
-                        <button type="submit" class="btn btn-default" ng-click="createQuery()">
-                            Submit
-                        </button>
+                        <button type="submit" class="btn btn-default" ng-click="createQuery()">Submit</button>
                     </td>
                 </tr>
                 </form>
@@ -142,11 +150,12 @@
         $scope.search_path = search_path;
         $scope.show_new_set_dialog = false;
         $scope.show_new_query_dialog = false;
-        $scope.query_set = [];
+        $scope.search_set = [];
         $scope.searchLength = 0;
         $scope.currentSearch = -1;
         $scope.start_button_disabled = false;
         $scope.show_danger_alert = false;
+        $scope.show_success_alert = false;
 
         function getURLParameter(name) {
           return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
@@ -158,13 +167,19 @@
             $scope.show_danger_alert = true;
         }
 
+        $scope.successAlert = function( message ){
+
+            $scope.success_alert_message = message;
+            $scope.show_success_alert = true;
+        }
+
         $scope.createQuery = function(){
 
             var obj = {
                 query:$scope.new_query,
                 description:$scope.new_query_description
             };
-            $scope.query_set.push( obj );
+            $scope.search_set.push( obj );
 
             <!--console.log("createQuery(): "+$scope.new_query);-->
             <!--console.log("createQuery(): "+$scope.new_query_description);-->
@@ -176,7 +191,7 @@
             $scope.new_query = "";
             $scope.new_query_description = "";
 
-            var cleanList = angular.toJson( $scope.query_set );
+            var cleanList = angular.toJson( $scope.search_set );
 
             $http.get("/search/put_set?set="+cleanList+"&name="+$scope.current_set.filename)
                 .then(function (response) {
@@ -196,18 +211,33 @@
             <!--console.log("removeQuery(): "+query);-->
 
             // Find index by iterating the set
-            var arrayLength = $scope.query_set.length;
+            var arrayLength = $scope.search_set.length;
 
             for(var i=0; i < arrayLength; i++){//mkk
 
-               if( $scope.query_set[i].query === query){
+               if( $scope.search_set[i].query === query){
 
-                   $scope.query_set.splice( i, 1);
+                   $scope.search_set.splice( i, 1);
                    break;
                }
             }
             // Memory set is updated, now save it to server
             // mkk
+            var cleanList = angular.toJson( $scope.search_set );
+
+            $http.get("/search/put_set?set="+cleanList+"&name="+$scope.current_set.filename)
+                .then(function (response) {
+
+                // Returned data is currently a string, convert it to JSON
+                var result = $.parseJSON( response.data.result );
+
+                if( result.success === true){
+
+                    $scope.successAlert("Search set saved");
+                }
+                else
+                    $scope.dangerAlert("Error saving set");
+            });
         }
 
         $scope.startSearch = function(){
@@ -215,7 +245,7 @@
             <!--console.log("startSearch");-->
 
             $scope.start_button_disabled = true;
-            $scope.searchLength = $scope.query_set.length;
+            $scope.searchLength = $scope.search_set.length;
             $scope.currentSearch = -1;
 
             $scope.nextSearch();
@@ -230,7 +260,7 @@
                 <!--console.log("last search complete");-->
                 return;
             }
-            var search_query = $scope.query_set[ $scope.currentSearch ].query;
+            var search_query = $scope.search_set[ $scope.currentSearch ].query;
             <!--console.log("next search: "+search_query);-->
 
             $http.get("/search/search?search_path="+ search_path +"&search_query="+ search_query)
@@ -240,7 +270,7 @@
                 var result = $.parseJSON( response.data.result );
 
                 // Save number of hits and iterate to the next search
-                $scope.query_set[ $scope.currentSearch ].num_hits = result.num_hits;;
+                $scope.search_set[ $scope.currentSearch ].num_hits = result.num_hits;;
 
                 $scope.nextSearch();
             });
@@ -337,7 +367,7 @@
                 var result = $.parseJSON( response.data.result );
 
                 // Set query set
-                $scope.query_set = result.set;
+                $scope.search_set = result.set;
 
                 // Update select menu by iterating all sets and setting current set object
                 var arrayLength = $scope.sets.length;

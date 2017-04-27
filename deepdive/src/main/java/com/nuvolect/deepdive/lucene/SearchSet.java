@@ -20,7 +20,7 @@ import java.io.OutputStream;
 /**
  * Manage search sets
  */
-public class SearchSet {//SPRINT rename SearchSet
+public class SearchSet {
 
     static String SEARCH_SET_FOLDER_PATH = "/.search_set/";
     static String DEFAULT_SEARCH_SET_FILENAME = "default_search_set.json";

@@ -143,7 +143,7 @@ public class SearchRest {
             return new ByteArrayInputStream(wrapper.toString().getBytes("UTF-8"));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.logException( SearchRest.class, e);
         }
 
         return null;
