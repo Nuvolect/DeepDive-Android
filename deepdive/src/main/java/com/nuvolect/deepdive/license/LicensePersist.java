@@ -213,7 +213,6 @@ public class LicensePersist {
         return CrypUtil.get( ctx, PRO_USER, "false").contentEquals("true");
     }
 
-
     public static long getProUserUpgradeTime(Context ctx) {
 
         final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);

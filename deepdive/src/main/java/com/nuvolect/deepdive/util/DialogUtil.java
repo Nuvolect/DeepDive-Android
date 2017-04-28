@@ -13,7 +13,11 @@ import com.nuvolect.deepdive.main.CConst;
 
 public class DialogUtil {
 
-    private static AlertDialog dialog_alert;
+    private static AlertDialog confirmDialog_alert;
+    private static AlertDialog dismissDialog_alert;
+    private static AlertDialog dismissDialogMl_alert;
+    private static AlertDialog oneButtonDialog_alert;
+    private static AlertDialog twoButtonDialog_alert;
 
     public static interface DialogCallback {
 
@@ -114,7 +118,7 @@ public class DialogUtil {
     }
 
     public static void inputDialog(
-        Activity act, String title, String message, String hint,
+            Activity act, String title, String message, String hint,
             boolean enableOkButton, final InputDialogCallbacks callbacks){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
@@ -173,14 +177,14 @@ public class DialogUtil {
         builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                dialog_alert.cancel();
+                dismissDialog_alert.cancel();
             }
         });
-        dialog_alert = builder.create();
-        dialog_alert.show();
+        dismissDialog_alert = builder.create();
+        dismissDialog_alert.show();
 
         // Activate the HTML
-        TextView tv = ((TextView) dialog_alert.findViewById(android.R.id.message));
+        TextView tv = ((TextView) dismissDialog_alert.findViewById(android.R.id.message));
         tv.setMovementMethod(LinkMovementMethod.getInstance());
     }
     /** Simple multi-line dialog with a title, message and dismiss button */
@@ -203,11 +207,11 @@ public class DialogUtil {
         builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                dialog_alert.cancel();
+                dismissDialogMl_alert.cancel();
             }
         });
-        dialog_alert = builder.create();
-        dialog_alert.show();
+        dismissDialogMl_alert = builder.create();
+        dismissDialogMl_alert.show();
     }
     /** Multi-line dialog with a title, message, dismiss button and callback*/
     public static void oneButtonMlDialog(
@@ -231,7 +235,7 @@ public class DialogUtil {
         builder.setNegativeButton( buttonTitle, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                dialog_alert.cancel();
+                oneButtonDialog_alert.cancel();
                 callbacks.confirmed( true);
             }
         });
@@ -242,15 +246,16 @@ public class DialogUtil {
                 callbacks.confirmed( false);
             }
         });
-        dialog_alert = builder.create();
-        dialog_alert.show();
+        oneButtonDialog_alert = builder.create();
+        oneButtonDialog_alert.show();
 
         tv.setMovementMethod(LinkMovementMethod.getInstance());
     }
     /** Multi-line dialog with a title, message, dismiss button and second button*/
     public static void twoButtonMlDialog(
             Activity act, String title, String message,
-            String secondButtonTitle, final DialogUtilCallbacks callbacks) {
+            String negativeButtonTitle, String positiveButtonTitle,
+            final DialogUtilCallbacks callbacks) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
 
@@ -266,22 +271,32 @@ public class DialogUtil {
         builder.setIcon(CConst.SMALL_ICON);
         builder.setCancelable(true);
 
-        builder.setPositiveButton( secondButtonTitle, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton( positiveButtonTitle, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                dialog_alert.cancel();
+                twoButtonDialog_alert.cancel();
                 callbacks.confirmed( true);
             }
         });
-        builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton( negativeButtonTitle, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                dialog_alert.cancel();
+                twoButtonDialog_alert.cancel();
                 callbacks.confirmed( false);
             }
         });
-        dialog_alert = builder.create();
-        dialog_alert.show();
+        builder.setOnCancelListener(
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                        twoButtonDialog_alert.cancel();
+                        callbacks.confirmed( false);
+                    }
+                }
+        );
+        twoButtonDialog_alert = builder.create();
+        twoButtonDialog_alert.show();
     }
     public interface DialogUtilCallbacks {
 
@@ -300,22 +315,22 @@ public class DialogUtil {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                dialog_alert.cancel();
+                confirmDialog_alert.cancel();
                 callbacks.confirmed( true);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                dialog_alert.cancel();
+                confirmDialog_alert.cancel();
                 callbacks.confirmed( false);
             }
         });
-        dialog_alert = builder.create();
-        dialog_alert.show();
+        confirmDialog_alert = builder.create();
+        confirmDialog_alert.show();
 
         // Activate the HTML
-        TextView tv = ((TextView) dialog_alert.findViewById(android.R.id.message));
+        TextView tv = ((TextView) confirmDialog_alert.findViewById(android.R.id.message));
         tv.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }

@@ -68,6 +68,9 @@ public class Analytics {//SPRINT review analytics
     public static final String SURVEY_MENU         = "survey_menu";
     public static final String SURVEY_TOTAL        = "survey_total";
     public static final String UNCHECKED           = "unchecked";
+    public static final String UPGRADE_MENU        = "upgrade_menu";
+    public static final String UPGRADE_SELECT      = "upgrade_select";
+    public static final String UPGRADE_CANCEL      = "upgrade_cancel";
     public static final String UP_BUTTON_EXIT      = "up_button_exit";
     public static final String UPDATED             = "updated";
     public static final String FINDER              = "finder";

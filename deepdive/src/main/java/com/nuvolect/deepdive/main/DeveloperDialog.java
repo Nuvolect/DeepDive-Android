@@ -109,12 +109,16 @@ public class DeveloperDialog {
                                 if( LicenseManager.mIsProUser)
                                     LicenseManager.mIsProUserExpired = false;
 
+                                Toast.makeText(m_act, "pro user: "+LicenseManager.mIsProUser, Toast.LENGTH_SHORT).show();
                                 LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUser: "+LicenseManager.mIsProUser);
                                 LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUserExpired: "+LicenseManager.mIsProUserExpired);
                                 break;
                             }
                             case Toggle_Pro_UserExpired:{
 
+                                /**
+                                 * In-memory only, will reset next app start
+                                 */
                                 LicenseManager.mIsProUserExpired = ! LicenseManager.mIsProUserExpired;
                                 /**
                                  * Can never be a pro user and also be expired
@@ -122,6 +126,7 @@ public class DeveloperDialog {
                                 if( LicenseManager.mIsProUserExpired)
                                     LicenseManager.mIsProUser = false;
 
+                                Toast.makeText(m_act, "pro user: "+LicenseManager.mIsProUserExpired, Toast.LENGTH_SHORT).show();
                                 LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUser: "+LicenseManager.mIsProUser);
                                 LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUserExpired: "+LicenseManager.mIsProUserExpired);
                                 break;

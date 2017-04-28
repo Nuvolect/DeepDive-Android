@@ -127,22 +127,27 @@ public class MainActivity extends FragmentActivity {
                 startGui();
                 break;
             }
-            case PRO_USER_EXPIRED:{
-                DialogUtil.confirmDialog(m_act,
-                        "App License Expired",
-                        "The app license has expired. To enable Pro features please upgrade your license.\n",
-                        "Exit",
-                        new DialogUtil.DialogCallback() {
-                            @Override
-                            public void confirmed() {
-                                LicenseManager.upgradeLicense(m_act);
-                            }
+            case PRO_USER_EXPIRED:{//mkk
 
+                DialogUtil.twoButtonMlDialog(m_act,
+                        "App License Expired",
+                        "The Pro license has expired. To enable Pro features please upgrade your license.\n",
+                        "Not now", "Upgrade",
+                        new DialogUtil.DialogUtilCallbacks() {
                             @Override
-                            public void canceled() {
-                                startGui();
+                            public void confirmed(boolean confirmed) {
+
+                                if( confirmed){
+                                    // Send the user on to ponder an upgrade to pro
+                                    LicenseManager.upgradeLicense(m_act);
+                                }else{
+                                    // User can continue without pro features
+                                    startGui();
+                                }
                             }
-                        });
+                        }
+                );
+                break;
             }
             case APP_EXPIRED:{
                 DialogUtil.oneButtonMlDialog(m_act,
@@ -158,6 +163,7 @@ public class MainActivity extends FragmentActivity {
                                 m_act.finish();
                             }
                         });
+                break;
             }
             default:
                 break;
@@ -273,6 +279,16 @@ public class MainActivity extends FragmentActivity {
                         Analytics.COUNT, 1);
 
                 quitApp();
+                break;
+            }
+            case R.id.menu_upgrade:{
+
+                Analytics.send(getApplicationContext(),
+                        Analytics.MAIN_MENU,
+                        Analytics.UPGRADE_MENU,
+                        Analytics.COUNT, 1);
+
+                LicenseManager.upgradeLicense( m_act);//mkk
                 break;
             }
             case R.id.menu_help:{

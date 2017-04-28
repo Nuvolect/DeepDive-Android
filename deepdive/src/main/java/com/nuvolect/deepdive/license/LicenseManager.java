@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.nuvolect.deepdive.BuildConfig;
 import com.nuvolect.deepdive.main.CConst;
+import com.nuvolect.deepdive.util.Analytics;
+import com.nuvolect.deepdive.util.DialogUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 
 import java.util.Date;
@@ -60,18 +62,6 @@ import java.util.Date;
 public class LicenseManager {
 
     private final boolean DEBUG = LogUtil.DEBUG;
-
-    /**
-     * Set the user as a pro user.
-     * Set the current time as when user upgrade.
-     *
-     * @param ctx
-     */
-    public static void upgradeLicense(Context ctx) {
-
-        LicensePersist.setIsProUser(ctx, true);
-        LicensePersist.setProUserUpgradeTime(ctx);
-    }
 
     /**
      * License type is saved in the ordinal position.
@@ -247,4 +237,53 @@ public class LicenseManager {
         mListener.licenseResult(LicenseResult.APPRECIATED_USER);
         // All done here, calling class will take over with returned result
     }
+
+    /**
+     * Set the user as a pro user.
+     * Set the current time as when user upgrade.
+     *
+     * @param act
+     */
+    public static void upgradeLicense(final Activity act) {
+
+        Analytics.send( act,
+                Analytics.MAIN_MENU,
+                Analytics.UPGRADE_MENU,
+                Analytics.COUNT, 1);
+
+        DialogUtil.twoButtonMlDialog( act, "Upgrade to Pro",
+                "Early adopters can upgrade to Pro for free for six months, no catch.",
+                "Not now", "Upgrade", new DialogUtil.DialogUtilCallbacks() {
+                    @Override
+                    public void confirmed(boolean confirmed) {
+
+                        if( confirmed ){
+
+                            if( ! LicensePersist.isProUser( act)){
+
+                                LicensePersist.setIsProUser( act, true);
+                                LicensePersist.setProUserUpgradeTime( act);
+
+                                DialogUtil.dismissDialog( act, "A New Pro User!",
+                                        "Congrats! You are now a Pro User!");
+
+                                Analytics.send( act,
+                                        Analytics.MAIN_MENU,
+                                        Analytics.UPGRADE_SELECT,
+                                        Analytics.COUNT, 1);
+                            }
+                            else {
+                                DialogUtil.dismissDialog( act, "A Pro User!",
+                                        "This is great, you are already a Pro User!");
+                            }
+                        }else{
+                            Analytics.send( act,
+                                    Analytics.MAIN_MENU,
+                                    Analytics.UPGRADE_CANCEL,
+                                    Analytics.COUNT, 1);
+                        }
+                    }
+                });
+    }
+
 }
