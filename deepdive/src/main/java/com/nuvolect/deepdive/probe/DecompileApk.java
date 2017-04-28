@@ -447,7 +447,10 @@ public class DecompileApk {
                         OmniFile optimizedDex = new OmniFile( m_volumeId,m_appFolderPath+ OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
                         if( ! optimizedDex.exists()){
 
-                            OmniUtil.writeFile( optimizedDex, "");
+                            String assetFilePath = CConst.ASSET_DATA_FOLDER+OPTIMIZED_CLASSES_EXCLUSION_FILENAME;
+                            OmniFile omniFile = new OmniFile( m_volumeId, m_appFolderPath+ OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
+                            OmniUtil.copyAsset( m_ctx, assetFilePath, omniFile);
+
                             m_progressStream.putStream("File created: "+OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
                         }
                     }
@@ -487,7 +490,7 @@ public class DecompileApk {
      * Build a new DEX file excluding classes in the OPTIMIZED_CLASS_EXCLUSION file
      * @return
      */
-    private JSONObject optimizeDex() {//SPRINT complete optimize DEX
+    private JSONObject optimizeDex() {
 
         final Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler() {
             @Override
@@ -518,7 +521,7 @@ public class DecompileApk {
                         m_progressStream.putStream("Exclude class: "+excludeClass);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LogUtil.logException(DecompileApk.class, e);
                 }
                 if( s != null)
                     s.close();
@@ -526,44 +529,55 @@ public class DecompileApk {
                 /**
                  * FIXME: Optimizing DEX appears to only read the first classes.dex.
                  * The problem is the classes{n}.dex files are ignored and not all classes can be decompiled.
+                 * mkk
                  */
-//                File dFile = new File( m_appFolderPath +"classes.dex" );
-//                try {
-//                    DexFile df = new DexFile( dFile);
-//                    Enumeration<String> e = df.entries();
-//
-//                    LogUtil.log( e.toString());
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+                for( String fileName : m_dexFileNames) {
 
-                org.jf.dexlib2.iface.DexFile dexFile = null;
-                try {
-                    dexFile = DexFileFactory.loadDexFile( m_appApkPath, 19);
-                } catch( Exception e) {
-                    m_progressStream.putStream("The app DEX file cannot be decompiled.");
-                }
+                    OmniFile dexFile = new OmniFile(m_volumeId, m_appFolderPath + fileName + ".dex");
 
-                Set<? extends ClassDef> classSet = dexFile.getClasses();
+                    if (dexFile.exists() && dexFile.isFile()) {
 
-                for (org.jf.dexlib2.iface.ClassDef classDef : classSet) {
 
-                    if (!isIgnored(classDef.getType())) {
-                        final String currentClass = classDef.getType();
-                        m_progressStream.putStream("Optimizing_class: " + currentClass);
-                        classes.add(classDef);
+                        org.jf.dexlib2.iface.DexFile memoryDexFile = null;
+                        try {
+                            memoryDexFile = DexFileFactory.loadDexFile( dexFile.getStdFile(), 19);
+                        } catch (Exception e) {
+                            m_progressStream.putStream("The app DEX file cannot be decompiled.");
+                            LogUtil.logException(DecompileApk.class, e);
+                            continue;
+                        }
+
+                        int excludedClassCount = 0;
+                        Set<? extends ClassDef> origClassSet = memoryDexFile.getClasses();
+
+                        for (org.jf.dexlib2.iface.ClassDef classDef : origClassSet) {
+
+                            final String currentClass = classDef.getType();
+
+                            if (isIgnored(currentClass)) {
+                                ++excludedClassCount;
+                                m_progressStream.putStream("Excluded class: " + currentClass);
+                            } else {
+                                m_progressStream.putStream("Included class: " + currentClass);
+                                classes.add(classDef);
+                            }
+                        }
+
+                        m_progressStream.putStream("Excluded classes #" + excludedClassCount);
+                        m_progressStream.putStream("Included classes #" + classes.size());
+                        m_progressStream.putStream("Rebuilding immutable dex file...");
+
+                        org.jf.dexlib2.iface.DexFile optimizedDexFile = null;
+                        optimizedDexFile = new ImmutableDexFile(classes);
+
+                        try {
+                            m_progressStream.putStream("Writing optimized dex: "+dexFile.getName());
+                            dexFile.delete();
+                            DexFileFactory.writeDexFile( dexFile.getStdFile().getAbsolutePath(), optimizedDexFile);
+                        } catch (Exception e) {
+                            m_progressStream.putStream("The app DEX file cannot be decompiled: "+dexFile.getName());
+                        }
                     }
-                }
-
-                m_progressStream.putStream("Merging classes #"+classSet.size());
-                dexFile = new ImmutableDexFile( classes);
-
-                try {
-                    m_progressStream.putStream("Writing optimized_classes.dex");
-                    DexFileFactory.writeDexFile(m_appFolder+"/optimized_classes.dex", dexFile);
-                } catch( Exception e) {
-                    m_progressStream.putStream("The app DEX file cannot be decompiled.");
                 }
                 m_progressStream.putStream("Optimize DEX complete: "
                         +TimeUtil.deltaTimeHrMinSec(m_optimize_dex_time));
@@ -652,7 +666,9 @@ public class DecompileApk {
                         } catch ( Exception e) {
                             String ex = LogUtil.logException(LogUtil.LogType.DECOMPILE, e);
                             m_progressStream.putStream(ex);
+                            m_progressStream.putStream("DEX to JAR failed: "+jarFile.getName());
                             success = false;
+                            continue;
                         }
                         if( success ){
                             size = NumberFormat.getNumberInstance(Locale.US).format(jarFile.length());

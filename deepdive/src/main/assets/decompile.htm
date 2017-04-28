@@ -23,6 +23,14 @@
     <br>
 
     <div align="center">
+
+        <div ng-show="show_danger_alert" class="alert alert-danger alert-dismissable" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>{{danger_alert_message}}</strong>
+        </div>
+
         <button type="button" class="btn btn-link" data-toggle="modal" data-target=".help-modal">Help</button>
 
         <table class="card">
@@ -34,7 +42,7 @@
                 <td><strong>Search</strong></td>
             </tr>
             <tr>
-                <td>1.</td>
+                <td><strong>1.</strong></td>
                 <td>
                     <button ng-click="copyApk()">Extract APK</button>
                 </td>
@@ -53,7 +61,7 @@
                 </td>
             </tr>
             <tr>
-                <td>2.</td>
+                <td><strong>2.</strong></td>
                 <td>
                     <button ng-click="unpackApk()">Unpack APK</button>
                 </td>
@@ -70,7 +78,24 @@
                 </td>
             </tr>
             <tr>
-                <td>3. Jadx</td>
+                <td></td>
+                <td>
+                    <button ng-click="optimizeDex()">Optimize DEX</button> (optional)
+                </td>
+                <td align="center">
+                    {{ optimize_dex_thread }}
+                    <button ng-show="optimize_dex_show_button" ng-click="stopThread('optimize_dex')">Stop</button>
+                </td>
+            </tr>
+            <tr ng-show="optimize_dex_show_time">
+                <td></td>
+                <td></td>
+                <td>
+                    {{ optimize_dex_time }}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>3.</strong></td>
                 <td>
                     <button ng-click="startJadx()">Decompile with Jadx</button>
                 </td>
@@ -97,24 +122,7 @@
                 </td>
             </tr>
             <tr>
-                <td>3.1</td>
-                <td>
-                    <button ng-click="optimizeDex()">Optimize DEX</button> (optional)
-                </td>
-                <td align="center">
-                    {{ optimize_dex_thread }}
-                    <button ng-show="optimize_dex_show_button" ng-click="stopThread('optimize_dex')">Stop</button>
-                </td>
-            </tr>
-            <tr ng-show="optimize_dex_show_time">
                 <td></td>
-                <td></td>
-                <td>
-                    {{ optimize_dex_time }}
-                </td>
-            </tr>
-            <tr>
-                <td>3.2</td>
                 <td>
                     <button ng-click="dex2jar()">DEX to JAR</button>
                 </td>
@@ -131,7 +139,7 @@
                 </td>
             </tr>
             <tr>
-                <td>3.3 CFR</td>
+                <td><strong>3.</strong></td>
                 <td>
                     <button ng-click="startCfr()">Decompile with CFR</button>
                 </td>
@@ -158,7 +166,7 @@
                 </td>
             </tr>
             <tr>
-                <td>3.3 FernFlower</td>
+                <td><strong>3.</strong></td>
                 <td>
                     <button ng-click="startFernFlower()">Decompile with FernFlower</button>
                 </td>
@@ -216,6 +224,7 @@
                 <h4 class="modal-title">How to decompile an App</h4>
             </div>
             <div class="modal-body">
+                <p>The basic procedure is:</p>
                 <ol>
                     <li>Extract APK file</li>
                     <li>Unpack APK file</li>
@@ -223,17 +232,24 @@
                 </ol>
                 <p>After step 2 use Finder or Search to explore app assets and manifest.</p>
                 <p>Step 3 is different for each decompiler. Jadx can decompile the DEX file directly.
-                    CFR and FernFlower require DEX conversion to JAR. Optionally, DEX files can be
-                    optimized to prior to decompiling to reduce computation time or bypass decompilation errors.
+                    CFR and FernFlower require DEX conversion to JAR.
+                </p>
+                <p>Optionally, DEX files can be optimized to prior to decompiling to reduce
+                    computation time or bypass decompilation errors.
                     This is done by adding classes to the dex_class_exclusion.txt via "Finder Edit file",
-                    then select 3.1) Optional: Optimize DEX.
+                    then select "Optimize DEX".
                 </p>
                 <pre>
+                Example decompile with Jadx:
+                    1. Extract APK
+                    2. Unpack APK
+                    3. Decompile with Jadx
+
                 Example decompile with FernFlower:
                     1. Extract APK
                     2. Unpack APK
-                    3.2 DEX to JAR
-                    3.3 Decompile with FernFlower
+                       DEX to JAR
+                    3. Decompile with FernFlower
                 </pre>
             </div>
             <div class="modal-footer">
@@ -252,7 +268,15 @@
     var app = angular.module('myApp', []);
     app.controller('myController', function ($scope, $http, $parse, $interval, $timeout, $sce) {
 
+    $scope.show_danger_alert = false;
+
     $scope.year = new Date().getFullYear(); // footer copyright year
+
+        $scope.dangerAlert = function( message ){
+
+            $scope.danger_alert_message = message;
+            $scope.show_danger_alert = true;
+        }
 
         function getURLParameter(name) {
             return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
@@ -397,6 +421,11 @@
         };
         $scope.startCfr = function () {
 
+            if( dex2jar_thread = '-' ){
+
+                $scope.dangerAlert("DEX to JAR required");
+            }
+
             $http.get("/probe/decompile_action/?action=cfr&package_name=" + $scope.packageName)
                 .then(function (response) {
 
@@ -414,6 +443,11 @@
                 });
         };
         $scope.startFernFlower = function () {
+
+            if( dex2jar_thread = '-' ){
+
+                $scope.dangerAlert("DEX to JAR required");
+            }
 
             $http.get("/probe/decompile_action/?action=fern_flower&package_name=" + $scope.packageName)
                 .then(function (response) {

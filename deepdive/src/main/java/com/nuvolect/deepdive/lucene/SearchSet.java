@@ -2,20 +2,18 @@ package com.nuvolect.deepdive.lucene;//
 
 import android.content.Context;
 
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.FileUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniUtil;
 import com.nuvolect.deepdive.util.Persist;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Manage search sets
@@ -52,11 +50,9 @@ public class SearchSet {
             boolean created = OmniUtil.forceMkdir(searchSetFolder);
 
             if( created){
-                InputStream inputStream = ctx.getAssets().open(DEFAULT_SEARCH_SET_FILENAME);
-                OutputStream outputStream = new OmniFile( volumeId, DEFAULT_SET_PATH).getOutputStream();
-                IOUtils.copy( inputStream, outputStream);
-                inputStream.close();
-                outputStream.close();
+                String assetFilePath = CConst.ASSET_DATA_FOLDER+DEFAULT_SEARCH_SET_FILENAME;
+                OmniFile destinationFolder = new OmniFile( volumeId, DEFAULT_SET_PATH);
+                OmniUtil.copyAsset( ctx, assetFilePath, destinationFolder);
             }
         } catch (IOException e) {
             LogUtil.logException(SearchSet.class, e);

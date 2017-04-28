@@ -24,6 +24,7 @@ import android.content.Context;
 import com.nuvolect.deepdive.webserver.MimeUtil;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -361,5 +362,24 @@ public class OmniUtil {
             e.printStackTrace();
         }
         return wrapper;
+    }
+
+    /**
+     * Copy a file from assets to an omni destination folder.
+     * @param ctx
+     * @param assetFilePath
+     * @param destinationFolder
+     * @return number of bytes copied
+     * @throws IOException
+     */
+    public static int copyAsset(Context ctx, String assetFilePath, OmniFile destinationFolder) throws IOException {
+
+        InputStream inputStream = ctx.getAssets().open( assetFilePath);
+        OutputStream outputStream = destinationFolder.getOutputStream();
+        int numBytes = IOUtils.copy( inputStream, outputStream);
+        inputStream.close();
+        outputStream.close();
+
+        return numBytes;
     }
 }

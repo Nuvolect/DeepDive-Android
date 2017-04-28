@@ -6,6 +6,7 @@ public class CConst {
 
     public static final String APP_SIGNATURE        = "com.nuvolect.deepdive";
     public static final String APPS_PAGE            = "/apps.htm";
+    public static final String ASSET_DATA_FOLDER    = "data/";
     public static final String AUTHENTICATED        = "authenticated";
     public static final String CHUNK                = "/chunk/";
     public static final String COMPANION_IP_PORT    = "companion_ip_port";//Match settings.xml
