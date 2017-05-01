@@ -257,7 +257,7 @@ public class MainActivity extends FragmentActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
 
-        if( (LicenseManager.mIsWhitelistUser || Boolean.valueOf( m_act.getString(R.string.verbose_logging)))
+        if( (LicenseManager.isWhitelistUser() || Boolean.valueOf( m_act.getString(R.string.verbose_logging)))
                 && DeveloperDialog.isEnabled()){
 
             Util.showMenu( menu, R.id.menu_developer );

@@ -102,16 +102,16 @@ public class DeveloperDialog {
                             }
                             case Toggle_Pro_User:{
                                 LicensePersist.setIsProUser( m_act, ! LicensePersist.isProUser(m_act));
-                                LicenseManager.mIsProUser = LicensePersist.isProUser(m_act);
+                                LicenseManager.setIsProUser( LicensePersist.isProUser(m_act));
                                 /**
                                  * Can never be a pro user and also be expired
                                  */
-                                if( LicenseManager.mIsProUser)
-                                    LicenseManager.mIsProUserExpired = false;
+                                if( LicenseManager.isProUser())
+                                    LicenseManager.setIsProUserExpired( false );
 
-                                Toast.makeText(m_act, "pro user: "+LicenseManager.mIsProUser, Toast.LENGTH_SHORT).show();
-                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUser: "+LicenseManager.mIsProUser);
-                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUserExpired: "+LicenseManager.mIsProUserExpired);
+                                Toast.makeText(m_act, "pro user: "+LicenseManager.isProUser() , Toast.LENGTH_SHORT).show();
+                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUser: "+LicenseManager.isProUser() );
+                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUserExpired: "+LicenseManager.isProUserExpired() );
                                 break;
                             }
                             case Toggle_Pro_UserExpired:{
@@ -119,16 +119,16 @@ public class DeveloperDialog {
                                 /**
                                  * In-memory only, will reset next app start
                                  */
-                                LicenseManager.mIsProUserExpired = ! LicenseManager.mIsProUserExpired;
+                                LicenseManager.setIsProUserExpired( ! LicenseManager.isProUserExpired());
                                 /**
                                  * Can never be a pro user and also be expired
                                  */
-                                if( LicenseManager.mIsProUserExpired)
-                                    LicenseManager.mIsProUser = false;
+                                if( LicenseManager.isProUserExpired())
+                                    LicenseManager.setIsProUser( false);
 
-                                Toast.makeText(m_act, "pro user: "+LicenseManager.mIsProUserExpired, Toast.LENGTH_SHORT).show();
-                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUser: "+LicenseManager.mIsProUser);
-                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUserExpired: "+LicenseManager.mIsProUserExpired);
+                                Toast.makeText(m_act, "pro user: "+LicenseManager.isProUserExpired() , Toast.LENGTH_SHORT).show();
+                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUser: "+LicenseManager.isProUser() );
+                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUserExpired: "+LicenseManager.isProUserExpired() );
                                 break;
                             }
                             case Clear_Data_Close_App:{

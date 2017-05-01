@@ -13,6 +13,7 @@ import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.DialogUtil;
 import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.TimeUtil;
 
 import java.util.Date;
 
@@ -37,6 +38,22 @@ import java.util.Date;
  *      the user will lose nearly all pro privileges.
  *
  * 5 User not white_list or pro user is an appreciated user, LicenseResult.APPRECIATED_USER
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Pro user states
+ *
+ * New user, not yet a pro user
+ *     isProUser: false, isProUserExpired: false  - an appreciated user
+ *
+ * User becomes a pro user
+ *     isProUser: true, isProUserExpired: false   - an active pro user
+ *
+ * User chooses not to renew pro user license
+ * isProUser: false, isProUserExpired: true   - license expired, was a pro user
+ *
+ * User later re-upgades to pro user
+ *     isProUser: true, isProUserExpired: false   - an active pro user
+ *
+ * Both booleans cannot be true.  You cannot be a pro user and be expired.
  *
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * About LicenseResult.APP_EXPIRED
@@ -78,9 +95,10 @@ public class LicenseManager {
     private Activity m_act;
     private static LicenseManager sInstance;
 
-    public static boolean mIsWhitelistUser;
-    public static boolean mIsProUser;
-    public static boolean mIsProUserExpired;
+
+    private static boolean mIsWhitelistUser;
+    private static boolean mIsProUser;
+    private static boolean mIsProUserExpired;
 
     /** Short description of current license for the Settings page */
     public String mLicenseSummary = "";
@@ -135,7 +153,7 @@ public class LicenseManager {
 
             String message = "By using this application you agree to "+AppSpecific.TOC_HREF_URL
                     +" and "+AppSpecific.PP_HREF_URL+". "+
-                    "Use of this software is for education and training only.";
+                    "Use of this software is for education and training purposes only.";
 
             AlertDialog.Builder builder = new AlertDialog.Builder(m_act);
             builder.setTitle("Please confirm Terms and Conditions and Privacy Policy");
@@ -212,7 +230,12 @@ public class LicenseManager {
             long timeLastProUpgrade = LicensePersist.getProUserUpgradeTime( m_act);
             long timeProExpires = timeLastProUpgrade + CConst.PRO_LICENSE_DURATION;
 
-            if( timeProExpires < System.currentTimeMillis()){
+            if( DEBUG){
+                LogUtil.log("timeLastProUpgrade: "+ TimeUtil.friendlyTimeString( timeLastProUpgrade));
+                LogUtil.log("timeProExpires    : "+ TimeUtil.friendlyTimeString( timeProExpires));
+            }
+
+            if( System.currentTimeMillis() < timeProExpires){
 
                 mIsProUser = true;
                 mLicenseSummary = "Pro user";
@@ -284,6 +307,30 @@ public class LicenseManager {
                         }
                     }
                 });
+    }
+
+    public static boolean isWhitelistUser() {
+        return mIsWhitelistUser;
+    }
+
+    public static boolean isProUser() {
+        return mIsProUser;
+    }
+
+    public static boolean isProUserExpired() {
+        return mIsProUserExpired;
+    }
+
+    public static void setIsWhitelistUser(boolean mIsWhitelistUser) {
+        LicenseManager.mIsWhitelistUser = mIsWhitelistUser;
+    }
+
+    public static void setIsProUser(boolean mIsProUser) {
+        LicenseManager.mIsProUser = mIsProUser;
+    }
+
+    public static void setIsProUserExpired(boolean mIsProUserExpired) {
+        LicenseManager.mIsProUserExpired = mIsProUserExpired;
     }
 
 }
