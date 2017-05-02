@@ -96,7 +96,7 @@ public class ProbeUtil {
         String name = apkPackageFolder.getName();
         try {
             object.put("name", name);
-            object.put("url", OmniHash.getHashedServerUrl( ctx, Omni.userVolumeId, CConst.USER_FOLDER_PATH+ name));
+            object.put("url", OmniHash.getHashedServerUrl( ctx, Omni.userVolumeId_0, CConst.USER_FOLDER_PATH+ name));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -145,7 +145,7 @@ public class ProbeUtil {
                 object.put("name", array.get( i ));
 
                 String url = OmniHash.getHashedServerUrl(
-                    ctx, Omni.userVolumeId, slash+array.get( i ));
+                    ctx, Omni.userVolumeId_0, slash+array.get( i ));
                 object.put("url", url);
                 fatList.put( object);
             }

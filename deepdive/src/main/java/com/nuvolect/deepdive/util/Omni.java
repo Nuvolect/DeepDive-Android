@@ -26,10 +26,13 @@ import android.widget.Toast;
 import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.main.CConst;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -81,14 +84,12 @@ public class Omni {
     private static JSONObject volHash; // key: vHash, value: vId
 
     public static String localVolumeId = "l0"; // Local Volume 0, sdcard on Android, root on Linux
-    public static String userVolumeId = "u0"; // User Volume 0, relative to user file
+    public static String userVolumeId_0 = "u0"; // User Volume 0, restricted to user file
+    public static String userVolumeId_1 = "u1"; // User Volume 1, restricted to user file
     public static String cryptoVolumeId = "c0"; // Encrypted Volume 0
-    /**
-     * Give the user three volumes, the SDCARD a private volume and an encrypted volume
-     */
-    private  static String[] activeVolumeIds = { localVolumeId, userVolumeId, cryptoVolumeId};
+    private static List<String> activeVolumeIds;
     public static String localRoot;
-    public static String userRoot;
+    public static String userRoot_0;
     public static String crypRoot;
     public static final String THUMBNAIL_FOLDER_PATH = "/.tmb/";
 
@@ -99,14 +100,18 @@ public class Omni {
      */
     public static boolean init(Context ctx) {
 
-        if( ! App.hasPermission( WRITE_EXTERNAL_STORAGE)){
+        activeVolumeIds = new ArrayList<String>();
+        activeVolumeIds.add( cryptoVolumeId);
 
-            activeVolumeIds = new String[] { userVolumeId, cryptoVolumeId};
+        if( App.hasPermission( WRITE_EXTERNAL_STORAGE)) {
 
+            activeVolumeIds.add( localVolumeId);
+        }else{
             String s = "Access to local storage denied";
             Toast.makeText(ctx, s, Toast.LENGTH_SHORT).show();
             LogUtil.log( Omni.class, s);
         }
+        activeVolumeIds.add( userVolumeId_0);
 
         /**
          * Create the virtual file system and keep a reference too it.
@@ -140,7 +145,7 @@ public class Omni {
          */
         crypRoot = CConst.ROOT;
         localRoot = Environment.getExternalStorageDirectory().getAbsolutePath()+"/";
-        userRoot = ctx.getApplicationInfo().dataDir+"/omni/";
+        userRoot_0 = ctx.getApplicationInfo().dataDir+"/omni/";
 
         boolean success = true;
         volRoot = new JSONObject();
@@ -149,16 +154,28 @@ public class Omni {
 
         try {
             volRoot.put( localVolumeId,  localRoot);
-            volRoot.put( userVolumeId,   userRoot);
+            volRoot.put( userVolumeId_0, userRoot_0);
             volRoot.put( cryptoVolumeId, crypRoot);
 
             volName.put( localVolumeId,  "sdcard");
-            volName.put( userVolumeId,   "private");
+            volName.put( userVolumeId_0, "private_0");
             volName.put( cryptoVolumeId, "crypto");
 
             volHash.put( localVolumeId  + "_" + OmniHash.encode( CConst.ROOT), localVolumeId);
-            volHash.put( userVolumeId   + "_" + OmniHash.encode( CConst.ROOT), userVolumeId);
+            volHash.put( userVolumeId_0 + "_" + OmniHash.encode( CConst.ROOT), userVolumeId_0);
             volHash.put( cryptoVolumeId + "_" + OmniHash.encode( CConst.ROOT), cryptoVolumeId);
+
+            JSONArray privateStorage = StoragePrivate.getStoragePrivate(ctx);
+            if( privateStorage.length() > 1){
+
+                JSONObject priv_1 = privateStorage.getJSONObject(1);
+                String userRoot_1 = priv_1.getString( "path")+"/omni/";
+                volRoot.put( userVolumeId_1, userRoot_1);
+                volName.put( userVolumeId_1, "private_1");
+                volHash.put( userVolumeId_1 + "_" + OmniHash.encode( CConst.ROOT), userVolumeId_1);
+
+                activeVolumeIds.add( userVolumeId_1);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -190,7 +207,10 @@ public class Omni {
      */
     public static String[] getActiveVolumeIds() {
 
-        return activeVolumeIds;
+        String[] stringArray = new String[ activeVolumeIds.size()];
+        stringArray = activeVolumeIds.toArray( stringArray);
+
+        return stringArray;
     }
 
     /**
