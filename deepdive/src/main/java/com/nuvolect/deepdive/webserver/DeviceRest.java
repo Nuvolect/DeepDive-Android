@@ -39,6 +39,7 @@ public class DeviceRest {
             cmd_id = CMD_ID.valueOf( segments[2]);
         } catch (IllegalArgumentException e) {
             error = "Error, invalid command: "+params.get("cmd");
+            LogUtil.logException(DeviceRest.class, e);
         }
 
         JSONObject wrapper = new JSONObject();
@@ -86,7 +87,7 @@ public class DeviceRest {
             return new ByteArrayInputStream(wrapper.toString().getBytes("UTF-8"));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.logException(DeviceRest.class, e);
         }
 
         return null;

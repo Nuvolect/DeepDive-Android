@@ -3,17 +3,17 @@
 <head>
     <title>App: {{ appName }}</title>
 
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     <script src="/js/angular.min.js"></script>
+
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
-    <link href="/css/probe.css" rel="stylesheet">
 
 </head>
 
 <body>
-<!-- Bootstrap core JavaScript -->
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+
 <div ng-include="'./navbar.htm'"></div>
 
 <div class="container">
@@ -35,9 +35,9 @@
                 <td>
                     <strong>Package Name</strong>
                 </td>
-            <td>
-                {{ packageName }}
-            </td>
+                <td>
+                    {{ packageName }}
+                </td>
             </tr>
             <tr>
                 <td>
@@ -69,243 +69,243 @@
                 <td>
                     <strong>Version Code</strong>
                 </td>
-            <td>
-                {{ versionCode }}
-            </td>
+                <td>
+                    {{ versionCode }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Version Name</strong>
                 </td>
-            <td>
-                {{ versionName }}
-            </td>
+                <td>
+                    {{ versionName }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Last Update Time</strong>
                 </td>
-            <td>
-                {{ lastUpdateTime }}
-            </td>
+                <td>
+                    {{ lastUpdateTime }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>First Update Time</strong>
                 </td>
-            <td>
-                {{ firstUpdateTime }}
-            </td>
+                <td>
+                    {{ firstUpdateTime }}
+                </td>
             </tr>
 
             <tr>
                 <td>
                     <strong>Read Contacts</strong>
                 </td>
-            <td>
-                {{ readContacts | showRequested }}
-            </td>
+                <td>
+                    {{ readContacts | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Write Contacts</strong>
                 </td>
-            <td>
-                {{ writeContacts | showRequested }}
-            </td>
+                <td>
+                    {{ writeContacts | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Read External Storage</strong>
                 </td>
-            <td>
-                {{ readExternalStorage | showRequested }}
-            </td>
+                <td>
+                    {{ readExternalStorage | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Write External Storage</strong>
                 </td>
-            <td>
-                {{ writeExternalStorage | showRequested }}
-            </td>
+                <td>
+                    {{ writeExternalStorage | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Network Access</strong>
                 </td>
-            <td>
-                {{ networkAccess | showRequested }}
-            </td>
+                <td>
+                    {{ networkAccess | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Receive Boot Completed</strong>
                 </td>
-            <td>
-                {{ receiveBootCompleted | showRequested }}
-            </td>
+                <td>
+                    {{ receiveBootCompleted | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Internet</strong>
                 </td>
-            <td>
-                {{ internet | showRequested }}
-            </td>
+                <td>
+                    {{ internet | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Get Accounts</strong>
                 </td>
-            <td>
-                {{ getAccounts | showRequested }}
-            </td>
+                <td>
+                    {{ getAccounts | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Camera</strong>
                 </td>
-            <td>
-                {{ camera | showRequested }}
-            </td>
+                <td>
+                    {{ camera | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Record Audio</strong>
                 </td>
-            <td>
-                {{ recordAudio | showRequested }}
-            </td>
+                <td>
+                    {{ recordAudio | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Access Coarse Location</strong>
                 </td>
-            <td>
-                {{ accessCoarseLocation | showRequested }}
-            </td>
+                <td>
+                    {{ accessCoarseLocation | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Access Fine Location</strong>
                 </td>
-            <td>
-                {{ accessFineLocation | showRequested }}
-            </td>
+                <td>
+                    {{ accessFineLocation | showRequested }}
+                </td>
             </tr>
 
             <tr>
                 <td>
                     <strong>Read Calendar</strong>
                 </td>
-            <td>
-                {{ readCalendar | showRequested }}
-            </td>
+                <td>
+                    {{ readCalendar | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Write Calendar</strong>
                 </td>
-            <td>
-                {{ writeCalendar | showRequested }}
-            </td>
+                <td>
+                    {{ writeCalendar | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Read Phone State</strong>
                 </td>
-            <td>
-                {{ readPhoneState | showRequested }}
-            </td>
+                <td>
+                    {{ readPhoneState | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Call Phone</strong>
                 </td>
-            <td>
-                {{ callPhone | showRequested }}
-            </td>
+                <td>
+                    {{ callPhone | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Read Call Log</strong>
                 </td>
-            <td>
-                {{ readCallLog | showRequested }}
-            </td>
+                <td>
+                    {{ readCallLog | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Write Call Log</strong>
                 </td>
-            <td>
-                {{ writeCallLog | showRequested }}
-            </td>
+                <td>
+                    {{ writeCallLog | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Add Voicemail</strong>
                 </td>
-            <td>
-                {{ addVoicemail | showRequested }}
-            </td>
+                <td>
+                    {{ addVoicemail | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Use SIP</strong>
                 </td>
-            <td>
-                {{ useSip | showRequested }}
-            </td>
+                <td>
+                    {{ useSip | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Process Outgoing Calls</strong>
                 </td>
-            <td>
-                {{ processOutgoingCalls | showRequested }}
-            </td>
+                <td>
+                    {{ processOutgoingCalls | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Send SMS</strong>
                 </td>
-            <td>
-                {{ sendSms | showRequested }}
-            </td>
+                <td>
+                    {{ sendSms | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Receive SMS</strong>
                 </td>
-            <td>
-                {{ receiveSms | showRequested }}
-            </td>
+                <td>
+                    {{ receiveSms | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Read SMS</strong>
                 </td>
-            <td>
-                {{ readSms | showRequested }}
-            </td>
+                <td>
+                    {{ readSms | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Receive WAP Push</strong>
                 </td>
-            <td>
-                {{ receiveWapPush | showRequested }}
-            </td>
+                <td>
+                    {{ receiveWapPush | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
                     <strong>Receive MMS</strong>
                 </td>
-            <td>
-                {{ receiveMms | showRequested }}
-            </td>
+                <td>
+                    {{ receiveMms | showRequested }}
+                </td>
             </tr>
             <tr>
                 <td>
@@ -577,6 +577,8 @@
 
 var app = angular.module('myApp', []);
 app.controller('myController', function($scope, $http, $parse) {
+
+    $scope.year = new Date().getFullYear(); // footer copyright year
 
     function getURLParameter(name) {
       return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
