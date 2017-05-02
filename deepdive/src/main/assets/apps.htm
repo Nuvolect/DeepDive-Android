@@ -21,22 +21,15 @@
     <div align="center">
         <h2>Working Apps</h2>
     </div>
-    <div align="center" ng-hide="show_package_list">
+    <div align="center" ng-hide="show_working_list">
         <h5>No working folders yet</h5>
     </div>
-    <div ng-show="show_package_list" align="center">
+    <div ng-show="show_working_list" align="center">
 
-        <p style="color: Black"><input type="text" ng-model="folder_search" placeholder="Search apps">#{{ (package_list|filter:folder_search).length }}</p>
+        <p style="color: Black"><input type="text" ng-model="folder_search" placeholder="Search apps">#{{ (working_list|filter:folder_search).length }}</p>
 
         <table class="card">
-            <tr>
-                <td></td>
-                <td></td>
-                <td align="left">
-                    <strong>Uploaded App</strong>
-                </td>
-            </tr>
-            <tr style="vertical-align:middle" ng-repeat="p in package_list | orderBy: 'name' | filter : folder_search ">
+            <tr style="vertical-align:middle" ng-repeat="p in working_list | orderBy: 'name' | filter : folder_search ">
                 <td>
                     <a href="/decompile.htm?packageName={{ p.name }}&appName={{ p.name }}">
                         <span class="glyphicon glyphicon-cog" style="font-size:1.8em"></span>
@@ -84,7 +77,7 @@
 
     <h2>Installed Apps</h2>
 
-    <p><input type="text" ng-model="app_search" placeholder="Search apps">#{{ (apps|filter:app_search).length }}</p>
+    <p><input type="text" ng-model="app_search" placeholder="Search apps">#{{ (installed_list|filter:app_search).length }}</p>
 
     <table class="card">
         <tr>
@@ -100,7 +93,7 @@
                 <strong>Version</strong>
             </td>
         </tr>
-        <tr style="vertical-align:middle" ng-repeat="a in apps | orderBy: 'name' | filter : app_search ">
+        <tr style="vertical-align:middle" ng-repeat="a in installed_list | orderBy: 'name' | filter : app_search ">
             <td>
                 <a href="/app.htm?package={{ a.package}}">
                     <span class="glyphicon glyphicon-info-sign" style="font-size:1.8em"></span>
@@ -133,7 +126,7 @@ app.controller('myController', function($scope, $http, $parse) {
        .then(function (response) {
 
         // List is currently a string, convert it to JSON
-        $scope.apps = $.parseJSON( response.data.apps );
+        $scope.installed_list = $.parseJSON( response.data.apps );
 
         $scope.exposePackageInput = function(){
 
@@ -146,9 +139,9 @@ app.controller('myController', function($scope, $http, $parse) {
 
                 // List is currently a string, convert it to JSON, assign it to display with AngularJS
                 var response = $.parseJSON( response.data.result );
-                $scope.package_list = response.list;
+                $scope.working_list = response.list;
 
-                $scope.show_package_list = $scope.package_list.length > 0;
+                $scope.show_working_list = $scope.working_list.length > 0;
              });
         };
         $scope.removeFolder = function( folder ){
@@ -158,9 +151,9 @@ app.controller('myController', function($scope, $http, $parse) {
 
                 // List is currently a string, convert it to JSON, assign it to display with AngularJS
                 var response = $.parseJSON( response.data.result );
-                $scope.package_list = response.list;
+                $scope.working_list = response.list;
 
-                $scope.show_package_list = $scope.package_list.length > 0;
+                $scope.show_working_list = $scope.working_list.length > 0;
              });
         };
 
@@ -169,9 +162,9 @@ app.controller('myController', function($scope, $http, $parse) {
 
             // List is currently a string, convert it to JSON, assign it to display with AngularJS
             var response = $.parseJSON( response.data.result );
-            $scope.package_list = response.list;
+            $scope.working_list = response.list;
 
-            $scope.show_package_list = $scope.package_list.length > 0;
+            $scope.show_working_list = $scope.working_list.length > 0;
          });
      });
 });
