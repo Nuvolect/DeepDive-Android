@@ -395,7 +395,11 @@ public class Omni {
         return path;
     }
 
-    public static String getDefaultVolumeId() { //TODO confirm correct volumeId is returned.
-        return localVolumeId;
+    /**
+     * Return a default volume ID, the volume that the app uses for its storage.
+     * @return
+     */
+    public static String getDefaultVolumeId() {
+        return userVolumeId_0;
     }
 }

@@ -1,7 +1,4 @@
 package com.nuvolect.deepdive.webserver;
-//
-//TODO create class description
-//
 
 import android.content.Context;
 
@@ -11,7 +8,6 @@ import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.probe.DecompileApk;
 import com.nuvolect.deepdive.probe.ProbeMgr;
 import com.nuvolect.deepdive.probe.ProbeUtil;
-import com.nuvolect.deepdive.probe.TestAndroid;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +18,9 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+/**
+ * REST services for probing a device.
+ */
 public class ProbeRest {
 
     private enum CMD_ID {
@@ -32,7 +31,7 @@ public class ProbeRest {
         decompile_action,
         delete_package,
         get_log,
-        get_package_list,
+        get_working_apps,
         get_status,
         installed_apps,
         stop_thread,
@@ -104,8 +103,8 @@ public class ProbeRest {
                     wrapper.put("stream", stream.toString());
                     break;
                 }
-                case get_package_list:{
-                    JSONObject result = ProbeUtil.getPackageList( ctx );
+                case get_working_apps:{
+                    JSONObject result = ProbeUtil.getWorkingApps( ctx );
                     wrapper.put("result", result.toString());
                     break;
                 }
@@ -117,7 +116,7 @@ public class ProbeRest {
                 }
                 case installed_apps:{
 
-                    JSONArray apps = TestAndroid.getApps( ctx);
+                    JSONArray apps = ProbeUtil.getInstalledApps( ctx);
                     wrapper.put("apps", apps.toString());
                     break;
                 }

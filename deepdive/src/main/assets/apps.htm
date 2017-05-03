@@ -72,7 +72,6 @@
 </div><!-- /card-container -->
 
 <br>
-<br>
 <div align="center">
 
     <h2>Installed Apps</h2>
@@ -157,15 +156,16 @@ app.controller('myController', function($scope, $http, $parse) {
              });
         };
 
-        $http.get("/probe/get_package_list")
+     });
+
+     $http.get("/probe/get_working_apps")
             .then(function (response) {
 
-            // List is currently a string, convert it to JSON, assign it to display with AngularJS
-            var response = $.parseJSON( response.data.result );
-            $scope.working_list = response.list;
+         // List is currently a string, convert it to JSON, assign it to display with AngularJS
+         var response = $.parseJSON( response.data.result );
+         $scope.working_list = response.list;
 
-            $scope.show_working_list = $scope.working_list.length > 0;
-         });
+         $scope.show_working_list = $scope.working_list.length > 0;
      });
 });
 
