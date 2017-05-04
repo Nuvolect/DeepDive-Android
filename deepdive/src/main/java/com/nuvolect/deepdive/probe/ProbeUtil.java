@@ -101,7 +101,8 @@ public class ProbeUtil {
         String name = apkPackageFolder.getName();
         try {
             object.put("name", name);
-            object.put("url", OmniHash.getHashedServerUrl( ctx, Omni.userVolumeId_0, CConst.USER_FOLDER_PATH+ name));
+//            object.put("url", OmniHash.getHashedServerUrl( ctx, Omni.userVolumeId_0, CConst.USER_FOLDER_PATH+ name));//FIXME remove
+            object.put("url", OmniHash.getStartPathUrl( ctx, apkPackageFolder));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -149,7 +150,7 @@ public class ProbeUtil {
                 JSONObject object = new JSONObject();
                 object.put("name", array.get( i ));
 
-                String url = OmniHash.getHashedServerUrl(
+                String url = OmniHash.getStartPathUrl(
                     ctx, Omni.userVolumeId_0, slash+array.get( i ));
                 object.put("url", url);
                 fatList.put( object);

@@ -165,7 +165,7 @@ public class DecompileApk {
         if (!m_appFolder.exists()) {
             m_appFolder.mkdirs();
         }
-        m_appFolderUrl = OmniHash.getHashedServerUrl(m_ctx, m_volumeId, m_appFolderPath);
+        m_appFolderUrl = OmniHash.getStartPathUrl(m_ctx, m_volumeId, m_appFolderPath);
 
         m_appApkPath = m_appFolderPath+m_packageName+".apk";
         m_apkFile           = new OmniFile( m_volumeId, m_appApkPath);
@@ -205,7 +205,7 @@ public class DecompileApk {
             wrapper.put("app_folder_path", m_appFolderPath);
 
             if(cfrFolderExists){
-                String url = OmniHash.getHashedServerUrl(m_ctx,
+                String url = OmniHash.getStartPathUrl(m_ctx,
                         m_volumeId, m_srcCfrFolderPath);
                 wrapper.put("cfr_url", url);
             }
@@ -214,7 +214,7 @@ public class DecompileApk {
             }
 
             if(jadxFolderExists){
-                String url = OmniHash.getHashedServerUrl(m_ctx,
+                String url = OmniHash.getStartPathUrl(m_ctx,
                         m_volumeId, m_srcJadxFolderPath);
                 wrapper.put("jadx_url", url);
             }
@@ -223,7 +223,7 @@ public class DecompileApk {
             }
 
             if(fernFolderExists){
-                String url = OmniHash.getHashedServerUrl(m_ctx,
+                String url = OmniHash.getStartPathUrl(m_ctx,
                         m_volumeId, m_srcFernFolderPath);
                 wrapper.put("fern_url", url);
             }
