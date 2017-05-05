@@ -17,11 +17,6 @@
         android:title="IP address"
         android:summary="When enabled, the web app can be found at this IP address on your local area network."
         />
-    <Preference
-        android:key="permission_manager"
-        android:title="Permission Manager"
-        android:summary=""
-        />
     <EditTextPreference
         android:key="thread_stack_size"
         android:title="Stack size"
@@ -47,7 +42,7 @@
     <Preference
         android:key="rate_app_google_play"
         android:title="Rate DeepDive in Google Play"
-        android:summary="Help us become a 5 star app! (touch here)\n\n\n"
+        android:summary="Help us become a 5 star app!"
         />
 </PreferenceScreen>
 
