@@ -6,29 +6,36 @@
 <div class="navbar navbar-default" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
 			<a class="navbar-brand" href="/">
 				<img src="/img/icon_48.png" alt="DeepDive logo" style="width:48px;height:48px;"></a>
 		</div>
-		<ul class="nav navbar-nav">
-			<li>
-				<div class="dropdown">
-					<button
-						class="btn btn-secondary-transparent dropdown-toggle"
-						type="button" data-toggle="dropdown">Device<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu">
-						<li><a href="/device.htm">Details</a></li>
-						<li><a href="/logcat.htm">Logcat</a></li>
-						<li><a href="/shell.htm">Shell</a></li>
-						<li><a href="/keystore.htm">Keystore</a></li>
-					</ul>
-				</div>
-			</li>
-			<li><a href="/apps.htm">Apps</a></li>
-			<li><a href="/elFinder-2.1.24-nightly/finder.html">Finder</a></li>
-			<li><a href="/search_manager.htm">Search</a></li>
-			<li><a href="https://github.com/Nuvolect/SecureSuite-Android" >GitHub</a></li>
-			<li><a href="/logout.htm">Logout</a></li>
-		</ul>
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav navbar-center">
+				<li>
+					<div class="dropdown">
+						<button
+								class="btn btn-secondary-transparent dropdown-toggle"
+								type="button" data-toggle="dropdown">Device<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a href="/device.htm">Details</a></li>
+							<li><a href="/logcat.htm">Logcat</a></li>
+							<li><a href="/shell.htm">Shell</a></li>
+							<li><a href="/keystore.htm">Keystore</a></li>
+							<li><a href="https://github.com/Nuvolect/SecureSuite-Android" >GitHub</a></li>
+						</ul>
+					</div>
+				</li>
+				<li><a href="/apps.htm">Apps</a></li>
+				<li><a href="/elFinder-2.1.24-nightly/finder.html">Finder</a></li>
+				<li><a href="/search_manager.htm">Search</a></li>
+				<li><a href="/logout.htm">Logout</a></li>
+			</ul>
+		</div>
 	</div>
 </div>

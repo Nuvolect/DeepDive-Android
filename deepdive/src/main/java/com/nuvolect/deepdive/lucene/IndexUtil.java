@@ -148,36 +148,42 @@ public class IndexUtil {
     }
 
     /**
-     * Add a new search index. First check if the path to the folder exists,
-     * if not note an error that the folder is not found.
-     * Next build the current set of active indexes and return it along with
-     * the new search index.
+     * Add a new search index folder and return the current set of search folders.
+     * If the sourcePath does not reference a folder to index, return an error.
      * @param volumeId
-     * @param newPath
+     * @param sourcePath
      * @return
      */
-    public static JSONObject newIndex(String volumeId, String newPath) {
+    public static JSONObject newIndex(String volumeId, String sourcePath) {
 
-        JSONArray currentIndexes = getIndexes(volumeId);
+        String encodedPath = volumeId+"_"+OmniHash.encode( sourcePath);
+        OmniFile newFolder = new OmniFile( volumeId, INDEX_FOLDER+encodedPath);
+        OmniFile sourceFolder = new OmniFile( volumeId, sourcePath);
+
         JSONObject result = new JSONObject();
 
-        OmniFile newFolder = new OmniFile( volumeId, newPath);
         try {
-            if( newFolder.exists() && newFolder.isDirectory()){
+            if( sourceFolder.exists() && sourceFolder.isDirectory()){
 
-                result.put("error","");
-                if( newPath.startsWith("/"))
-                    addPath( currentIndexes, newPath);
-                else
-                    addPath( currentIndexes, "/"+newPath);
+                if( ! newFolder.exists()){
+
+                    newFolder.mkdirs();
+                }
+                if( ! newFolder.exists()){
+
+                    result.put("error", "Search creation folder error");
+                }else{
+                    result.put("error", "");
+                }
             }
-            else
-                result.put("error","Path is not a directory");
+            else{
+                result.put("error", "Folder does not exist: "+sourcePath);
+            }
 
-            result.put("paths",currentIndexes);
+            result.put("paths", getIndexes(volumeId));
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            LogUtil.logException( IndexUtil.class, e);
         }
 
         return result;
@@ -231,12 +237,12 @@ public class IndexUtil {
 
         if( indexFolder.exists() && indexFolder.isDirectory()){
 
-        Context ctx = App.getContext();
-        count = OmniUtil.deleteRecursive( ctx, indexFolder);
+            Context ctx = App.getContext();
+            count = OmniUtil.deleteRecursive( ctx, indexFolder);
 
-        if( count == -1)
-            error = "File delete error: ";
-        else
+            if( count == -1)
+                error = "File delete error: ";
+            else
             if( count == 0)
                 error = "No files deleted: ";
         }
@@ -249,7 +255,8 @@ public class IndexUtil {
 
         JSONObject result = new JSONObject();
         try {
-            result.put("count", count);
+            result.put("paths", getIndexes(volumeId));
+            result.put("num_deleted", count);
             result.put("error", error);
         } catch (JSONException e) {
             e.printStackTrace();

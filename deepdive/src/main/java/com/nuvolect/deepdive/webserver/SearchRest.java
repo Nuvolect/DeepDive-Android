@@ -2,13 +2,13 @@ package com.nuvolect.deepdive.webserver;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.Safe;
 import com.nuvolect.deepdive.lucene.Index;
 import com.nuvolect.deepdive.lucene.IndexUtil;
 import com.nuvolect.deepdive.lucene.Search;
 import com.nuvolect.deepdive.lucene.SearchSet;
 import com.nuvolect.deepdive.main.App;
+import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.Safe;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,6 +27,7 @@ public class SearchRest {
     private enum CMD_ID {
         NIL,
         delete_index,
+        new_index,
         get_indexes,
         index,
         interrupt_indexing,
@@ -44,11 +45,13 @@ public class SearchRest {
         long timeStart = System.currentTimeMillis();
         CMD_ID cmd_id = CMD_ID.NIL;
         String volumeId = App.getUser().getDefaultVolumeId();
-        if( params.containsKey("volume_id"))
+        if( params.containsKey("volume_id")){
             volumeId = params.get("volume_id");
+        }
         String search_path = "";
-        if( params.containsKey("search_path"))
+        if( params.containsKey("search_path")){
             search_path = params.get("search_path");
+        }
         String error = "";
 
         try {
@@ -71,6 +74,11 @@ public class SearchRest {
                     wrapper.put("result", result.toString());
                     break;
                 }
+                case new_index: {
+                    JSONObject result = IndexUtil.newIndex( volumeId, search_path);
+                    wrapper.put("result", result.toString());
+                    break;
+                }
                 case get_indexes:{
                     JSONArray result = IndexUtil.getIndexes( volumeId);
                     wrapper.put("result", result.toString());
@@ -78,8 +86,9 @@ public class SearchRest {
                 }
                 case index:{
                     boolean forceReindex = false;
-                    if( params.containsKey("force_index"))//TODO understand boolean compatibility with Sprint MVC REST
-                        forceReindex = Boolean.valueOf( params.get("force_index"));
+                    if( params.containsKey("force_index")) {//TODO understand boolean compatibility with Sprint MVC REST
+                        forceReindex = Boolean.valueOf(params.get("force_index"));
+                    }
                     JSONObject result = Index.index( volumeId, search_path, forceReindex);
                     wrapper.put("result", result.toString());
                     break;

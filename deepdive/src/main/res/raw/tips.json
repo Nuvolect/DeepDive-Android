@@ -1,7 +1,7 @@
 {
   "tips": [
     {
-      "tip": "Try using the app on your laptop from your phone's WiFi hotspot."
+      "tip": "Try using the web app on your laptop from your phone's WiFi hotspot."
     },
     {
       "tip": "It is OK to bookmark the web app in your browser, however <strong>the IP address can change</strong> when your WiFi router is reset or power cycled."
@@ -14,6 +14,27 @@
     },
     {
       "tip": "When the dashboard shows \"Unsecured, no password\", anyone on your network can use the web app to access your phone. Select Settings-Web app user credentials to assign a username and password."
+    },
+    {
+      "tip": "Optimize DEX gives you the ability to remove classes from the DEX, to make computation faster and bypass downstream decompile issues."
+    },
+    {
+      "tip": "The Jadx compile operates directly on the DEX. CFR and Fernflower operate on JAR files, requiring DEX to JAR conversion."
+    },
+    {
+      "tip": "Lucene search can be performed on the entire private storage drive, on a specific application or on a compiler specific source folder."
+    },
+    {
+      "tip": "Settings Stack size allows you to change the memory allocation used by decompile utilities."
+    },
+    {
+      "tip": "A decompiler is having a beer at the bar when he is heldup by a gunman. He says \"Don't do it, I see right through you and know your intensions.\""
+    },
+    {
+      "tip": "If the decompile process stalls, look at the log carefully and add any offending classes to the <strong>dex_class_exclusion.txt</strong> file, then re-optimize the DEX."
+    },
+    {
+      "tip": "Add your own <strong>Search Sets with the Search Manager</strong>. You can search dozens of keywords and phrases at one time."
     },
     {
       "tip": "Google \"Lucene cheat sheet\" to find tips and tricks for effective use of this powerful search engine"
