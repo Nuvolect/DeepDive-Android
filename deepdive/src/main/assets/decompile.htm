@@ -109,7 +109,7 @@
                     </a>
                 </td>
                 <td align="center">
-                    <a href="/search.htm?search_path={{app_folder_path}}/srcJadx">
+                    <a href="/search.htm?search_path={{app_folder_path}}srcJadx">
                         <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
                     </a>
                 </td>
@@ -153,7 +153,7 @@
                     </a>
                 </td>
                 <td align="center">
-                    <a href="/search.htm?search_path={{app_folder_path}}/srcCfr">
+                    <a href="/search.htm?search_path={{app_folder_path}}srcCfr">
                         <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
                     </a>
                 </td>
@@ -180,7 +180,7 @@
                     </a>
                 </td>
                 <td align="center">
-                    <a href="/search.htm?search_path={{app_folder_path}}/srcFern">
+                    <a href="/search.htm?search_path={{app_folder_path}}srcFern">
                         <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
                     </a>
                 </td>
@@ -377,7 +377,7 @@
 
                             $scope.iterateGetStatus();
 
-                        }, 1000);// start 1 second in the future
+                        }, 5000);// start 5 seconds in the future
                     }
                 });
         };
@@ -420,7 +420,7 @@
         };
         $scope.startCfr = function () {
 
-            if( dex2jar_thread = '-' ){
+            if( dex2jar_thread == '-' ){
 
                 $scope.dangerAlert("DEX to JAR required");
             }
@@ -443,7 +443,7 @@
         };
         $scope.startFernflower = function () {
 
-            if( dex2jar_thread = '-' ){
+            if( dex2jar_thread == '-' ){
 
                 $scope.dangerAlert("DEX to JAR required");
             }
