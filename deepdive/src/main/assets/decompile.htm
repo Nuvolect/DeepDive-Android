@@ -377,7 +377,7 @@
 
                             $scope.iterateGetStatus();
 
-                        }, 5000);// start 5 seconds in the future
+                        }, 1000);// start 1 second in the future
                     }
                 });
         };
@@ -420,7 +420,7 @@
         };
         $scope.startCfr = function () {
 
-            if( dex2jar_thread == '-' ){
+            if( $scope.dex2jar_thread === '-' ){
 
                 $scope.dangerAlert("DEX to JAR required");
             }
@@ -443,7 +443,7 @@
         };
         $scope.startFernflower = function () {
 
-            if( dex2jar_thread == '-' ){
+            if( $scope.dex2jar_thread === '-' ){
 
                 $scope.dangerAlert("DEX to JAR required");
             }
