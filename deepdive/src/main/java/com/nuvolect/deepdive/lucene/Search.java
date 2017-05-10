@@ -163,7 +163,7 @@ public class Search {
             String file_name = hitDoc.get(( CConst.FIELD_FILENAME));
             String file_path = hitDoc.get(( CConst.FIELD_PATH));
             try {
-                String folder_url = OmniHash.getHashedServerUrl( ctx, volumeId, file_path);
+                String folder_url = OmniHash.getStartPathUrl( ctx, volumeId, file_path);
 
                 JSONObject hitObj = new JSONObject();
                 hitObj.put("volume_id", volumeId);

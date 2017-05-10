@@ -151,22 +151,33 @@ public class OmniHash {
     }
 
     /**
-     * Given a path such as /deepdive, return a URL with a hashed path
-     * that can be pasted into a browser, assuming authentication is in place.
+     * Return a url that can start in an explicit folder.
+     * If the omniFile is not a folder, the parent is used.//FIXME test, also test just file.
      * @param ctx
-     * @param path
+     * @param omniFile
      * @return
      */
-    public static String getHashedServerUrl(Context ctx, String volumeId, String path){
+    public static String getStartPathUrl(Context ctx, OmniFile omniFile){
 
-        String hashedUrl = OmniHash.getVolumeHash(
-                volumeId,
-                path);
+        String volumeId = omniFile.getVolumeId();
+        String path = omniFile.getPath();
+        if( ! omniFile.isDirectory()){
+            path = omniFile.getParentFile().getPath();
+        }
+
+        String hashedUrl = OmniHash.getVolumeHash( volumeId, path);
+
         String url = WebUtil.getServerUrl(ctx)
-                + CConst.ELFINDER_PAGE
-                +"#"
-                +CConst.ELF_
-                +hashedUrl;
+                + CConst.ELFINDER_PAGE +"?startPathHash=" +hashedUrl;
+        return url;
+    }
+
+    public static String getStartPathUrl(Context ctx, String volumeId, String path){
+
+        String hashedUrl = OmniHash.getVolumeHash( volumeId, path);
+
+        String url = WebUtil.getServerUrl(ctx)
+                + CConst.ELFINDER_PAGE +"?startPathHash=" +hashedUrl;
         return url;
     }
 

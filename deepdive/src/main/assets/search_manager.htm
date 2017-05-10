@@ -3,23 +3,26 @@
 <head>
     <title>Search Manager</title>
 
-    <script src="/js/angular.min.js"></script>
-    <script src="/js/angular-sanitize.min.js"></script>
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
-    <link href="/css/lobby.css" rel="stylesheet">
+    <link href="/css/search_manager.css" rel="stylesheet">
+
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<!-- Bootstrap core JavaScript -->
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
 <div ng-include="'./navbar.htm'"></div>
 
 <div class="container">
 
     <div align="center">
-        <h1>Search Manager</h1>
+        <h2>Search Manager</h2>
+    </div>
+    <br>
+
+    <div align="center">
 
         <table class="card" style="border-collapse: separate; border-spacing: 20px 5px;">
 
@@ -31,11 +34,16 @@
                 <td style="padding: 2px 0;">
                     <a href="search.htm?search_path={{p.path}}">{{p.path}}</a>
                 </td>
+                <td>
+                    <button class="btn btn-link" ng-click="deleteIndex(p.path)">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </td>
             </tr>
 
         </table>
         <br>
-        <input ng-model="search_path" ng-keypress="changePath($event)"
+        <input ng-model="search_path" ng-keypress="newPath($event)"
                placeholder="New search path" type="text" size="50" ng-trim="false" >
 
         <br>
@@ -52,37 +60,57 @@
 <div ng-include="'footer.htm'"></div>
 
 <script>
-    var app = angular.module('myApp', ['ngSanitize']);
+    var app = angular.module('myApp', []);
     app.controller('myController', function($scope, $http) {
 
+        $scope.path_error = "";
         $scope.year = new Date().getFullYear(); // footer copyright year
         $scope.paths = [];
 
-        $scope.changePath = function ($event) {
+        $scope.newPath = function ($event) {
 
             var keyCode = $event.which || $event.keyCode;
-            if (keyCode === 13) { // Test for return character
+            if (keyCode === 13) {                                // Test for return character
 
-                var path = $scope.search_path.trim();
-                if( !path || 0 == path.length )
+                var search_path = $scope.search_path.trim();
+                if( !search_path || 0 == search_path.length ){
                     return;
+                }
 
-                $http.get("/search/index/?path="+path)
+                $http.get("/search/new_index/?search_path="+search_path)
                     .then(function (response) {
 
                     // Returned data is currently a string, convert it to JSON
                     var result = $.parseJSON( response.data.result );
 
                     $scope.path_error = result.error;
+                    $scope.paths = result.paths;
 
                     if( result.error.length == 0 ){
 
-                        $scope.paths = result.paths;
                         $scope.search_path = "";
+                        $scope.path_error = "";
+                    }else{
+                        $scope.path_error = result.error;
                     }
                 });
             }
-        };
+        }
+
+        $scope.deleteIndex = function ( search_path ){
+
+            $http.get("/search/delete_index?search_path="+search_path)
+                .then(function (response) {
+
+                // Returned data is currently a string, convert it to JSON
+                var result = $.parseJSON( response.data.result );
+                if( result.error.length == 0 ){
+
+                    $scope.paths = result.paths;
+                    $scope.search_path = "";
+                }
+            });
+        }
 
         $http.get("/search/get_indexes")
             .then(function (response) {

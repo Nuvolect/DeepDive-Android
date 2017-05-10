@@ -19,7 +19,7 @@ public class User {
 
     public User() {
 
-        m_defaultVolumeId = Omni.userVolumeId;
+        m_defaultVolumeId = Omni.userVolumeId_0;
 
         m_currentUserLogin = "user";
 

@@ -1,4 +1,6 @@
 Landroid/support/
+Ljavax/annotation/
+Lcom/android/
 Lcom/fasterxml/
 Lcom/google/
 Lcom/googlecode
@@ -6,8 +8,8 @@ Lcom/squareup/
 Lcom/squarup/
 Lokio/
 Lorg/apache/
-Lorg/apache/
 Lorg/immutables/gson/
+Lorg/jetbrains/
 Lorg/joda/
 Lorg/json/
 Lorg/objectweb/

@@ -39,7 +39,7 @@ public class OmniTest {
     @Test
     public void testUserStorage() throws  Exception {
 
-        testStorage( Omni.userVolumeId);
+        testStorage( Omni.userVolumeId_0);
     }
 
     @Test

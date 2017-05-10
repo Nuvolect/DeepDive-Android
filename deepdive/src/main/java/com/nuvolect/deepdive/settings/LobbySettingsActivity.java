@@ -19,7 +19,6 @@ import com.nuvolect.deepdive.util.ActionBarUtil;
 import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.PermissionManager;
 import com.nuvolect.deepdive.util.ShowTips;
 
 
@@ -162,17 +161,5 @@ public class LobbySettingsActivity extends PreferenceActivity
         super.onNewIntent(intent);
 
         LogUtil.log(LogUtil.LogType.SETTINGS_ACTIVITY, "onNewIntent");
-    }
-    /**
-     * Used by the PermissionManager to refresh when user makes changes.
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        PermissionManager.getInstance(m_act).refresh();
     }
 }

@@ -26,21 +26,14 @@ public class StoragePrivate {
         File[] filesDirs = ContextCompat.getExternalFilesDirs(ctx, null);// null == all files?
         try {
 
-            int number = 1;
-            String name = "";
+            int number = 0;
 
             for( File drive : filesDirs){
 
-                boolean external = Environment.isExternalStorageRemovable( drive);
-
-                if( external ){
-                    name = "private_"+number++;
-                }else {
-                    name = "private_"+number++;
-                }
+                boolean external = Environment.isExternalStorageRemovable( drive );
 
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("name", name);
+                jsonObject.put("name", "private_"+number++);
                 jsonObject.put("path", drive.getAbsolutePath());
                 jsonObject.put("can_read", drive.canRead());
                 jsonObject.put("can_write", drive.canWrite());

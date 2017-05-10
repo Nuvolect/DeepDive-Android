@@ -85,11 +85,6 @@
 
 <script>
 
-function myOnClick( fileName, filePath){
-
-    console.log("got to myOnClick(): "+fileName+ filePath);
-}
-
 // Workaround for accessing $scope from within ng-repeat
 // $parent is not working, ng-click() is never called
 
@@ -151,8 +146,6 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
     // Inject contents of a text file into a modal
     //
     $scope.addModalContent = function( file_name, file_path ){
-
-    console.log("viewFile path: "+file_path);
 
         $http.get("/omni/get_text/?path="+file_path)
           .then(function (response) {

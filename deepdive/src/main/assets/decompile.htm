@@ -3,13 +3,13 @@
 <head>
     <title>Decompile: {{ appName }}</title>
 
-    <script src="/js/angular.min.js"></script>
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/probe.css" rel="stylesheet">
-    <script src="/js/jquery-3.1.1.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
 
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -109,7 +109,7 @@
                     </a>
                 </td>
                 <td align="center">
-                    <a href="/search.htm?search_path={{app_folder_path}}/srcJadx">
+                    <a href="/search.htm?search_path={{app_folder_path}}srcJadx">
                         <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
                     </a>
                 </td>
@@ -153,7 +153,7 @@
                     </a>
                 </td>
                 <td align="center">
-                    <a href="/search.htm?search_path={{app_folder_path}}/srcCfr">
+                    <a href="/search.htm?search_path={{app_folder_path}}srcCfr">
                         <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
                     </a>
                 </td>
@@ -168,7 +168,7 @@
             <tr>
                 <td><strong>3.c</strong></td>
                 <td>
-                    <button ng-click="startFernFlower()">Decompile with FernFlower</button>
+                    <button ng-click="startFernflower()">Decompile with Fernflower</button>
                 </td>
                 <td align="center">
                     {{ fern_thread }}
@@ -180,7 +180,7 @@
                     </a>
                 </td>
                 <td align="center">
-                    <a href="/search.htm?search_path={{app_folder_path}}/srcFern">
+                    <a href="/search.htm?search_path={{app_folder_path}}srcFern">
                         <span class="glyphicon glyphicon-search" style="font-size:1.5em"></span>
                     </a>
                 </td>
@@ -232,7 +232,7 @@
                 </ol>
                 <p>After step 2 use Finder or Search to explore app assets and manifest.</p>
                 <p>Step 3 is different for each decompiler. Jadx can decompile the DEX file directly.
-                    CFR and FernFlower require DEX conversion to JAR.
+                    CFR and Fernflower require DEX conversion to JAR.
                 </p>
                 <p>Optionally, DEX files can be optimized to prior to decompiling to reduce
                     computation time or bypass decompilation errors.
@@ -245,11 +245,11 @@
                     2.  Unpack APK
                     3.a Decompile with Jadx
 
-                Example decompile with FernFlower:
+                Example decompile with Fernflower:
                     1.  Extract APK
                     2.  Unpack APK
                         DEX to JAR
-                    3.c Decompile with FernFlower
+                    3.c Decompile with Fernflower
                 </pre>
             </div>
             <div class="modal-footer">
@@ -268,9 +268,8 @@
     var app = angular.module('myApp', []);
     app.controller('myController', function ($scope, $http, $parse, $interval, $timeout, $sce) {
 
-    $scope.show_danger_alert = false;
-
-    $scope.year = new Date().getFullYear(); // footer copyright year
+        $scope.show_danger_alert = false;
+        $scope.year = new Date().getFullYear(); // footer copyright year
 
         $scope.dangerAlert = function( message ){
 
@@ -421,7 +420,7 @@
         };
         $scope.startCfr = function () {
 
-            if( dex2jar_thread = '-' ){
+            if( $scope.dex2jar_thread === '-' ){
 
                 $scope.dangerAlert("DEX to JAR required");
             }
@@ -442,9 +441,9 @@
                     $scope.iterateGetStatus();//FIXME limit to a single instance in case user is performing more than one task
                 });
         };
-        $scope.startFernFlower = function () {
+        $scope.startFernflower = function () {
 
-            if( dex2jar_thread = '-' ){
+            if( $scope.dex2jar_thread === '-' ){
 
                 $scope.dangerAlert("DEX to JAR required");
             }

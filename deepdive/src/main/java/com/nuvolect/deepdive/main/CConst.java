@@ -26,7 +26,6 @@ public class CConst {
     public static final String NAME                 = "name";
     public static final String NO_PASSPHRASE        = "no-passphrase";
     public static final String OK                   = "ok";
-    public static final String PERMISSION_MANAGER   = "permission_manager";
     public static final String PORT                 = "port";
     public static final String PORT_NUMBER          = "port_number";
     public static final String RANDOM_EDGE          = "h0!U9#Wfnx";// Validates security certificate

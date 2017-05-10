@@ -268,82 +268,85 @@ public class SurveyExec {
 
             String[] requestedPermissions = packageInfo.requestedPermissions;
 
-            for (String requestedPermission : requestedPermissions) {
-                
-                if (requestedPermission.matches(Manifest.permission.WRITE_CONTACTS))
-                    appObj.put(WRITE_CONTACTS, 1);
-                else
-                if (requestedPermission.matches(Manifest.permission.READ_CONTACTS))
-                    appObj.put(READ_CONTACTS, 1);
-                else
-                if (requestedPermission.matches(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                    appObj.put(WRITE_EXTERNAL_STORAGE, 1);
-                else
-                if (requestedPermission.matches(Manifest.permission.READ_EXTERNAL_STORAGE))
-                    appObj.put(READ_EXTERNAL_STORAGE, 1);
-                else
-                if (requestedPermission.matches(Manifest.permission.RECEIVE_BOOT_COMPLETED))
-                    appObj.put(RECEIVE_BOOT_COMPLETED, 1);
-                else
-                if (requestedPermission.matches(Manifest.permission.INTERNET))
-                    appObj.put(INTERNET, 1);
-                else
-                if (requestedPermission.matches(Manifest.permission.GET_ACCOUNTS))
-                    appObj.put(GET_ACCOUNTS, 1);
-                else
-                if (requestedPermission.matches(Manifest.permission.CAMERA))
-                    appObj.put(CAMERA, 1);
-                else
-                if (requestedPermission.matches(Manifest.permission.RECORD_AUDIO))
-                    appObj.put(RECORD_AUDIO, 1);
-                else
-                if (requestedPermission.matches(Manifest.permission.ACCESS_COARSE_LOCATION))
-                    appObj.put(ACCESS_COARSE_LOCATION, 1);
-                else
-                if (requestedPermission.matches(Manifest.permission.ACCESS_FINE_LOCATION))
-                    appObj.put(ACCESS_FINE_LOCATION, 1);
-                else
-                if (requestedPermission.matches(Manifest.permission.READ_CALENDAR))
-                    appObj.put(READ_CALENDAR ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.WRITE_CALENDAR))
-                    appObj.put(WRITE_CALENDAR ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.READ_PHONE_STATE))
-                    appObj.put(READ_PHONE_STATE ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.CALL_PHONE))
-                    appObj.put(CALL_PHONE ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.READ_CALL_LOG))
-                    appObj.put(READ_CALL_LOG ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.WRITE_CALL_LOG))
-                    appObj.put(WRITE_CALL_LOG ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.ADD_VOICEMAIL))
-                    appObj.put(ADD_VOICEMAIL ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.USE_SIP))
-                    appObj.put(USE_SIP ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.PROCESS_OUTGOING_CALLS))
-                    appObj.put(PROCESS_OUTGOING_CALLS,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.SEND_SMS))
-                    appObj.put(SEND_SMS ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.RECEIVE_SMS))
-                    appObj.put(RECEIVE_SMS ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.READ_SMS))
-                    appObj.put(READ_SMS ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.RECEIVE_WAP_PUSH))
-                    appObj.put(RECEIVE_WAP_PUSH ,1);
-                else
-                if (requestedPermission.matches(Manifest.permission.RECEIVE_MMS))
-                    appObj.put(RECEIVE_MMS ,1);
+            if( requestedPermissions != null){
+
+                for (String requestedPermission : requestedPermissions) {
+
+                    if (requestedPermission.matches(Manifest.permission.WRITE_CONTACTS))
+                        appObj.put(WRITE_CONTACTS, 1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.READ_CONTACTS))
+                        appObj.put(READ_CONTACTS, 1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                        appObj.put(WRITE_EXTERNAL_STORAGE, 1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.READ_EXTERNAL_STORAGE))
+                        appObj.put(READ_EXTERNAL_STORAGE, 1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.RECEIVE_BOOT_COMPLETED))
+                        appObj.put(RECEIVE_BOOT_COMPLETED, 1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.INTERNET))
+                        appObj.put(INTERNET, 1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.GET_ACCOUNTS))
+                        appObj.put(GET_ACCOUNTS, 1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.CAMERA))
+                        appObj.put(CAMERA, 1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.RECORD_AUDIO))
+                        appObj.put(RECORD_AUDIO, 1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.ACCESS_COARSE_LOCATION))
+                        appObj.put(ACCESS_COARSE_LOCATION, 1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.ACCESS_FINE_LOCATION))
+                        appObj.put(ACCESS_FINE_LOCATION, 1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.READ_CALENDAR))
+                        appObj.put(READ_CALENDAR ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.WRITE_CALENDAR))
+                        appObj.put(WRITE_CALENDAR ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.READ_PHONE_STATE))
+                        appObj.put(READ_PHONE_STATE ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.CALL_PHONE))
+                        appObj.put(CALL_PHONE ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.READ_CALL_LOG))
+                        appObj.put(READ_CALL_LOG ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.WRITE_CALL_LOG))
+                        appObj.put(WRITE_CALL_LOG ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.ADD_VOICEMAIL))
+                        appObj.put(ADD_VOICEMAIL ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.USE_SIP))
+                        appObj.put(USE_SIP ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.PROCESS_OUTGOING_CALLS))
+                        appObj.put(PROCESS_OUTGOING_CALLS,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.SEND_SMS))
+                        appObj.put(SEND_SMS ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.RECEIVE_SMS))
+                        appObj.put(RECEIVE_SMS ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.READ_SMS))
+                        appObj.put(READ_SMS ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.RECEIVE_WAP_PUSH))
+                        appObj.put(RECEIVE_WAP_PUSH ,1);
+                    else
+                    if (requestedPermission.matches(Manifest.permission.RECEIVE_MMS))
+                        appObj.put(RECEIVE_MMS ,1);
+                }
             }
 
             appObj.put(FLAG_SYSTEM                    , oneZero( ApplicationInfo.FLAG_SYSTEM & applicationInfo.flags));

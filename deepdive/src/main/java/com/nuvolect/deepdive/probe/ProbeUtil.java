@@ -1,19 +1,24 @@
 package com.nuvolect.deepdive.probe;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
+import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniHash;
 import com.nuvolect.deepdive.util.OmniUtil;
-import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.webserver.connector.FileObj;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 
 /**
@@ -35,7 +40,7 @@ public class ProbeUtil {
         boolean result = folder.mkdirs();
         String error = result?"":"mkdirs error";
 
-        JSONObject list = getPackageList(ctx);
+        JSONObject list = getWorkingApps(ctx);
         list = appendError( list, error);
 
         return list;
@@ -54,7 +59,7 @@ public class ProbeUtil {
         int count = OmniUtil.deleteRecursive(ctx, folder);
         String error = count > 0 ? "":"Delete error";
 
-        JSONObject list = getPackageList(ctx);
+        JSONObject list = getWorkingApps(ctx);
         list = appendError( list, error);
 
         return list;
@@ -66,7 +71,7 @@ public class ProbeUtil {
      * @param ctx
      * @return
      */
-    public static JSONObject getPackageList(Context ctx) {
+    public static JSONObject getWorkingApps(Context ctx) {
 
         String volumeId = App.getUser().getDefaultVolumeId();
         OmniFile apkFolder = new OmniFile( volumeId, CConst.USER_FOLDER_PATH);
@@ -96,7 +101,8 @@ public class ProbeUtil {
         String name = apkPackageFolder.getName();
         try {
             object.put("name", name);
-            object.put("url", OmniHash.getHashedServerUrl( ctx, Omni.userVolumeId, CConst.USER_FOLDER_PATH+ name));
+//            object.put("url", OmniHash.getHashedServerUrl( ctx, Omni.userVolumeId_0, CConst.USER_FOLDER_PATH+ name));//FIXME remove
+            object.put("url", OmniHash.getStartPathUrl( ctx, apkPackageFolder));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -144,8 +150,8 @@ public class ProbeUtil {
                 JSONObject object = new JSONObject();
                 object.put("name", array.get( i ));
 
-                String url = OmniHash.getHashedServerUrl(
-                    ctx, Omni.userVolumeId, slash+array.get( i ));
+                String url = OmniHash.getStartPathUrl(
+                    ctx, Omni.userVolumeId_0, slash+array.get( i ));
                 object.put("url", url);
                 fatList.put( object);
             }
@@ -154,47 +160,6 @@ public class ProbeUtil {
         }
         return fatList;
     }
-
-    /**
-     * Requires spring MultipartFile
-     * @param encodedPath
-     * @return
-     */
-//    public static JSONObject uploadFile( String path, String fileName, MultipartFile multipartFile) {
-//
-//        JSONObject wrapper = new JSONObject();
-//
-//        String volumeId = App.getUser().getDefaultVolumeId();
-//        String error = "";
-//        String result = "";
-//
-//        path = ("/" + path + "/").replace("//","/");
-//        new OmniFile( volumeId, path).mkdirs();
-//        OmniFile file = new OmniFile( volumeId, path+fileName);
-//        result = (file.delete()?"File deleted, ":"");
-//
-//        try {
-//            multipartFile.transferTo( file.getStdFile());
-//            result += "File upload successful: "+ file.getName();
-//
-//        } catch (IOException e) {
-//            LogUtil.logException( ProbeUtil.class, e);
-//            error = e.toString();
-//        }
-//        try {
-//            long length = file.length();
-//            String size = NumberFormat.getNumberInstance(Locale.US).format( length);
-//            wrapper.put("size", size);
-//            wrapper.put("name", file.getName());
-//            wrapper.put("error", error);
-//            wrapper.put("result", result);
-//
-//        } catch (JSONException e) {
-//            LogUtil.logException( ProbeUtil.class, e);
-//        }
-//
-//        return wrapper;
-//    }
 
     public static JSONObject getInfo( String encodedPath) {
 
@@ -213,6 +178,36 @@ public class ProbeUtil {
         }
 
         return wrapper;
+    }
+    /**
+     * Return a list of apps installed in Android.
+     * @param ctx
+     * @return
+     */
+    public static JSONArray getInstalledApps(Context ctx) {
+
+        JSONArray apps = new JSONArray();
+        PackageManager pm = ctx.getPackageManager();
+        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+
+        for (ApplicationInfo applicationInfo : packages) {
+            try {
+                PackageInfo packageInfo = pm.getPackageInfo(applicationInfo.packageName, PackageManager.GET_PERMISSIONS);
+
+                JSONObject app = new JSONObject();
+                app.put("name", String.valueOf(applicationInfo.loadLabel(pm)));
+                app.put("package", applicationInfo.packageName);
+                app.put("version_name", String.valueOf(packageInfo.versionName));
+                apps.put(app);
+
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return apps;
     }
 }
 

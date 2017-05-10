@@ -30,7 +30,6 @@ import com.nuvolect.deepdive.main.UserManager;
 import com.nuvolect.deepdive.util.ActionBarUtil;
 import com.nuvolect.deepdive.util.DeviceInfo;
 import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.PermissionManager;
 import com.nuvolect.deepdive.webserver.WebUtil;
 
 import org.json.JSONException;
@@ -102,16 +101,6 @@ public class LobbySettingsFragment extends PreferenceFragment
         Preference userManagerPref = findPreference(CConst.USER_MANAGER);
         String users = UserManager.getInstance(m_act).getSummary();
         userManagerPref.setSummary(users);
-
-        updatePermissionsSummary();
-    }
-
-    private void updatePermissionsSummary(){
-
-        // Display current permissions
-        String permissions = PermissionManager.getInstance(m_act).getSummary();
-        Preference permissionManagerPref = findPreference(CConst.PERMISSION_MANAGER);
-        permissionManagerPref.setSummary("Enabled: " + permissions);
     }
 
     int clickCount = 0;
@@ -230,17 +219,6 @@ public class LobbySettingsFragment extends PreferenceFragment
         if( preference.getKey().contentEquals(CConst.USER_MANAGER)){
 
             UserManager.getInstance(m_act).showDialog(m_act);
-        }
-        if( preference.getKey().contentEquals(CConst.PERMISSION_MANAGER)){
-
-            PermissionManager.getInstance(m_act).showDialog(
-                    new PermissionManager.PermissionMgrCallbacks() {
-                        @Override
-                        public void dialogOnCancel() {
-                            updatePermissionsSummary();
-                        }
-                    }
-            );
         }
 
         if( preference.getKey().contains("rate_app_google_play")){

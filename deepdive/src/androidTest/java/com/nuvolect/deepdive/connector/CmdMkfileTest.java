@@ -52,7 +52,7 @@ public class CmdMkfileTest {
 
         assertThat ( Omni.init( ctx), is( true ));
 
-        String volumeId = Omni.userVolumeId;
+        String volumeId = Omni.userVolumeId_0;
         String rootPath = "/";
         String uniqueFilename = ".filenameNeverGuessZez";
 

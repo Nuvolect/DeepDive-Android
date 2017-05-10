@@ -26,41 +26,6 @@
 
     <!-- elFinder initialization (REQUIRED) -->
     <script type="text/javascript" charset="utf-8">
-			// Documentation for client options:
-			// https://github.com/Studio-42/elFinder/wiki/Client-configuration-options
-			$(document).ready(function() {
-				$('#elfinder').elfinder({
-					url : '/connector',  // connector URL (REQUIRED)
-					lang: 'en',          // language (OPTIONAL)
-					docked: true,
-					defaultView: 'list',
-uiOptions : {
-	toolbar : [
-		['back', 'forward'],
-		['mkdir', 'mkfile', 'upload'],
-		['open', 'download'],
-		['info', 'quicklook'],
-		['copy', 'cut', 'paste'],
-		['rm'],
-		['duplicate', 'rename', 'edit'],
-		['extract', 'archive'],
-		['search'],
-		['view', 'sort'],
-		['help'],
-		['fullscreen'],
-		// extra options
-		{
-			// also displays the text label on the button (true / false)
-			displayTextLabel: false,
-			// Exclude `displayTextLabel` setting UA type
-			labelExcludeUA: [],
-			// auto hide on initial open
-			autoHideUA: []
-		}
-	]
-}
-				});
-			});
         </script>
 
     <!-- added for full screen-->
@@ -97,6 +62,51 @@ app.controller('myController', function($scope, $http, $parse) {
 
     $scope.year = new Date().getFullYear(); // footer copyright year
 
+    function getURLParameter(name) {
+      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+    }
+
+    var startPathHash = getURLParameter('startPathHash');
+
+	// Documentation for client options:
+	// https://github.com/Studio-42/elFinder/wiki/Client-configuration-options
+	$(document).ready(function() {
+		$('#elfinder').elfinder({
+			url : '/connector',  // connector URL (REQUIRED)
+			lang: 'en',          // language (OPTIONAL)
+			docked: false,
+			defaultView: 'list',
+	        rememberLastDir: false, // Remember last opened dir. This is stored in browser cookie.
+	        useBrowserHistory: false, // Use browser native history by hash-change.
+	        startPathHash: startPathHash,
+
+            uiOptions : {
+	            toolbar : [
+	                ['back', 'forward'],
+		            ['mkdir', 'mkfile', 'upload'],
+		            ['open', 'download'],
+		            ['info', 'quicklook'],
+		            ['copy', 'cut', 'paste'],
+		            ['rm'],
+		            ['duplicate', 'rename', 'edit'],
+		            ['extract', 'archive'],
+		            ['search'],
+		            ['view', 'sort'],
+		            ['help'],
+		            ['fullscreen'],
+		            // extra options
+		            {
+			           // also displays the text label on the button (true / false)
+			           displayTextLabel: false,
+			           // Exclude `displayTextLabel` setting UA type
+			           labelExcludeUA: [],
+			           // auto hide on initial open
+			           autoHideUA: []
+		            }
+	            ]
+            }
+		});
+	});
 });
 </script>
 </body>
