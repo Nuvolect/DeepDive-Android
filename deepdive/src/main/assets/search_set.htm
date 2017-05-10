@@ -9,7 +9,7 @@
 
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
-    <link href="/css/lobby.css" rel="stylesheet">
+    <link href="/css/search_set.css" rel="stylesheet">
 </head>
 
 <body>
@@ -212,7 +212,7 @@
             // Find index by iterating the set
             var arrayLength = $scope.search_set.length;
 
-            for(var i=0; i < arrayLength; i++){//mkk
+            for(var i=0; i < arrayLength; i++){
 
                if( $scope.search_set[i].query === query){
 
@@ -221,7 +221,6 @@
                }
             }
             // Memory set is updated, now save it to server
-            // mkk
             var cleanList = angular.toJson( $scope.search_set );
 
             $http.get("/search/put_set?set="+cleanList+"&name="+$scope.current_set.filename)
@@ -366,7 +365,11 @@
                 var result = $.parseJSON( response.data.result );
 
                 // Set query set
-                $scope.search_set = result.set;
+                var setNoHits = result.set;
+                for(var i=0; i < setNoHits.length; i++){
+                    setNoHits[i].num_hits = 0;
+                }
+                $scope.search_set = setNoHits;
 
                 // Update select menu by iterating all sets and setting current set object
                 var arrayLength = $scope.sets.length;
