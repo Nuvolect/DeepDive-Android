@@ -14,7 +14,7 @@
   { "query": "com.fish.when.orangecamera", "description":"Orange Camera"},
   { "query": "com.fishing.when.orangecamera", "description":"Orange Camera"},
   { "query": "com.flappy.game.cat", "description":"FlappyCat"},
-  { "query": "com.fun.happy.camera- Happy Camera"},
+  { "query": "com.fun.happy.camera","description":"Happy Camera"},
   { "query": "com.group.hotcamera", "description":"Hot Camera"},
   { "query": "com.just.parrot.album", "description":"com.qti.atfwd.core"},
   { "query": "com.like.coral.album", "description":"com.qti.atfwd.core"},
@@ -27,7 +27,7 @@
   { "query": "com.op.blinking.camera", "description":"Blinking Camera"},
   { "query": "com.op.blinkingcamera", "description":"Blinking Camera"},
   { "query": "com.op.smart.albums", "description":"SmartAlbums"},
-  { "query": "com.room.wow.camera", "description":"Wow Camera-Beautyï¼ŒCollageï¼ŒEdit"},
+  { "query": "com.room.wow.camera", "description":"Wow Camera-Beauty，Collage，Edit"},
   { "query": "com.speed.top", "description":"Topspeed Test2"},
   { "query": "com.start.super.speedtest", "description":"com.qti.atfwd.core"},
   { "query": "com.tec.file.master", "description":"File Master"},
@@ -42,5 +42,6 @@
   { "query": "com.wind.coco.camera", "description":"Coco Camera"},
   { "query": "com.with.swan.camera", "description":"Swan Camera"},
   { "query": "global.fm.filesexplorer", "description":"file explorer"},
-  { "query": "gorer", "description":"File Explorer"}
+  { "query": "gorer", "description":"File Explorer"},
+  { "query": "io.zhuozhuo.snail.android_snails -蜗牛手游加速器-专业的vpn，解决手游卡顿延迟问题"}
 ]
