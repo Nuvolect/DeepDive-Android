@@ -13,7 +13,10 @@ import com.googlecode.dex2jar.v3.Dex2jar;
 import com.googlecode.dex2jar.v3.DexExceptionHandler;
 import com.jaredrummler.apkparser.ApkParser;
 import com.jaredrummler.apkparser.model.CertificateMeta;
+import com.nuvolect.deepdive.license.LicenseManager;
+import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.main.CConst;
+import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniHash;
@@ -21,7 +24,6 @@ import com.nuvolect.deepdive.util.OmniUtil;
 import com.nuvolect.deepdive.util.OmniZip;
 import com.nuvolect.deepdive.util.TimeUtil;
 import com.nuvolect.deepdive.util.Util;
-import com.nuvolect.deepdive.main.App;
 
 import org.apache.commons.io.FilenameUtils;
 import org.benf.cfr.reader.state.ClassFileSourceImpl;
@@ -91,7 +93,7 @@ public class DecompileApk {
     private OmniFile m_apkFile;
     private OmniFile m_dexFile;
     private OmniFile m_jarFile;
-    private OmniFile m_optimizedDexFile;
+    private OmniFile m_optimizedDexLogFile;
     private OmniFile m_srcCfrFolder;
     private OmniFile m_srcFernFolder;
     private OmniFile m_srcJadxFolder;
@@ -124,6 +126,7 @@ public class DecompileApk {
     private List<String> ignoredLibs = new ArrayList();
     private String OPTIMIZED_CLASSES = "optimized_classes";
     private String OPTIMIZED_CLASSES_EXCLUSION_FILENAME = "dex_class_exclusion.txt";
+    private String DEX_OPTIMIZATION_LOG_FILE = "dex_optimization_log.txt";
     private String[] m_dexFileNames = {}; // Generated list of candidate dex file names
 
     // Time when a process is started
@@ -170,7 +173,7 @@ public class DecompileApk {
         m_appApkPath = m_appFolderPath+m_packageName+".apk";
         m_apkFile           = new OmniFile( m_volumeId, m_appApkPath);
         m_dexFile           = new OmniFile( m_volumeId, m_appFolderPath+"classes.dex");
-        m_optimizedDexFile  = new OmniFile( m_volumeId, m_appFolderPath+"optimized_classes.dex");
+        m_optimizedDexLogFile=new OmniFile( m_volumeId, m_appFolderPath+ DEX_OPTIMIZATION_LOG_FILE);
         m_jarFile           = new OmniFile( m_volumeId, m_appFolderPath+"classes.jar");
         m_srcCfrFolderPath  = m_appFolderPath+"srcCfr";
         m_srcCfrFolder      = new OmniFile( m_volumeId, m_srcCfrFolderPath);
@@ -191,7 +194,7 @@ public class DecompileApk {
          */
         boolean apkFileExists = m_apkFile.exists();
         boolean dexFileExists = m_dexFile.exists();
-        boolean optimizedDexExists = m_optimizedDexFile.exists();
+        boolean optimizedDexExists = m_optimizedDexLogFile.exists();
         boolean jarFileExists = m_jarFile.exists();
         boolean cfrFolderExists = m_srcCfrFolder.exists();
         boolean jadxFolderExists = m_srcJadxFolder.exists();
@@ -223,8 +226,7 @@ public class DecompileApk {
             }
 
             if(fernFolderExists){
-                String url = OmniHash.getStartPathUrl(m_ctx,
-                        m_volumeId, m_srcFernFolderPath);
+                String url = OmniHash.getStartPathUrl(m_ctx, m_volumeId, m_srcFernFolderPath);
                 wrapper.put("fern_url", url);
             }
             else{
@@ -355,6 +357,18 @@ public class DecompileApk {
 
             m_progressStream.putStream("Extract APK complete, "+formatted_count+" bytes");
 
+            if(LicenseManager.isFreeUser()){
+
+                String category = Analytics.DECOMPILE;
+                String action = "extract_apk";
+                String label = m_packageName;
+                long value = bytes_copied;
+
+                Analytics.send( m_ctx, category, action, label, value);
+
+//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+            }
+
             wrapper.put("extract_apk_status", 1); // Change to success if we get here
             wrapper.put("extract_apk_url", m_appFolderUrl);
 
@@ -387,6 +401,7 @@ public class DecompileApk {
                 boolean success = false;
                 try {
 
+                    m_progressStream = new ProgressStream(new OmniFile(m_volumeId, m_appFolderPath+ "unpack_apk_log.txt"));
                     m_progressStream.putStream("Unpack APK starting");
                     if( m_apkFile.exists() && m_apkFile.isFile()){
 
@@ -469,6 +484,20 @@ public class DecompileApk {
                 else{
                     m_progressStream.putStream("Unpack APK failed: "+time);
                 }
+                m_progressStream.close();
+
+                if(LicenseManager.isFreeUser()){
+
+                    String category = Analytics.DECOMPILE;
+                    String action = "unpack_apk";
+                    String label = m_packageName;
+                    long value = m_unpack_apk_time;
+
+                    Analytics.send( m_ctx, category, action, label, value);
+
+//                    LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+                }
+
             }
         }, UNZIP_APK_THREAD, STACK_SIZE);
 
@@ -508,7 +537,9 @@ public class DecompileApk {
             @Override
             public void run() {
 
-                List<ClassDef> classes = new ArrayList<>();
+                m_progressStream = new ProgressStream(new OmniFile(m_volumeId, m_appFolderPath+ DEX_OPTIMIZATION_LOG_FILE));
+
+                List<ClassDef> classes = new ArrayList<>();//mkk
                 m_progressStream.putStream("Optimizing classes, reference: "+ OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
 
                 Scanner s = null;
@@ -526,11 +557,6 @@ public class DecompileApk {
                 if( s != null)
                     s.close();
 
-                /**
-                 * FIXME: Optimizing DEX appears to only read the first classes.dex.
-                 * The problem is the classes{n}.dex files are ignored and not all classes can be decompiled.
-                 * mkk
-                 */
                 for( String fileName : m_dexFileNames) {
 
                     OmniFile dexFile = new OmniFile(m_volumeId, m_appFolderPath + fileName + ".dex");
@@ -581,7 +607,21 @@ public class DecompileApk {
                 }
                 m_progressStream.putStream("Optimize DEX complete: "
                         +TimeUtil.deltaTimeHrMinSec(m_optimize_dex_time));
+                m_progressStream.close();
+
+                if(LicenseManager.isFreeUser()){
+
+                    String category = Analytics.DECOMPILE;
+                    String action = "optimize_apk";
+                    String label = m_packageName;
+                    long value = m_optimize_dex_time;
+
+                    Analytics.send( m_ctx, category, action, label, value);
+
+//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+                }
                 m_optimize_dex_time = 0;
+
             }
         }, UNZIP_APK_THREAD, STACK_SIZE);
 
@@ -684,6 +724,19 @@ public class DecompileApk {
 
                 m_progressStream.putStream("DEX to JAR complete: "
                         +TimeUtil.deltaTimeHrMinSec(m_dex2jar_time));
+
+                if(LicenseManager.isFreeUser()){
+
+                    String category = Analytics.DECOMPILE;
+                    String action = "dex2jar";
+                    String label = m_packageName;
+                    long value = m_dex2jar_time;
+
+                    Analytics.send( m_ctx, category, action, label, value);
+
+//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+                }
+
                 m_dex2jar_time = 0;
             }
 
@@ -724,6 +777,8 @@ public class DecompileApk {
             @Override
             public void run() {
 
+                //mkk
+                m_progressStream = new ProgressStream(new OmniFile(m_volumeId, m_srcCfrFolderPath+ "cfr_decompile_log.txt"));
                 m_progressStream.putStream("CFR starting");
                 OmniFile jarFile = null;
                 try {
@@ -762,6 +817,20 @@ public class DecompileApk {
                     m_progressStream.putStream(e.toString());
                 }
                 m_progressStream.putStream("CFR complete: "+TimeUtil.deltaTimeHrMinSec(m_cfr_time));
+                m_progressStream.close();
+
+                if(LicenseManager.isFreeUser()){
+
+                    String category = Analytics.DECOMPILE;
+                    String action = "cfr";
+                    String label = m_packageName;
+                    long value = m_cfr_time;
+
+                    Analytics.send( m_ctx, category, action, label, value);
+
+//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+                }
+
                 m_cfr_time = 0;
             }
         }, DEEPDIVE_THREAD_GROUP, STACK_SIZE);
@@ -843,6 +912,19 @@ public class DecompileApk {
                 }
 
                 m_progressStream.putStream("Jadx complete: "+TimeUtil.deltaTimeHrMinSec(m_jadx_time));
+
+                if(LicenseManager.isFreeUser()){
+
+                    String category = Analytics.DECOMPILE;
+                    String action = "jadx";
+                    String label = m_packageName;
+                    long value = m_jadx_time;
+
+                    Analytics.send( m_ctx, category, action, label, value);
+
+//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+                }
+
                 m_jadx_time = 0;
             }
         }, JADX_THREAD, STACK_SIZE);
@@ -883,8 +965,6 @@ public class DecompileApk {
             @Override
             public void run() {
 
-                File javaOutputDir = m_srcFernFolder.getStdFile();
-
                 File inputJarFile = null;
                 String inputJarFileName = "";
 
@@ -902,7 +982,9 @@ public class DecompileApk {
                             PrintStream printStream = new PrintStream(m_progressStream);
                             System.setErr(printStream);
                             System.setOut(printStream);
-                            PrintStreamLogger logger = new PrintStreamLogger(printStream);
+                            OmniFile fernLog = new OmniFile(m_volumeId, m_srcFernFolderPath+"/"+m_dexFileNames[i]+"_log.txt");
+                            PrintStream logStream = new PrintStream( fernLog.getOutputStream());
+                            PrintStreamLogger logger = new PrintStreamLogger( logStream);
 
                             final Map<String, Object> mapOptions = new HashMap<>();
                             ConsoleDecompiler decompiler = new ConsoleDecompiler(
@@ -916,6 +998,7 @@ public class DecompileApk {
                             String decompiledJarFilePath = m_srcFernFolderPath + "/"+ inputJarFileName;
                             OmniFile decompiledJarFile = new OmniFile( m_volumeId, decompiledJarFilePath);
                             success = OmniZip.unzipFile( decompiledJarFile, m_srcFernFolder, null, null);
+                            decompiledJarFile.delete();
 
                             if (success){
                                 m_progressStream.putStream("Fernflower decompiler.unpack complete: "+ inputJarFileName);
@@ -947,6 +1030,19 @@ public class DecompileApk {
                     }
                 }
                 m_progressStream.putStream( "Fernflower complete: "+TimeUtil.deltaTimeHrMinSec(m_fern_time));
+
+                if(LicenseManager.isFreeUser()){
+
+                    String category = Analytics.DECOMPILE;
+                    String action = "fernflower";
+                    String label = m_packageName;
+                    long value = m_fern_time;
+
+                    Analytics.send( m_ctx, category, action, label, value);
+
+//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+                }
+
                 m_fern_time = 0;
             }
         }, FERN_THREAD, STACK_SIZE);
@@ -1014,6 +1110,19 @@ public class DecompileApk {
                 myThread.currentThread().interrupt();
             }
         }
+
+        if(LicenseManager.isFreeUser()){
+
+            String category = Analytics.DECOMPILE;
+            String action = "stop_thread";
+            String label = m_packageName;
+            long value = 1;
+
+            Analytics.send( m_ctx, category, action, label, value);
+
+//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+        }
+
 
         return getStatus();
     }

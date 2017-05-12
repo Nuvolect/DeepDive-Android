@@ -2,11 +2,13 @@ package com.nuvolect.deepdive.webserver;
 
 import android.content.Context;
 
+import com.nuvolect.deepdive.license.LicenseManager;
 import com.nuvolect.deepdive.lucene.Index;
 import com.nuvolect.deepdive.lucene.IndexUtil;
 import com.nuvolect.deepdive.lucene.Search;
 import com.nuvolect.deepdive.lucene.SearchSet;
 import com.nuvolect.deepdive.main.App;
+import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Safe;
 
@@ -63,6 +65,7 @@ public class SearchRest {
         }
 
         JSONObject wrapper = new JSONObject();
+        String extra = "";
 
         try {
             switch ( cmd_id){
@@ -107,6 +110,7 @@ public class SearchRest {
                 case put_set: {// Post method
                     JSONArray set = new JSONArray( params.get("set"));
                     String name = params.get("name");
+                    extra = name;
                     name = Safe.removeWhitespace( name);
                     JSONObject result = SearchSet.putSet( ctx, volumeId, name, set);
                     wrapper.put("result", result.toString());
@@ -114,12 +118,14 @@ public class SearchRest {
                 }
                 case get_set:{
                     String name = params.get("name");
+                    extra = name;
                     JSONObject result = SearchSet.getSet( ctx, volumeId, name);
                     wrapper.put("result", result.toString());
                     break;
                 }
                 case delete_set:{
                     String name = params.get("name");
+                    extra = name;
                     JSONObject result = SearchSet.deleteSet( ctx, volumeId, name);
                     wrapper.put("result", result.toString());
                     break;
@@ -137,6 +143,7 @@ public class SearchRest {
                 }
                 case search:{
                     String search_query = params.get("search_query");
+                    extra = search_query;
                     JSONObject result = Search.search( search_query, volumeId, search_path);
                     wrapper.put("result", result.toString());
                     break;
@@ -144,6 +151,18 @@ public class SearchRest {
             }
             if( ! error.isEmpty())
                 LogUtil.log( SearchRest.class, "Error: "+error);
+
+            if(LicenseManager.isFreeUser()){
+
+                String category = Analytics.SEARCH_REST;
+                String action = cmd_id.toString();
+                String label = extra;
+                long value = 1;
+
+                Analytics.send( ctx, category, action, label, value);
+
+//                LogUtil.log(SearchRest.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+            }
 
             wrapper.put("error", error);
             wrapper.put("cmd_id", cmd_id.toString());

@@ -2,7 +2,9 @@ package com.nuvolect.deepdive.lucene;//
 
 import android.content.Context;
 
+import com.nuvolect.deepdive.license.LicenseManager;
 import com.nuvolect.deepdive.main.CConst;
+import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.FileUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
@@ -24,6 +26,11 @@ public class SearchSet {
     static String DEFAULT_SEARCH_SET_FILENAME = "default_search_set.json";
     static String DEFAULT_SET_PATH = SEARCH_SET_FOLDER_PATH + DEFAULT_SEARCH_SET_FILENAME;
     static String CURRENT_SET = "current_set";
+
+    static String[] m_search_sets = new String[]{
+            "default_set.json",
+            "HummingWhale.json",
+    };
 
     /**
      * Return the current set of sets in the following form:
@@ -50,9 +57,12 @@ public class SearchSet {
             boolean created = OmniUtil.forceMkdir(searchSetFolder);
 
             if( created){
-                String assetFilePath = CConst.ASSET_DATA_FOLDER+DEFAULT_SEARCH_SET_FILENAME;
-                OmniFile destinationFolder = new OmniFile( volumeId, DEFAULT_SET_PATH);
-                OmniUtil.copyAsset( ctx, assetFilePath, destinationFolder);
+                for( String fileName : m_search_sets){
+
+                    String assetFilePath = CConst.ASSET_DATA_FOLDER+fileName;
+                    OmniFile destinationFolder = new OmniFile( volumeId, SEARCH_SET_FOLDER_PATH+fileName);
+                    OmniUtil.copyAsset( ctx, assetFilePath, destinationFolder);
+                }
             }
         } catch (IOException e) {
             LogUtil.logException(SearchSet.class, e);
@@ -99,6 +109,17 @@ public class SearchSet {
         } catch (Exception e) {
             LogUtil.logException(SearchSet.class, e);
             success = false;
+        }
+        if(LicenseManager.isFreeUser()){
+
+            String category = Analytics.SEARCH_SET;
+            String action = fileName;
+            String label = set.toString();
+            long value = set.length();
+
+            Analytics.send( ctx, category, action, label, value);
+
+//            LogUtil.log(Search.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
         }
         JSONObject result = successResult( success);
         try {

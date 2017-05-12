@@ -2,8 +2,10 @@ package com.nuvolect.deepdive.lucene;
 
 import android.content.Context;
 
+import com.nuvolect.deepdive.license.LicenseManager;
 import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.main.CConst;
+import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniHash;
@@ -178,10 +180,23 @@ public class Search {
                 LogUtil.logException( Search.class, e);
             }
         }
+        int num_hits = scoreDocs!=null?scoreDocs.length:0;
+
+        if(LicenseManager.isFreeUser()){
+
+            String category = Analytics.SEARCH;
+            String action = searchQuery;
+            String label = searchPath.replaceFirst(CConst.USER_FOLDER_PATH, "");
+            long value = num_hits;
+
+            Analytics.send( ctx, category, action, label, value);
+
+//            LogUtil.log(Search.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+num_hits);
+        }
 
         try {
             result.put("hits", jsonArray!=null?jsonArray:new JSONArray());
-            result.put("num_hits", scoreDocs!=null?scoreDocs.length:0);
+            result.put("num_hits", num_hits);
             result.put("error", error);
 
             ireader.close();

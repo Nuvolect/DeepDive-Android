@@ -1,0 +1,34 @@
+[
+  {
+    "query": "Analytics",
+    "description":"Analytics"
+  },
+  {
+    "query": "EasyTracker",
+    "description":"Analytics"
+  },
+  {
+    "query": "\"tracking.android.MapBuilder\"",
+    "description":""
+  },
+  {
+    "query": "\"com.crashlytics\"",
+    "description":"Analytics"
+  },
+  {
+    "query": "",
+    "description":""
+  },
+  {
+    "query": "",
+    "description":""
+  },
+  {
+    "query": "",
+    "description":""
+  },
+  {
+    "query": "",
+    "description":""
+  }
+]

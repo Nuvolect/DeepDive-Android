@@ -31,9 +31,11 @@ public class Analytics {//SPRINT review analytics
     public static final String CLOSE_TIPS          = "close_tips";
     public static final String CLOUD_ITEM          = "cloud_item";
     public static final String COUNT               = "count";
+    public static final String DECOMPILE           = "decompile";
     public static final String DELETE_CANCEL       = "delete_cancel";
     public static final String DELETE_LOG          = "delete_log";
     public static final String DELETED             = "deleted";
+    public static final String DEVICE              = "device";
     public static final String DONT_ASK_AGAIN      = "dont_ask_again";
     public static final String EMAIL_LOG           = "email_log";
     public static final String EVENT_LOG           = "event_log";
@@ -51,6 +53,7 @@ public class Analytics {//SPRINT review analytics
     public static final String NEXT_TIP            = "next_tip";
     public static final String OBSERVER            = "observer";
     public static final String OK                  = "ok";
+    public static final String OMNI_REST           = "omni_rest";
     public static final String PEN_TEST            = "pen_test";
     public static final String PREVIOUS_TIP        = "previous_tip";
     public static final String RATE_THIS_APP       = "rate_this_app";
@@ -61,6 +64,8 @@ public class Analytics {//SPRINT review analytics
     public static final String SERV                = "serv_";
     public static final String SETTINGS            = "settings";
     public static final String SEARCH              = "search";
+    public static final String SEARCH_REST         = "search_rest";
+    public static final String SEARCH_SET          = "search_set";
     public static final String SHOW_TIP            = "show_tip";
     public static final String SURVEY              = "survey";
     public static final String SURVEY_CLICK        = "survey_click";

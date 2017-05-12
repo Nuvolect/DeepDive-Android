@@ -1,4 +1,6 @@
-Landroid/support/
+Landroid/
+Lio/fabric/
+Ljava/
 Ljavax/annotation/
 Lcom/android/
 Lcom/fasterxml/
@@ -8,8 +10,10 @@ Lcom/squareup/
 Lcom/squarup/
 Lokio/
 Lorg/apache/
+Lorg/antlr/
 Lorg/immutables/gson/
 Lorg/jetbrains/
 Lorg/joda/
 Lorg/json/
+Lorg/junit/
 Lorg/objectweb/

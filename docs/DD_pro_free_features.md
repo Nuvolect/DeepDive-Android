@@ -7,12 +7,14 @@ It needs to be very clear about what, how and why a feature is free or pro.
 ## Free version
   o Fully functional explore and decompile Android apps. 
   o Advertisements shown
+  o Anonymous Analytics
   o No Search Sets
   o No removable storage
   o No DEX optimization
 
 ## Pro version
   o No advertisements
+  o Complete privacy, no analytics
   o Yes Search Sets
   o Yes removable storage
   o Yes DEX optimization

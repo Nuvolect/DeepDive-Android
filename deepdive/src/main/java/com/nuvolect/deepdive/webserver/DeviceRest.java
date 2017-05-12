@@ -5,10 +5,12 @@ package com.nuvolect.deepdive.webserver;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.util.KeystoreUtil;
-import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.license.LicenseManager;
 import com.nuvolect.deepdive.survey.DeviceSurvey;
 import com.nuvolect.deepdive.survey.SurveyExec;
+import com.nuvolect.deepdive.util.Analytics;
+import com.nuvolect.deepdive.util.KeystoreUtil;
+import com.nuvolect.deepdive.util.LogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,6 +45,7 @@ public class DeviceRest {
         }
 
         JSONObject wrapper = new JSONObject();
+        String extra = "";
 
         try {
             switch ( cmd_id){
@@ -51,6 +54,7 @@ public class DeviceRest {
                     break;
                 case app_detail:{
                     String package_name = params.get("package_name");
+                    extra = package_name;
                     JSONObject app_detail = SurveyExec.getAppDetail( ctx, package_name);
                     wrapper.put("app_detail", app_detail.toString());
                     break;
@@ -72,6 +76,7 @@ public class DeviceRest {
                 }
                 case shell:{
                     String shell_cmd = params.get("shell_cmd");
+                    extra = shell_cmd;
                     JSONArray shell_log = DeviceSurvey.getShell( shell_cmd );
                     wrapper.put("shell_log", shell_log.toString());
                     break;
@@ -79,6 +84,18 @@ public class DeviceRest {
             }
             if( ! error.isEmpty())
                 LogUtil.log( DeviceRest.class, "Error: "+error);
+
+            if(LicenseManager.isFreeUser()){
+
+                String category = Analytics.DEVICE;
+                String action = cmd_id.toString();
+                String label = extra;
+                long value = 1;
+
+                Analytics.send( ctx, category, action, label, value);
+
+                LogUtil.log(DeviceRest.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+            }
 
             wrapper.put("error", error);
             wrapper.put("cmd_id", cmd_id.toString());
