@@ -63,14 +63,24 @@ import java.util.Map;
  */
 public class CmdRm {
 
-    // Keep list of removed files
-    private static JSONArray removed;
-    private static String httpIpPort;
+    private Context context;
+    private ArrayList<OmniFile> removedFiles = new ArrayList<>();
+
+    public CmdRm(Context context) {
+        this.context = context;
+    }
 
     public static InputStream go(Context ctx, Map<String, String> params) {
+        CmdRm instance = new CmdRm(ctx);
+        return instance.deleteFiles(params);
+    }
 
-        httpIpPort = params.get("url");
+    public static boolean delete(Context context, OmniFile omniFile) {
+        CmdRm instance = new CmdRm(context);
+        return instance.delete(omniFile, true);
+    }
 
+    private InputStream deleteFiles(Map<String, String> params) {
         ArrayList<String> targets = new ArrayList<>();
 
         /**
@@ -88,39 +98,50 @@ public class CmdRm {
             }
         }
 
-        removed = new JSONArray();
         boolean success = true;
 
-        for(String target : targets ){
+        for (String target : targets) {
 
             OmniFile targetFile = OmniUtil.getFileFromHash(target);
 
             /**
              * Recursively delete files and folders adding each delete to an arraylist.
              */
-            success = delete( ctx, targetFile);
-            if( ! success)
+            success = delete(targetFile, false);
+            if(! success)
                 break;
         }
 
         JSONObject wrapper = new JSONObject();
 
         try {
+            if (success) {
+                JSONArray removed = new JSONArray();
+                ArrayList<String> pathsToScan = new ArrayList<>();
+                for (OmniFile file: removedFiles) {
+                    removed.put(file.getHash());
+                    if (needScanFile(file)) {
+                        pathsToScan.add(file.getAbsolutePath());
+                    }
+                }
+                if (pathsToScan.size() > 0) {
+                    MediaScannerConnection.scanFile(
+                            context,
+                            pathsToScan.toArray(new String[pathsToScan.size()]),
+                            null,
+                            null);
+                }
 
-            if( success ){
                 wrapper.put("removed", removed);
             }
 
             return new ByteArrayInputStream(wrapper.toString().getBytes("UTF-8"));
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (JSONException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return null;
     }
-
 
     /**
      * Recursively deletes a directory and its contents.
@@ -128,12 +149,11 @@ public class CmdRm {
      * @param f The directory (or file) to delete
      * @return true if the delete succeeded, false otherwise
      */
-    public static boolean delete(Context ctx, OmniFile f) {
-
+    private boolean delete(OmniFile f, boolean scanFile) {
         if (f.isDirectory()) {
             for (OmniFile child : f.listFiles()) {
-                if (!delete(ctx, child)) {
-                    return(false);
+                if (!delete(child, scanFile)) {
+                    return false;
                 }
             }
         }
@@ -143,28 +163,30 @@ public class CmdRm {
          */
         OmniImage.deleteThumbnail( f );
 
-        String hash = f.getHash();
-        boolean success =f.delete();
+        boolean success = f.delete();
 
-        if( success){
+        if (success) {
+            removedFiles.add(f);
 
-            if( removed != null)
-                removed.put( hash );
+            /**
+             * The crypto storage does not use the media scanner.
+             */
+            if (scanFile && needScanFile(f)) {
+                MediaScannerConnection.scanFile(
+                        context,
+                        new String[]{f.getAbsolutePath()},
+                        null,
+                        null);
+            }
+
+            return true;
         }
 
-        /**
-         * The crypto storage does not use the media scanner.
-         */
-        if( success && f.isStd())
-            MediaScannerConnection.scanFile(
-                ctx,
-                new String[]{f.getAbsolutePath()},
-                null,
-                null);
+        return false;
+    }
 
-        /**
-         * Note only the last success case is returned.
-         */
-        return(success);
+    private boolean needScanFile(OmniFile file) {
+        //here you can add additional conditions if the file needs to be scanned
+        return file.isStd();
     }
 }

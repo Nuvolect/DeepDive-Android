@@ -21,6 +21,7 @@ package com.nuvolect.deepdive.testsuite;
 
 
 import com.nuvolect.deepdive.connector.CmdMkfileTest;
+import com.nuvolect.deepdive.connector.CmdRmFileTest;
 import com.nuvolect.deepdive.util.KeystoreUtilTest;
 import com.nuvolect.deepdive.util.OmniTest;
 
@@ -36,6 +37,7 @@ import org.junit.runners.Suite;
                 KeystoreUtilTest.class,
                 OmniTest.class,
                 CmdMkfileTest.class,
+                CmdRmFileTest.class,
         }
 )
 public class UnitTestSuite {
