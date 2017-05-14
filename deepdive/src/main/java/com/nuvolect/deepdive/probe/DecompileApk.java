@@ -591,7 +591,7 @@ public class DecompileApk {
 
                         m_progressStream.putStream("Excluded classes #" + excludedClassCount);
                         m_progressStream.putStream("Included classes #" + classes.size());
-                        m_progressStream.putStream("Rebuilding immutable dex file...");
+                        m_progressStream.putStream("Rebuilding immutable dex: "+fileName);
 
                         org.jf.dexlib2.iface.DexFile optimizedDexFile = null;
                         optimizedDexFile = new ImmutableDexFile(classes);

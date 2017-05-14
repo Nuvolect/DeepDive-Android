@@ -110,7 +110,7 @@ public class CustomDialog {
                     else
                         putInt(m_act, dialogPrefix+OK_ALREADY_SELECTED, 1);
                     String url =
-                            "https://play.google.com/store/apps/details?id=com.nuvolect.securesuite";
+                            "https://play.google.com/store/apps/details?id=com.nuvolect.deepdive";
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                     m_act.startActivity(i);
@@ -175,7 +175,7 @@ public class CustomDialog {
                         Toast.makeText(m_act, "ok button", Toast.LENGTH_SHORT).show();
                     // Note that a user can make multiple donations
 
-                    String url = "http://www.nuvolect.com/donate/#securesuite";
+                    String url = "https://www.nuvolect.com/donate";
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                     m_act.startActivity(i);

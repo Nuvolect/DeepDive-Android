@@ -171,7 +171,7 @@ public class KeystoreUtil {
 
                 KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(ctx)
                         .setAlias(key_alias)
-                        .setSubject(new X500Principal("CN=SecureSuite, O=Nuvolect"))
+                        .setSubject(new X500Principal("CN=DeepDive, O=Nuvolect"))
                         .setSerialNumber(BigInteger.ONE)
                         .setStartDate(start.getTime())
                         .setEndDate(end.getTime())
