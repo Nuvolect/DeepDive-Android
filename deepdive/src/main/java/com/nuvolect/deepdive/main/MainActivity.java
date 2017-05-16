@@ -298,7 +298,7 @@ public class MainActivity extends FragmentActivity {
                         Analytics.HELP,
                         Analytics.COUNT, 1);
 
-                String url = AppSpecific.APP_HELP_URL;
+                String url = AppSpecific.APP_WIKI_URL;
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);

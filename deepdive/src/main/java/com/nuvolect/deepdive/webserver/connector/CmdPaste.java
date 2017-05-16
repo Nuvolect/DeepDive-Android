@@ -156,7 +156,8 @@ public class CmdPaste {
                 if( ! toFile.exists())
                     break;
 
-                String extension = FilenameUtils.getExtension( toPath);// add ~ to filename, keep extension
+                // For duplicates, add ~ to filename, keep extension
+                String extension = FilenameUtils.getExtension( toPath);
                 if( ! extension.isEmpty())
                     extension = "."+extension;
                 toPath = FilenameUtils.removeExtension( toPath) + suffix;

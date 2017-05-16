@@ -87,7 +87,7 @@ public class LobbySettingsActivity extends PreferenceActivity
                 break;
             }
             case R.id.menu_help:{
-                String url = AppSpecific.APP_HELP_URL;
+                String url = AppSpecific.APP_WIKI_URL;
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);

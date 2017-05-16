@@ -26,7 +26,7 @@ public class AppSpecific {
     public final static String PP_HREF_URL                = CConst.APP_PP_HREF_URL;
 
     public final static String APP_GOOGLE_PLAY_URL        = "https://play.google.com/store/apps/details?id=com.nuvolect.deepdive";
-    public static final String APP_HELP_URL               = "https://nuvolect.com/deepdive_help/";
+    public static final String APP_WIKI_URL               = "https://github.com/Nuvolect/DeepDive-Android/wiki";
     public static final String APP_INFO_URL               = "https://nuvolect.com/deepdive/";
     public static final String APP_ISSUES_URL             = "https://github.com/TeamNuvolect/DeepDive/issues";
     public static final String APP_PRIVACY_URL            = "https://nuvolect.com/privacy/";

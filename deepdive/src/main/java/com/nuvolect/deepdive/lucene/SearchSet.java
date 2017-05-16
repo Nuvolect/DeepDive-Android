@@ -28,7 +28,8 @@ public class SearchSet {
     static String CURRENT_SET = "current_set";
 
     static String[] m_search_sets = new String[]{
-            "default_set.json",
+            "analytics.json",
+            "default_search_set.json",
             "HummingWhale.json",
     };
 
