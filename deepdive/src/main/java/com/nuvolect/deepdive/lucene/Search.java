@@ -47,6 +47,9 @@ public class Search {
         /**
          * The WhitespaceAnalyzer is case sensitive.
          */
+//        m_analyzer = new org.apache.lucene.analysis.core.WhitespaceAnalyzer();
+//        m_analyzer = new org.apache.lucene.analysis.core.KeywordAnalyzer();
+//        m_analyzer = new org.apache.lucene.analysis.standard.StandardAnalyzer();
         m_analyzer = new org.apache.lucene.analysis.core.SimpleAnalyzer();
 
         OmniFile luceneDir = IndexUtil.getCacheDir( volumeId, searchPath);
@@ -91,6 +94,8 @@ public class Search {
         Query query = null;
 
         try {
+
+            LogUtil.log(Search.class, "query: "+searchQuery+", vid: "+volumeId+", path: "+searchPath);
 
             // Parse a simple query that searches for "text":
             QueryParser parser = new QueryParser( CConst.FIELD_CONTENT, m_analyzer);

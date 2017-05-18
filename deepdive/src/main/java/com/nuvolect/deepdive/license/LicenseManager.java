@@ -19,7 +19,7 @@ import java.util.Date;
 
 
 /**
- * Class to manage the license related activities of startup.
+ * Manage the license related activities of startup and execution.
  * In the onCreate method of each entry class of the app call LicenseManager with
  * a listener to get the LicenseResult.
  * <pre>
@@ -90,6 +90,16 @@ public class LicenseManager {
         PRO_USER,
         PRO_USER_EXPIRED,  // Read access external storage, otherwise same as APPERCIATED_USER
         APPRECIATED_USER,
+    }
+
+    /**
+     * App expire enumerations
+     */
+    public enum AppExpireStatus { NIL,
+        APP_VALID,
+        APP_EXPIRE_WITHIN_30_DAYS,
+        APP_EXPIRE_WITHIN_7_DAYS,
+        APP_EXPIRED,
     }
 
     private Activity m_act;
@@ -188,11 +198,9 @@ public class LicenseManager {
     }
     void step_2_confirm_version_not_expired(){
 
-        Date buildDate = new Date(BuildConfig.BUILD_TIMESTAMP);
-        long appBuildTimeDate = buildDate.getTime();
-        long timeAppExpires = appBuildTimeDate + CConst.APP_VALID_DURATION;
+        AppExpireStatus appExpireStatus = getAppExpireStatus();
 
-        if( System.currentTimeMillis() < timeAppExpires){
+        if( appExpireStatus != AppExpireStatus.APP_EXPIRED){
 
             step_3_check_for_whitelist_user(); // app is still valid
         }else{
@@ -228,7 +236,7 @@ public class LicenseManager {
         if( LicensePersist.isProUser(m_act)) {
 
             long timeLastProUpgrade = LicensePersist.getProUserUpgradeTime( m_act);
-            long timeProExpires = timeLastProUpgrade + CConst.PRO_LICENSE_DURATION;
+            long timeProExpires = timeLastProUpgrade + CConst.DURATION_1_YEAR_MS;
 
             if( DEBUG){
                 LogUtil.log("timeLastProUpgrade: "+ TimeUtil.friendlyTimeString( timeLastProUpgrade));
@@ -308,6 +316,45 @@ public class LicenseManager {
                     }
                 });
     }
+
+    /**
+     * Return the status of when the app will expire.
+     * @return
+     */
+    public static AppExpireStatus getAppExpireStatus() {
+
+        Date buildDate = new Date(BuildConfig.BUILD_TIMESTAMP);
+        long appBuildTimeDate = buildDate.getTime();
+
+        long timeExpiresHalfYear = appBuildTimeDate + CConst.DURATION_HALF_YEAR_MS;
+        long timeExpires30Days = timeExpiresHalfYear - CConst.DURATION_30_DAYS_MS;
+        long timeExpires7Days = timeExpiresHalfYear - CConst.DURATION_7_DAYS_MS;
+
+        if( System.currentTimeMillis() > timeExpiresHalfYear) {
+
+            return AppExpireStatus.APP_EXPIRED;
+        }
+        if( System.currentTimeMillis() > timeExpires7Days) {
+
+            return AppExpireStatus.APP_EXPIRE_WITHIN_7_DAYS;
+        }
+        if( System.currentTimeMillis() > timeExpires30Days) {
+
+            return AppExpireStatus.APP_EXPIRE_WITHIN_30_DAYS;
+        }
+
+        return AppExpireStatus.APP_VALID;
+    }
+
+    public static String getAppExpireDate() {
+
+        Date buildDate = new Date(BuildConfig.BUILD_TIMESTAMP);
+        long appBuildTimeDate = buildDate.getTime();
+        long timeExpiresHalfYear = appBuildTimeDate + CConst.DURATION_HALF_YEAR_MS;
+
+        return TimeUtil.getFriendlyDate( timeExpiresHalfYear);
+    }
+
 
     public static boolean isWhitelistUser() {
         return mIsWhitelistUser;

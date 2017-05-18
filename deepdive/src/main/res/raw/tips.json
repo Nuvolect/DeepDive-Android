@@ -28,7 +28,7 @@
       "tip": "Settings Stack size allows you to change the memory allocation used by decompile utilities."
     },
     {
-      "tip": "A decompiler is having a beer at the bar when he is heldup by a gunman. He says \"Don't do it, I can see right through you and know your intensions.\""
+      "tip": "A decompiler is having a beer at the bar when he is heldup by a gunman. He says \"Don't do it, I can see right through you and know what you plan to do!\""
     },
     {
       "tip": "If the decompile process stalls, look at the log carefully and add any offending classes to the <strong>dex_class_exclusion.txt</strong> file, then re-optimize the DEX."

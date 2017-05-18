@@ -259,9 +259,9 @@
                 return;
             }
             var search_query = $scope.search_set[ $scope.currentSearch ].query;
-            <!--console.log("next search: "+search_query);-->
+            var encoded_query = encodeURIComponent( search_query );
 
-            $http.get("/search/search?search_path="+ search_path +"&search_query="+ search_query)
+            $http.get("/search/search?search_path="+ search_path +"&search_query="+ encoded_query)
                 .then(function (response) {
 
                 // Returned data is currently a string, convert it to JSON

@@ -49,10 +49,11 @@ public class CConst {
     public final static int SMALL_ICON              = R.drawable.icon_64;
     public static final int IP_TEST_TIMEOUT_MS      = 8000;// Time for testing for companion device IP
 
-    public static final long WEEK_MS                = 7 * 24 * 60 * 60 * 1000L;
-    public static final long HOURS_24_MS            = 1 * 24 * 60 * 60 * 1000L;// 1 day
-    public static final long PRO_LICENSE_DURATION   = 365 * 24 * 60 * 60 * 1000L;// 1 year
-    public static final long APP_VALID_DURATION     = 182 * 24 * 60 * 60 * 1000L;// 1/2 year
+    public static final long DURATION_1_DAY_MS      = 24 * 60 * 60 * 1000L;// 1 day
+    public static final long DURATION_7_DAYS_MS     =   7 * DURATION_1_DAY_MS;
+    public static final long DURATION_30_DAYS_MS    =  30 * DURATION_1_DAY_MS;
+    public static final long DURATION_HALF_YEAR_MS  = 182 * DURATION_1_DAY_MS;
+    public static final long DURATION_1_YEAR_MS     = 365 * DURATION_1_DAY_MS;
 
     public static final String BLOG_URL             = "https://nuvolect.com/blog";
     public static final String APP_TOC_HREF_URL     = "<a href='http://nuvolect.com/deepdive/terms.htm'>Terms and Conditions</a>";

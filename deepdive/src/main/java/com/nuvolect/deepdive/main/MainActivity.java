@@ -185,6 +185,35 @@ public class MainActivity extends FragmentActivity {
             // Execute upgrade methods
         }
 
+        switch ( LicenseManager.getAppExpireStatus()){
+
+            case APP_EXPIRE_WITHIN_30_DAYS: {// Annoy every week within last 30 days.
+                String expireDate = LicenseManager.getAppExpireDate();
+                if (LicensePersist.timeToNagUser(m_ctx, "within_30_days", CConst.DURATION_7_DAYS_MS)) {
+
+                    DialogUtil.dismissDialog(m_act, "App will expire within 30 days",
+                    "Better upgrade soon. App will expire on "+expireDate);
+                }
+                break;
+            }
+            case APP_EXPIRE_WITHIN_7_DAYS: {// Annoy every day during last 7 days.
+                String expireDate = LicenseManager.getAppExpireDate();
+                if (LicensePersist.timeToNagUser(m_ctx, "within_7_days", CConst.DURATION_1_DAY_MS)) {
+
+                    DialogUtil.dismissDialog(m_act, "App will expire within 7 days",
+                            "Better upgrade soon. App will expire on "+expireDate);
+                }
+                break;
+            }
+            case APP_EXPIRED:
+                m_act.finish();
+                break;
+
+            case NIL:// Do nothing, error will not happen
+            case APP_VALID:// Do nothing
+                break;
+        }
+
         if (!haveNecessaryPermissions()) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -281,16 +310,16 @@ public class MainActivity extends FragmentActivity {
                 quitApp();
                 break;
             }
-            case R.id.menu_upgrade:{
-
-                Analytics.send(getApplicationContext(),
-                        Analytics.MAIN_MENU,
-                        Analytics.UPGRADE_MENU,
-                        Analytics.COUNT, 1);
-
-                LicenseManager.upgradeLicense( m_act);//mkk
-                break;
-            }
+//            case R.id.menu_upgrade:{//PRO-USER
+//
+//                Analytics.send(getApplicationContext(),
+//                        Analytics.MAIN_MENU,
+//                        Analytics.UPGRADE_MENU,
+//                        Analytics.COUNT, 1);
+//
+//                LicenseManager.upgradeLicense( m_act);//mkk
+//                break;
+//            }
             case R.id.menu_help:{
 
                 Analytics.send(getApplicationContext(),

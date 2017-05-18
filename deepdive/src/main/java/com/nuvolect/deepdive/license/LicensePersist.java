@@ -81,7 +81,7 @@ public class LicensePersist {
                         +"\nUser accepted terms "+TimeUtil.friendlyTimeString(legalAgreeTime);
                 break;
             case PRO_USER:
-                long proLicenseExpires = getProUserUpgradeTime( ctx)+ CConst.PRO_LICENSE_DURATION;
+                long proLicenseExpires = getProUserUpgradeTime( ctx)+ CConst.DURATION_1_YEAR_MS;
                 summary = "License: Pro User"
                         +"\nUser accepted terms "+TimeUtil.friendlyTimeString(legalAgreeTime)
                         +"\nPro license expires "+TimeUtil.friendlyTimeString(proLicenseExpires);

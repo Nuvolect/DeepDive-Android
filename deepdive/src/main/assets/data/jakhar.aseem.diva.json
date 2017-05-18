@@ -1,0 +1,46 @@
+[
+  {
+    "query": "\"transaction with credit card\"",
+    "description": "Challenge 1 - Insecure Logging"
+  },
+  {
+    "query": "vendorSecretKey",
+    "description": "Challenge 2 - Hardcoding issues"
+  },
+  {
+    "query": "\"putString(\\\"password\\\"\"",
+    "description": "Challenge 3, Insecure Data Storage - Part 1"
+  },
+  {
+    "query": "+\"insert into\" +\"credentials saved\"",
+    "description": "Challenge 4, Insecure Data Storage - Part 2"
+  },
+  {
+    "query": "+getApplicationInfo +credentials",
+    "description": "Challenge 5, Insecure Data Storage - Part 3"
+  },
+  {
+    "query": "+getExternalStorageDirectory +\"credentials saved\"",
+    "description": "Challenge 6, Insecure Data Storage - Part 4"
+  },
+  {
+    "query": "+execSql +\"credit card\"",
+    "description": "Challenge 7, Input Validation Issues"
+  },
+  {
+    "query": "+webview +loadurl +edittext",
+    "description": "Challenge 8, Input Validation Issues"
+  },
+  {
+    "query": "\"api key\"",
+    "description": "Challenge 9-11, Access Control Issues"
+  },
+  {
+    "query": "\"see you in hell\"",
+    "description": "Challenge 12, Hardcoding Issues"
+  },
+  {
+    "query": "+\"access denied\" +Toast",
+    "description": "Challenge 13, Hardcoding Issues"
+  }
+]

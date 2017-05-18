@@ -1,34 +1,38 @@
 [
   {
-    "query": "Analytics",
-    "description":"Analytics"
+    "query": "\"com.google.analytics\"",
+    "description":"Google Analytics"
   },
   {
     "query": "EasyTracker",
-    "description":"Analytics"
-  },
-  {
-    "query": "\"tracking.android.MapBuilder\"",
-    "description":""
+    "description":"Google Analytics"
   },
   {
     "query": "\"com.crashlytics\"",
-    "description":"Analytics"
+    "description":"Crashlytics"
   },
   {
-    "query": "",
-    "description":""
+    "query": "\"org.piwik.sdk\"",
+    "description":"Piwik Tracking SDK"
   },
   {
-    "query": "",
-    "description":""
+    "query": "\"com.segment.analytics.Analytics\"",
+    "description": "Setment Analytics"
   },
   {
-    "query": "",
-    "description":""
+    "query": "\"com.mparticle\"",
+    "description":"mParticle"
   },
   {
-    "query": "",
-    "description":""
+    "query": "\"react-native-google-analytics-bridge\"",
+    "description": "Google Analytics Bridge"
+  },
+  {
+    "query": "\"com.github.florent37.androidanalytics\"",
+    "description":"Florent37 Analytics"
+  },
+  {
+    "query": "\"ly.count.android.sdk\"",
+    "description":"Countly Mobile Analytics"
   }
 ]

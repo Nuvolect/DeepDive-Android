@@ -31,6 +31,7 @@ public class SearchSet {
             "analytics.json",
             "default_search_set.json",
             "HummingWhale.json",
+            "jakhar.aseem.diva.json",
     };
 
     /**
@@ -105,7 +106,7 @@ public class SearchSet {
         boolean success;
         try {
             OmniFile omniFile = new OmniFile( volumeId, SEARCH_SET_FOLDER_PATH +fileName);
-            String content = set.toString();
+            String content = set.toString(2);
             success = OmniUtil.writeFile( omniFile, content);
         } catch (Exception e) {
             LogUtil.logException(SearchSet.class, e);

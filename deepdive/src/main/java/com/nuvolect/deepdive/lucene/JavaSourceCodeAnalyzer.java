@@ -1,7 +1,4 @@
 package com.nuvolect.deepdive.lucene;
-//
-//TODO create class description
-//
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.StopFilter;

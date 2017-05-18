@@ -379,7 +379,9 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
 
     $scope.searchFiles = function( search_path, search_query){
 
-        $http.get("/search/search/?search_query="+search_query+"&search_path="+search_path)
+        var encoded_query = encodeURIComponent( search_query );
+
+        $http.get("/search/search/?search_query="+encoded_query+"&search_path="+search_path)
           .then(function (response) {
 
             // Returned data is currently a string, convert it to JSON

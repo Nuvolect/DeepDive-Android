@@ -30,7 +30,7 @@ public class AppSpecific {
     public static final String APP_INFO_URL               = "https://nuvolect.com/deepdive/";
     public static final String APP_ISSUES_URL             = "https://github.com/TeamNuvolect/DeepDive/issues";
     public static final String APP_PRIVACY_URL            = "https://nuvolect.com/privacy/";
-    public static final String APP_ROADMAP_URL            = "https://nuvolect.com/blog/posts/pt-roadmap";
+    public static final String APP_ROADMAP_URL            = "https://nuvolect.com/blog/posts/dd-roadmap";
     public static final String APP_TERMS_URL              = "https://nuvolect.com/deepdive_terms/";
     public final static Uri APP_GOOGLE_PLAY_URI           = Uri.parse("market://details?id=com.nuvolect.deepdive");
 

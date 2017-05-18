@@ -26,6 +26,7 @@ import java.util.TimeZone;
 public class TimeUtil {
 
 	private static SimpleDateFormat formatMDYM = new SimpleDateFormat("MMM d, yyyy  K:mm a", Locale.US);
+	private static SimpleDateFormat formatDMY = new SimpleDateFormat("d MMM, yyyy", Locale.US);
 	private static SimpleDateFormat formatHrMinSec = new SimpleDateFormat("K:mm:ss a", Locale.US);
 	/**
 	 * Return time as a string in a user friendly format
@@ -128,5 +129,11 @@ public class TimeUtil {
 		time = time + seconds + " sec "+remainderMs + " ms";
 
 		return time;
+	}
+
+	public static String getFriendlyDate(long time) {
+
+		formatMDYM.setTimeZone(TimeZone.getDefault());
+		return formatDMY.format( time);
 	}
 }
