@@ -106,6 +106,20 @@ public class SearchSet {
         boolean success;
         try {
             OmniFile omniFile = new OmniFile( volumeId, SEARCH_SET_FOLDER_PATH +fileName);
+
+            // Remove excess data that will automatically get rebuilt on next use.
+            for( int i = 0 ; i < set.length(); i++){
+
+                JSONObject obj = set.getJSONObject( i );
+
+                if( obj.has("num_hits")){
+                    obj.remove("num_hits");
+                }
+                if( obj.has("encodedQuery")){
+                    obj.remove("encodedQuery");
+                }
+                set.put( i, obj);
+            }
             String content = set.toString(2);
             success = OmniUtil.writeFile( omniFile, content);
         } catch (Exception e) {

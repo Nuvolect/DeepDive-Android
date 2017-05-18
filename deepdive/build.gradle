@@ -150,9 +150,9 @@ dependencies {
 
     // CRASHLYTICS BUG REPORTING SDK
     // https://www.fabric.io/kits/android/crashlytics/install
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
-        transitive = true;
-    }
+//    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+//        transitive = true;
+//    }
 
     // APACHE LUCENE file search
     //    compile group: 'org.apache.lucene', name: 'lucene-core', version: '4.2.1'

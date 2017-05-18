@@ -80,7 +80,7 @@
             <tr ng-repeat="x in search_set | orderBy: '-num_hits'">
                 <td align="right">{{x.num_hits}}</td>
                 <td style="padding: 2px 0;">
-                    <a href="search.htm?search_path={{search_path}}&search_query={{x.query}}">{{x.query}}</a>
+                    <a href="search.htm?search_path={{search_path}}&search_query={{x.encodedQuery}}">{{x.query}}</a>
                 </td>
                 <td>{{x.description}}</td>
                 <td ng-show="edit_mode"><a
@@ -191,8 +191,9 @@
             $scope.new_query_description = "";
 
             var cleanList = angular.toJson( $scope.search_set );
+            var encodedList = encodeURIComponent( cleanList );
 
-            $http.get("/search/put_set?set="+cleanList+"&name="+$scope.current_set.filename)
+            $http.get("/search/put_set?set="+encodedList+"&name="+$scope.current_set.filename)
                 .then(function (response) {
 
                 // Returned data is currently a string, convert it to JSON
@@ -368,6 +369,7 @@
                 var setNoHits = result.set;
                 for(var i=0; i < setNoHits.length; i++){
                     setNoHits[i].num_hits = 0;
+                    setNoHits[i].encodedQuery = encodeURIComponent( setNoHits[i].query );
                 }
                 $scope.search_set = setNoHits;
 

@@ -365,7 +365,8 @@ public class LicenseManager {
     }
 
     public static boolean isFreeUser() {
-        return ! mIsProUser;
+//        return ! mIsProUser;//pro-user
+        return true;
     }
 
     public static boolean isProUserExpired() {
