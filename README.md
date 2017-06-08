@@ -49,14 +49,6 @@ Search Sets are collections of Lucene Searches. Search for up to a 100 keywords 
 We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked.
 <https://github.com/teamnuvolect/securesuite/issues>
 
-## Joining the Beta
-
-Want to live life on the bleeding edge and help out with testing?
-
-You can subscribe to DeepDive Android Beta releases here: <https://play.google.com/apps/testing/com.nuvolect.deepdive>.
-
-If you're interested in a life of peace and tranquility, stick with the standard releases.
-
 ## Support
 For troubleshooting and support information, please visit the wiki.
 <https://github.com/teamnuvolect/DeepDive-Android/wiki>
