@@ -19,8 +19,6 @@ package org.headsupdev.license;
 import java.util.Properties;
 
 /**
- * TODO add a description
- *
  * @author Andrew Williams
  * @version $Id: License.java 76 2012-03-17 23:17:03Z handyande $
  * @since 1.0
