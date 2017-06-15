@@ -53,7 +53,7 @@ public class Whitelist {
 	private static Set<String> developers = new HashSet<String>() {
 		private static final long serialVersionUID = 1L;
 	{
-		add("bfdcdf9d4013bd90"); // Matt's nexus 9
+//		add("bfdcdf9d4013bd90"); // Matt's nexus 9
         add("d5e36d9ee98729a6"); // Matt's samsung 9
 
 	}};

@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -93,8 +92,8 @@ public class LobbySettingsFragment extends PreferenceFragment
         ipPref.setSummary(WebUtil.getServerUrl(m_act));
 
         // Set license summary
-        mLicenseSummary = LicensePersist.getLicenseSummary(m_act);
-        Preference licensePref = findPreference(LicensePersist.APP_LICENSE);
+        mLicenseSummary = LicensePersist.getLicenseSummary( m_act);
+        Preference licensePref = findPreference(CConst.LICENSE_CRYP);
         licensePref.setSummary(mLicenseSummary);
 
         // Display list of user names
@@ -204,13 +203,6 @@ public class LobbySettingsFragment extends PreferenceFragment
 
             Toast.makeText(m_act, "Copied", Toast.LENGTH_SHORT).show();
         }
-        if( preference.getKey().contentEquals( LicensePersist.APP_LICENSE)){
-
-//            String url = "http://www.nuvolect.com/donate/#countercloud";
-//            Intent i = new Intent(Intent.ACTION_VIEW);
-//            i.setData(Uri.parse(url));
-//            startActivity(i);
-        }
         if( preference.getKey().contentEquals( "open_source_license" )){
 
             DisplayOpenSourceInfoFragment frag = new DisplayOpenSourceInfoFragment();
@@ -219,14 +211,6 @@ public class LobbySettingsFragment extends PreferenceFragment
         if( preference.getKey().contentEquals(CConst.USER_MANAGER)){
 
             UserManager.getInstance(m_act).showDialog(m_act);
-        }
-
-        if( preference.getKey().contains("rate_app_google_play")){
-
-            String url = AppSpecific.APP_GOOGLE_PLAY_URL;
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(url));
-            startActivity(i);
         }
 
         return super.onPreferenceTreeClick(preferenceScreen, preference);
@@ -262,5 +246,6 @@ public class LobbySettingsFragment extends PreferenceFragment
     @Override
     public void onSharedPreferenceChanged(SharedPreferences pref, String key) {
 
+        if(DEBUG)LogUtil.log("onSharedPreferenceChanged: "+key);
     }
 }

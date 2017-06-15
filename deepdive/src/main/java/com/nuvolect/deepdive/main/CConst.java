@@ -23,6 +23,7 @@ public class CConst {
     public static final String FIELD_VOLUME         = "volume_id";
     public static final String FILE_NAME            = "file_name";
     public static final String FILE_PATH            = "file_path";
+    public static final String LICENSE_CRYP         = "license_cryp";
     public static final String NAME                 = "name";
     public static final String NO_PASSPHRASE        = "no-passphrase";
     public static final String OK                   = "ok";
@@ -58,6 +59,5 @@ public class CConst {
     public static final String BLOG_URL             = "https://nuvolect.com/blog";
     public static final String APP_TOC_HREF_URL     = "<a href='http://nuvolect.com/deepdive/terms.htm'>Terms and Conditions</a>";
     public static final String APP_PP_HREF_URL      = "<a href='http://nuvolect.com/privacy'>Privacy Policy</a>";
-    public static final String APP_GOOGLE_PLAY_HREF_URL = "<a href='https://play.google.com/store/apps/details?id=com.nuvolect.deepdive'>Google Play</a>";
     public static final String APP_NUVOLECT_HREF_URL = "<a href='https://nuvolect.com/deepdive/deepdive_nuvolect.apk'>Nuvolect</a>";
 }

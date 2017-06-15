@@ -129,8 +129,8 @@ public class DialogUtil {
         edittext.setHint(hint);
 
         if( ! enableOkButton){
-            edittext.setEnabled( enableOkButton);
-            edittext.setFocusable(false);
+            edittext.setEnabled( false);
+            edittext.setFocusable( false);
         }
         builder.setView(edittext);
 

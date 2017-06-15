@@ -3,16 +3,20 @@ package com.nuvolect.deepdive.license;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.CrypUtil;
+import com.nuvolect.deepdive.util.DeviceInfo;
 import com.nuvolect.deepdive.util.JsonUtil;
+import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.TimeUtil;
 
+import org.headsupdev.license.License;
+import org.headsupdev.license.LicenseDecoder;
+import org.headsupdev.license.LicenseUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Random;
 
 @SuppressLint("CommitPrefEdits")
 public class LicensePersist {
@@ -27,8 +31,9 @@ public class LicensePersist {
     private static final String LEGAL_AGREE_TIME       = "legal_agree_time";
     private static final String LICENSE_RESULT         = "license_result";
     private static final String PRO_USER               = "pro_user";
+    private static final String ENCODED_LICENSE        = "encoded_license";
     private static final String PRO_USER_UPGRADE_TIME  = "pro_user_upgrade_time";
-    public static final CharSequence APP_LICENSE       = "app_license";// match settings.xml
+    private static final String LICENSE_CRYP           = CConst.LICENSE_CRYP;// match settings.xml
 
     /**
      * Remove all persistent data.
@@ -64,28 +69,47 @@ public class LicensePersist {
         LicenseManager.LicenseResult licenseResult = getLicenseResult(ctx);
         String summary = "";
 
-        switch( licenseResult){
+        switch( licenseResult) {
 
             case NIL:
                 summary = "ERROR NIL license type";
                 break;
             case REJECTED_TERMS:
-                summary = "User rejected terms "+ TimeUtil.friendlyTimeString(legalAgreeTime);
+                summary = "User rejected terms " + TimeUtil.friendlyTimeString(legalAgreeTime);
                 break;
             case WHITELIST_USER:
                 summary = "License: Whitelist"
-                        +"\nUser accepted terms "+TimeUtil.friendlyTimeString(legalAgreeTime);
+                        + "\nUser accepted terms " + TimeUtil.friendlyTimeString(legalAgreeTime);
                 break;
-            case APPRECIATED_USER:
-                summary = "License: Appreciated User"
-                        +"\nUser accepted terms "+TimeUtil.friendlyTimeString(legalAgreeTime);
-                break;
-            case PRO_USER:
-                long proLicenseExpires = getProUserUpgradeTime( ctx)+ CConst.DURATION_1_YEAR_MS;
+            case PRO_USER:{
+                LicenseDecoder decoder = new LicenseDecoder();
+                try {
+                    AppConfig config = new AppConfig();
+                    decoder.setPublicKey(LicenseUtils.deserialiseKey(config.getPublicKeyFile(ctx)));
+                    decoder.setSharedKey(LicenseUtils.deserialiseKey(config.getSharedKeyFile(ctx)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                String licDetails = "";
+
+                License out = new License();
+                try {
+                    String licenseCryp = LicensePersist.getLicenseCryp( ctx);
+                    decoder.decodeLicense( licenseCryp, out);
+                } catch (Exception e) {
+                    licDetails = "License invalid";
+                    LogUtil.log( licDetails);
+                }
+                if( licDetails.isEmpty()){// no decoder error, get license specifics
+
+                    licDetails = out.getSummary();
+                }
+
                 summary = "License: Pro User"
-                        +"\nUser accepted terms "+TimeUtil.friendlyTimeString(legalAgreeTime)
-                        +"\nPro license expires "+TimeUtil.friendlyTimeString(proLicenseExpires);
+                        + "\nUser accepted terms " + TimeUtil.friendlyTimeString(legalAgreeTime)
+                        + "\n" + licDetails;
                 break;
+            }
             default:
                 break;
         }
@@ -99,26 +123,6 @@ public class LicensePersist {
     public static LicenseManager.LicenseResult getLicenseResult(Context ctx) {
         final SharedPreferences pref = ctx.getSharedPreferences( PERSIST_NAME, Context.MODE_PRIVATE);
         return LicenseManager.LicenseResult.values()[pref.getInt(LICENSE_RESULT, 0)];
-    }
-    public static String getRandomUpgradePitch(Context ctx){
-
-        if( AppSpecific.PREMIUM_PITCH_LIST.length <= 0){
-            return "Consider a Premium Upgrade";
-        }
-        final SharedPreferences pref = ctx.getSharedPreferences( PERSIST_NAME, Context.MODE_PRIVATE);
-        int lastPitch = pref.getInt(LAST_PITCH, 0);
-
-        Random random = new Random();
-
-        int pitchIndex = random.nextInt(AppSpecific.PREMIUM_PITCH_LIST.length);
-
-        while( pitchIndex == lastPitch ){
-
-            pitchIndex = random.nextInt(AppSpecific.PREMIUM_PITCH_LIST.length);
-        }
-        pref.edit().putInt(LAST_PITCH, pitchIndex).commit();
-
-        return AppSpecific.PREMIUM_PITCH_LIST[ pitchIndex ];
     }
 
     /**
@@ -193,19 +197,48 @@ public class LicensePersist {
         CrypUtil.putInt(ctx, CrypUtil.APP_VERSION, appVersion);
     }
 
-    public static boolean isEarlyAdopter(Context ctx) {
-
-        return CrypUtil.get( ctx, EARLY_ADOPTER, "false").contentEquals("true");
-    }
-
-    public static void setIsEarlyAdopter(Context ctx, boolean b) {
-
-        CrypUtil.put( ctx, EARLY_ADOPTER, b?"true":"false");
-    }
-
     public static void setIsProUser(Context ctx, boolean b) {
 
         CrypUtil.put( ctx, PRO_USER, b?"true":"false");
+    }
+
+    public static boolean isInstallIdMatch(Context ctx){
+
+        String installId = DeviceInfo.getUniqueInstallId( ctx);
+        boolean installIdMatch = false;
+
+        try {
+            JSONObject json = new JSONObject( CrypUtil.get( ctx, ENCODED_LICENSE, "{}"));
+
+            if( json.getString("install_id").contentEquals( installId)){
+                installIdMatch = true;
+            }
+
+        } catch (JSONException e) {
+            installIdMatch = false;
+        }
+
+        return installIdMatch;
+    }
+
+    public static boolean isLicensePeriodValid(Context ctx){
+
+        boolean licensePeriodIsValid = false;
+
+        try {
+            JSONObject json = new JSONObject( CrypUtil.get( ctx, ENCODED_LICENSE, "{}"));
+            long licenseDate = json.getLong("LICENSE_DATE");
+
+            long timeProExpires = licenseDate + CConst.DURATION_1_YEAR_MS;
+
+            if( System.currentTimeMillis() < timeProExpires){
+                licensePeriodIsValid = true;
+            }
+        } catch (JSONException e) {
+            LogUtil.logException( LicensePersist.class, e);
+        }
+
+        return licensePeriodIsValid;
     }
 
     public static boolean isProUser(Context ctx) {
@@ -223,6 +256,23 @@ public class LicensePersist {
 
         final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
         pref.edit().putLong( PRO_USER_UPGRADE_TIME, System.currentTimeMillis()).commit();
+    }
+
+    /**
+     * Return encrypted license key as saved in app Settings.
+     * @param ctx
+     * @return
+     */
+    public static String getLicenseCryp(Context ctx ){
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences( ctx);
+        return sharedPref.getString(CConst.LICENSE_CRYP, "");
+    }
+
+    public static void putLicenseCryp(Context ctx, String licenseCryp){
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences( ctx);
+        sharedPref.edit().putString(CConst.LICENSE_CRYP, licenseCryp).apply();
     }
 
 }

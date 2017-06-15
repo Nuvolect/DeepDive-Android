@@ -25,6 +25,7 @@ import com.nuvolect.deepdive.license.LicenseUtil;
 import com.nuvolect.deepdive.settings.LobbySettingsActivity;
 import com.nuvolect.deepdive.util.ActionBarUtil;
 import com.nuvolect.deepdive.util.Analytics;
+import com.nuvolect.deepdive.util.DeviceInfo;
 import com.nuvolect.deepdive.util.DialogUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Util;
@@ -117,17 +118,61 @@ public class MainActivity extends FragmentActivity {
         switch ( license) {
             case NIL:
                 break;
-            case REJECTED_TERMS:
+            case REJECTED_TERMS:{
                 m_act.finish();
                 break;
+            }
+            case EMPTY_KEY: {
+
+                String installId = DeviceInfo.getUniqueInstallId( m_act);
+
+                DialogUtil.inputDialog( m_act, "License key empty",
+                        "The key is empty. Complete the license request form on Nuvolect.com using device ID: "
+                                +installId,"Enter key", true,
+                        new DialogUtil.InputDialogCallbacks() {
+                            @Override
+                            public void done(String result) {
+
+                                LicensePersist.putLicenseCryp( m_ctx, result);
+                                Util.restartApplication( m_act);
+                            }
+
+                            @Override
+                            public void cancel() {
+                                m_act.finish();
+                            }
+                        }
+                );
+                break;
+            }
+            case INVALID_KEY: {
+
+                DialogUtil.inputDialog( m_act, "License key invalid",
+                        "The key cannot have any extra characters, newline characters, etc.","Enter key", true,
+                        new DialogUtil.InputDialogCallbacks() {
+                            @Override
+                            public void done(String result) {
+
+                                LicensePersist.putLicenseCryp( m_ctx, result);
+                                Util.restartApplication( m_act);
+                            }
+
+                            @Override
+                            public void cancel() {
+                                m_act.finish();
+                            }
+                        }
+                );
+
+                break;
+            }
             case WHITELIST_USER:
-            case PRO_USER:
-            case APPRECIATED_USER: {
+            case PRO_USER: {
 
                 startGui();
                 break;
             }
-            case PRO_USER_EXPIRED:{//mkk
+            case PRO_USER_EXPIRED:{
 
                 DialogUtil.twoButtonMlDialog(m_act,
                         "App License Expired",
@@ -153,8 +198,7 @@ public class MainActivity extends FragmentActivity {
                 DialogUtil.oneButtonMlDialog(m_act,
                         "App Version Expired",
                         "This app version has expired and is no longer supported.\n"+
-                        "Please update the app from "+CConst.APP_GOOGLE_PLAY_HREF_URL+
-                        " or "+CConst.APP_NUVOLECT_HREF_URL+".",
+                        "Please update the app from "+CConst.APP_NUVOLECT_HREF_URL+".",
                         "Exit",
                         new DialogUtil.DialogUtilCallbacks() {
                             @Override

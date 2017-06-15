@@ -367,6 +367,17 @@ public class Util {
         System.exit(0);
     }
 
+    /**
+     * Restart the entire application
+     * @param act
+     */
+    public static void restartApplication(Activity act){
+        Intent i = act.getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage( act.getBaseContext().getPackageName() );
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        act.startActivity(i);
+    }
+
     public static void hideKeyboardFrom(Context ctx, View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) ctx.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);

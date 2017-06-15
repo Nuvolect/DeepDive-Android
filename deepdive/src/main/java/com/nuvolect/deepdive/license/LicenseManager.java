@@ -11,10 +11,16 @@ import android.widget.TextView;
 import com.nuvolect.deepdive.BuildConfig;
 import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.Analytics;
+import com.nuvolect.deepdive.util.DeviceInfo;
 import com.nuvolect.deepdive.util.DialogUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.TimeUtil;
 
+import org.headsupdev.license.License;
+import org.headsupdev.license.LicenseDecoder;
+import org.headsupdev.license.LicenseUtils;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -32,12 +38,13 @@ import java.util.Date;
  *
  * 3 Check for whitelist user, LicenseResult.WHITELIST_USER
  *
- * 4.a Check for pro user, license not expired, LicenseResult.PRO_USER
- * 4.b Check for pro user, license expired, LicenseResult.PRO_USER_EXPIRED
+ * 4.a Check for no key, invalid key, LicenseResult.EMPTY_KEY, LicenseResult.INVALID_KEY
+ * 4.b Check for invalid device, LicenseResult.INVALID_DEVICE
+ * 4.c Check for pro user, license not expired, LicenseResult.PRO_USER
+ * 4.d Check for pro user, license expired, LicenseResult.PRO_USER_EXPIRED
  *      The user will always be a pro user but when license period expires
  *      the user will lose nearly all pro privileges.
  *
- * 5 User not white_list or pro user is an appreciated user, LicenseResult.APPRECIATED_USER
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Pro user states
  *
@@ -87,9 +94,11 @@ public class LicenseManager {
         REJECTED_TERMS,
         APP_EXPIRED,
         WHITELIST_USER,
+        EMPTY_KEY,
+        INVALID_KEY,
+        INVALID_DEVICE,
         PRO_USER,
         PRO_USER_EXPIRED,  // Read access external storage, otherwise same as APPERCIATED_USER
-        APPRECIATED_USER,
     }
 
     /**
@@ -186,6 +195,7 @@ public class LicenseManager {
                     mListener.licenseResult( LicenseResult.REJECTED_TERMS);
                     dialog_alert.cancel();
                     // All done here, calling class will take over with returned result
+                    return;
                 }
             });
             dialog_alert = builder.create();
@@ -196,7 +206,7 @@ public class LicenseManager {
             tv.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
-    void step_2_confirm_version_not_expired(){
+    private void step_2_confirm_version_not_expired(){
 
         AppExpireStatus appExpireStatus = getAppExpireStatus();
 
@@ -208,10 +218,11 @@ public class LicenseManager {
             mLicenseSummary = "App version expired";
             mListener.licenseResult(LicenseResult.APP_EXPIRED);
             // All done here, calling class will take over with returned result
+            return;
         }
     }
 
-    void step_3_check_for_whitelist_user(){
+    private void step_3_check_for_whitelist_user(){
         if(DEBUG)LogUtil.log( "LicenseManager: step_3_check_for_whitelist_user");
 
         String whiteListAccount = Whitelist.getWhiteListCredentials(m_act);
@@ -223,50 +234,131 @@ public class LicenseManager {
             mLicenseSummary = "Whitelist user: " +whiteListAccount;
             mListener.licenseResult( LicenseResult.WHITELIST_USER);
             // All done here, calling class will take over with returned result
+            return;
         }else{
 
-            step_4_check_for_pro_user_license_not_expired();
+            step_4a_check_for_invalid_key();
         }
     }
 
-    void step_4_check_for_pro_user_license_not_expired(){
+    private static License out;
+    private static String m_licenseInstallId;
+    private static String m_licenseDate;
+    private static String m_licensePeriodDays;
 
-        if (DEBUG) LogUtil.log("LicenseManager: step_4_check_for_pro_user");
+    private void step_4a_check_for_invalid_key(){
 
-        if( LicensePersist.isProUser(m_act)) {
+        if (DEBUG) LogUtil.log("LicenseManager: step_4b_check_for_invalid_key");
 
-            long timeLastProUpgrade = LicensePersist.getProUserUpgradeTime( m_act);
-            long timeProExpires = timeLastProUpgrade + CConst.DURATION_1_YEAR_MS;
+        String encodedLicense = LicensePersist.getLicenseCryp( m_act).trim();
 
-            if( DEBUG){
-                LogUtil.log("timeLastProUpgrade: "+ TimeUtil.friendlyTimeString( timeLastProUpgrade));
-                LogUtil.log("timeProExpires    : "+ TimeUtil.friendlyTimeString( timeProExpires));
-            }
+        if( encodedLicense.isEmpty()){
 
-            if( System.currentTimeMillis() < timeProExpires){
-
-                mIsProUser = true;
-                mLicenseSummary = "Pro user";
-                mListener.licenseResult(LicenseResult.PRO_USER);
-                // All done here, calling class will take over with returned result
-            }else{
-
-                mIsProUserExpired = true;
-                mLicenseSummary = "Pro user, license expired";
-                mListener.licenseResult(LicenseResult.PRO_USER_EXPIRED);
-                // All done here, calling class will take over with returned result
-            }
-
-        }else{
-            step_5_user_is_appreciated_user();
+            mLicenseSummary = "App license key is invalid";
+            mListener.licenseResult(LicenseResult.EMPTY_KEY);
+            // All done here, calling class will take over with returned result
+            return;
         }
+
+        AppConfig config = new AppConfig();
+        out = new License();
+
+        LicenseDecoder decoder = new LicenseDecoder();
+        try {
+            decoder.setPublicKey( LicenseUtils.deserialiseKey( config.getPublicKeyFile(m_act) ) );
+            decoder.setSharedKey( LicenseUtils.deserialiseKey( config.getSharedKeyFile(m_act) ) );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        boolean licenseFailed = false;
+
+        License out = new License();
+        try {
+            decoder.decodeLicense( encodedLicense, out );
+        } catch ( Exception e ) {
+            licenseFailed = true;
+            LogUtil.log( "License decoding failed..." );
+            // handle however...
+        }
+
+        if( licenseFailed ) {
+
+            mLicenseSummary = "App license key is invalid";
+            mListener.licenseResult(LicenseResult.INVALID_KEY);
+            // All done here, calling class will take over with returned result
+            return;
+        }
+
+        m_licenseInstallId = out.getLicenseInstallId();
+        m_licenseDate = out.getLicenseDate();
+        m_licensePeriodDays = out.getLicensePeriodDays();
+
+        LogUtil.log( "License decoding success, licensedTo       : "+out.getLicensedTo());
+        LogUtil.log( "License decoding success, licenseInstallId : "+out.getLicenseInstallId());
+        LogUtil.log( "License decoding success, licenseDate      : "+out.getLicenseDate());
+        LogUtil.log( "License decoding success, licensePeriodDays: "+out.getLicensePeriodDays());
+
+        step_4b_check_for_invalid_device();
     }
 
-    private void step_5_user_is_appreciated_user() {
+    private void step_4b_check_for_invalid_device(){
 
-        mLicenseSummary = "Appreciated user";
-        mListener.licenseResult(LicenseResult.APPRECIATED_USER);
-        // All done here, calling class will take over with returned result
+        if (DEBUG) LogUtil.log("LicenseManager: step_4b_check_for_invalid_device");
+
+        String installId = DeviceInfo.getUniqueInstallId( m_act);
+        String licenseId = m_licenseInstallId;
+
+        if( licenseId == null || licenseId.isEmpty() || ! installId.contentEquals( licenseId)) {
+
+            mLicenseSummary = "App license invalid for this device ("+installId+")";
+            mListener.licenseResult(LicenseResult.INVALID_DEVICE);
+            // All done here, calling class will take over with returned result
+           return;
+        }
+
+        step_4cd_check_license_not_expired();
+    }
+
+    private void step_4cd_check_license_not_expired(){
+
+        if (DEBUG) LogUtil.log("LicenseManager: step_4cd_check_license_not_expired");
+
+        // Extra day to get you through midnight of the day it expires.
+        long licensePeriodMs = (Long.parseLong( m_licensePeriodDays) +1) * 24 * 60 * 60 * 1000;
+        long licenseEndMs = 0;
+
+        try {
+            String dateString = m_licenseDate;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            Date date = sdf.parse(dateString);
+
+            // End time is the time the license started plus the length of the license.
+            licenseEndMs = date.getTime() + licensePeriodMs;
+
+        } catch (Exception e) {
+            LogUtil.logException(LicenseManager.class, e);
+        }
+
+        if( DEBUG){
+            LogUtil.log("licenseEnd: "+ TimeUtil.friendlyTimeString( licenseEndMs));
+        }
+
+        if( System.currentTimeMillis() < licenseEndMs){
+
+            mIsProUser = true;
+            mLicenseSummary = "Pro user";
+            mListener.licenseResult(LicenseResult.PRO_USER);
+            // All done here, calling class will take over with returned result
+            return;
+        }else{
+
+            mIsProUserExpired = true;
+            mLicenseSummary = "Pro user, license expired";
+            mListener.licenseResult(LicenseResult.PRO_USER_EXPIRED);
+            // All done here, calling class will take over with returned result
+            return;
+        }
     }
 
     /**
