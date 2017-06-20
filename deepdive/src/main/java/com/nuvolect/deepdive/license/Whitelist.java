@@ -10,14 +10,14 @@ import java.util.Set;
 public class Whitelist {
 
 	/**
-	 * Check if a device is on the whitelist.  This is done using the a unique install ID
+	 * Check if a device is on the whitelist.  This is done using the a unique device ID
 	 * in place of an email to avoid having to use the accounts permission.
 	 * @param ctx
 	 * @return
 	 */
 	public static String getWhiteListCredentials(Context ctx) {
 
-		String uniqueDeviceId = DeviceInfo.getUniqueInstallId(ctx);
+		String uniqueDeviceId = DeviceInfo.getUniqueDeviceId(ctx);
 
 		if( developers.contains(uniqueDeviceId))
 			return uniqueDeviceId;

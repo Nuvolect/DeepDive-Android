@@ -115,8 +115,8 @@ public class LobbySettingsFragment extends PreferenceFragment
         } catch (NameNotFoundException e1) { }
 
         /**
-         * Use the app version number at the bottom of the screen to capture a unique device install ID.
-         * This install ID is can be used to determine if a device is whitelisted.
+         * Use the app version number at the bottom of the screen to capture a unique device ID.
+         * This device ID is can be used to determine if a device is whitelisted.
          */
         TextView appVersionTv = (TextView) m_rootView.findViewById(R.id.settings_app_version);
         appVersionTv.setText(AppSpecific.APP_NAME + " version " + version);

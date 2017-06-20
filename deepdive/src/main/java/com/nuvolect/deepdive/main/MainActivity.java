@@ -124,11 +124,11 @@ public class MainActivity extends FragmentActivity {
             }
             case EMPTY_KEY: {
 
-                String installId = DeviceInfo.getUniqueInstallId( m_act);
+                String deviceId = DeviceInfo.getUniqueDeviceId( m_act);
 
                 DialogUtil.inputDialog( m_act, "License key empty",
                         "The key is empty. Complete the license request form on Nuvolect.com using device ID: "
-                                +installId,"Enter key", true,
+                                + deviceId,"Enter key", true,
                         new DialogUtil.InputDialogCallbacks() {
                             @Override
                             public void done(String result) {

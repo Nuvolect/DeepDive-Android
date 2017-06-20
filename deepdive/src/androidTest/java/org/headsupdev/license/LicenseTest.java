@@ -8,9 +8,8 @@ import org.junit.Test;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
+import static org.hamcrest.core.Is.is;
 
 /**
  * Run license utility through its paces.
@@ -20,11 +19,14 @@ public class LicenseTest {
     @Test
     public void testLicense() throws Exception {
 
-        String encodedLicense = "qYOp7Kvl0kNo3L40ysyaA0sOHnQX/35LoRZJGHD3Rw4Jvaj9uQPQlQr61gJqUYGvQo4VAEdIfAzY76tgkFD/9eY+idFGAbzwwwkxbmvmry5cycxRjftGnOIZ4urAcPpl8wJbtVe5bB6BtdW+6QGYZWmp1v3vX9K8QPL9iRglaVoRiq4QF7p++6I3DftzI/GBRwlR9H/9oF5t/fjjmOegQACmDUR+ke4EndiCQC4MYZyFccuJI25l/kyQ7VK9OJadiaSLBWAd9/DXCrikFgJdwgiU451JredMk7L9fGvTgyUZuQ7nYBqX1uYcbldGLvhoUCoS7Hko+yZIYiZWmcHh3zBnL2vREdArpt7swcGKLMj7rl6YPUiNaPmUGiambQZ+kmaIT2laqaBilGTM27vGJA==";
-        String installId = "bfdcdf9d4013bd90";
-        String licenseDate = "2017/06/12";
+        String licenseName = "Matt Kraus";
+        String licenseAddress = "10151 University Blvd., Suite 343, Orlando, FL 32817";
+        String licensePhone = "4075847854";
+        String licenseEmail = "matt.kraus@nuvolect.com";
+        String licenseDeviceId = "bfdcdf9d4013bd90";
+        String licenseDate = "2017/06/16";
         String licensePeriod = "365";
-        String licenseTo = "matt.kraus@nuvolect.com";
+        String encodedLicense = "qYOp7Kvl0kNo3L40ysyaA0sOHnQX/35LZjv4/zqt8nGgfHvNc5ne2wr61gJqUYGvQo4VAEdIfAyAqKCyucBb6vpiWb7GYBjpHECb8kv7rrPI9LfcvprsKRn6KqsldcjCDSb/2fGi0dNt/fjjmOegQACmDUR+ke4EAhEKUn6BKEHv502pxYkAlSdLwiyvEEGOPgVzJwE5mzuuSNvlftWYbFgJ/JLptjlMlu52juILh5UzOfffr7VsitJOrPMtaGNaN6bZsaZ/VcA12pM+/urkigO12k4vrvsPKxbSQiHOjq3UhUP82pWXB8GL2x1oSdN7uaUrC2tPVTOMnPvYVwuFQyPnmuL/dhGdGfoqqyV1yMJih8FVpkv0CVRwygejgm5J3erTUZkwjMhTVn+tbrRXxjVVO/7hw55QHTSVIq8Q66c6LGGGkTglpFQ/ozFFZMkGr0/nGRwK+2TOON+1KLtujyIARSNGvsgQagxLF1wvohvRwqj6o3VV+JK/CIFQIsbDBje8kAwqjIZL6r+BQzET45prpu0gQSYLFLt4bkt4hCmx8ATso38jBg==";
 
         Context ctx = getTargetContext();
 
@@ -50,11 +52,12 @@ public class LicenseTest {
         }
         assertTrue(decodeLicense);
 
-        String resultLicenseTo = out.getLicensedTo();
-
-        assertThat( out.getLicensedTo(), is( licenseTo));
-        assertThat( out.getLicenseInstallId(), is( installId));
-        assertThat( out.getLicenseDate(), is(licenseDate));
+        assertThat( out.getLicenseName(),       is( licenseName));
+        assertThat( out.getLicenseAddress(),    is( licenseAddress));
+        assertThat( out.getLicensePhone(),      is( licensePhone));
+        assertThat( out.getLicenseEmail(),      is( licenseEmail));
+        assertThat( out.getLicenseDeviceId(),   is( licenseDeviceId));
+        assertThat( out.getLicenseDate(),       is( licenseDate));
         assertThat( out.getLicensePeriodDays(), is( licensePeriod));
     }
 }

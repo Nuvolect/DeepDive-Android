@@ -26,7 +26,7 @@ public class DeviceInfo {
 	 * @param context
 	 * @return unique device ID string
 	 */
-	public static String getUniqueInstallId(Context context) {
+	public static String getUniqueDeviceId(Context context) {
 
 		String deviceId = Settings.Secure.getString( context.getContentResolver(), Settings.Secure.ANDROID_ID);
 		return deviceId;
@@ -49,7 +49,7 @@ public class DeviceInfo {
 			j.put("device", android.os.Build.DEVICE);
 			j.put("model", android.os.Build.MODEL);
 			j.put("product",android.os.Build.PRODUCT);
-			j.put("unique_install_id", getUniqueInstallId(context));
+			j.put("unique_device_id", getUniqueDeviceId(context));
 		} catch (JSONException e) {
 		}
 		return j;

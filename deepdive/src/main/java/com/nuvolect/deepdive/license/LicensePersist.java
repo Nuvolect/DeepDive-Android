@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 
 import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.CrypUtil;
-import com.nuvolect.deepdive.util.DeviceInfo;
 import com.nuvolect.deepdive.util.JsonUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.TimeUtil;
@@ -24,16 +23,11 @@ public class LicensePersist {
     private static final String PERSIST_NAME           = "license_persist";
 
     // Persist keys
-    private static final String EARLY_ADOPTER          = "early_adopter";
     private static final String LAST_NAG_TIME          = "last_nag_time";
-    private static final String LAST_PITCH             = "last_pitch";
     private static final String LEGAL_AGREE            = "legal_agree";
     private static final String LEGAL_AGREE_TIME       = "legal_agree_time";
     private static final String LICENSE_RESULT         = "license_result";
     private static final String PRO_USER               = "pro_user";
-    private static final String ENCODED_LICENSE        = "encoded_license";
-    private static final String PRO_USER_UPGRADE_TIME  = "pro_user_upgrade_time";
-    private static final String LICENSE_CRYP           = CConst.LICENSE_CRYP;// match settings.xml
 
     /**
      * Remove all persistent data.
@@ -202,60 +196,9 @@ public class LicensePersist {
         CrypUtil.put( ctx, PRO_USER, b?"true":"false");
     }
 
-    public static boolean isInstallIdMatch(Context ctx){
-
-        String installId = DeviceInfo.getUniqueInstallId( ctx);
-        boolean installIdMatch = false;
-
-        try {
-            JSONObject json = new JSONObject( CrypUtil.get( ctx, ENCODED_LICENSE, "{}"));
-
-            if( json.getString("install_id").contentEquals( installId)){
-                installIdMatch = true;
-            }
-
-        } catch (JSONException e) {
-            installIdMatch = false;
-        }
-
-        return installIdMatch;
-    }
-
-    public static boolean isLicensePeriodValid(Context ctx){
-
-        boolean licensePeriodIsValid = false;
-
-        try {
-            JSONObject json = new JSONObject( CrypUtil.get( ctx, ENCODED_LICENSE, "{}"));
-            long licenseDate = json.getLong("LICENSE_DATE");
-
-            long timeProExpires = licenseDate + CConst.DURATION_1_YEAR_MS;
-
-            if( System.currentTimeMillis() < timeProExpires){
-                licensePeriodIsValid = true;
-            }
-        } catch (JSONException e) {
-            LogUtil.logException( LicensePersist.class, e);
-        }
-
-        return licensePeriodIsValid;
-    }
-
     public static boolean isProUser(Context ctx) {
 
         return CrypUtil.get( ctx, PRO_USER, "false").contentEquals("true");
-    }
-
-    public static long getProUserUpgradeTime(Context ctx) {
-
-        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
-        return pref.getLong(PRO_USER_UPGRADE_TIME, 0);
-    }
-
-    public static void setProUserUpgradeTime(Context ctx ){
-
-        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
-        pref.edit().putLong( PRO_USER_UPGRADE_TIME, System.currentTimeMillis()).commit();
     }
 
     /**

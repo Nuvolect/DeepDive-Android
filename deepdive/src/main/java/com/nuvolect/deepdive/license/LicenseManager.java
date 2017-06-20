@@ -290,12 +290,12 @@ public class LicenseManager {
             return;
         }
 
-        m_licenseInstallId = out.getLicenseInstallId();
+        m_licenseInstallId = out.getLicenseDeviceId();
         m_licenseDate = out.getLicenseDate();
         m_licensePeriodDays = out.getLicensePeriodDays();
 
-        LogUtil.log( "License decoding success, licensedTo       : "+out.getLicensedTo());
-        LogUtil.log( "License decoding success, licenseInstallId : "+out.getLicenseInstallId());
+        LogUtil.log( "License decoding success, licenseName      : "+out.getLicenseName());
+        LogUtil.log( "License decoding success, licenseInstallId : "+out.getLicenseDeviceId());
         LogUtil.log( "License decoding success, licenseDate      : "+out.getLicenseDate());
         LogUtil.log( "License decoding success, licensePeriodDays: "+out.getLicensePeriodDays());
 
@@ -306,7 +306,7 @@ public class LicenseManager {
 
         if (DEBUG) LogUtil.log("LicenseManager: step_4b_check_for_invalid_device");
 
-        String installId = DeviceInfo.getUniqueInstallId( m_act);
+        String installId = DeviceInfo.getUniqueDeviceId( m_act);
         String licenseId = m_licenseInstallId;
 
         if( licenseId == null || licenseId.isEmpty() || ! installId.contentEquals( licenseId)) {
@@ -374,8 +374,12 @@ public class LicenseManager {
                 Analytics.UPGRADE_MENU,
                 Analytics.COUNT, 1);
 
-        DialogUtil.twoButtonMlDialog( act, "Upgrade to Pro",
-                "Early adopters can upgrade to Pro for free for six months, no catch.",
+        String deviceId = DeviceInfo.getUniqueDeviceId( act);
+
+        //FIXME develop/test upgrade when license expires
+
+        DialogUtil.twoButtonMlDialog( act, "Upgrade or renew license",
+                "Go to nuvolect.com/deepdive and use device ID: "+ deviceId,
                 "Not now", "Upgrade", new DialogUtil.DialogUtilCallbacks() {
                     @Override
                     public void confirmed(boolean confirmed) {
@@ -385,7 +389,6 @@ public class LicenseManager {
                             if( ! LicensePersist.isProUser( act)){
 
                                 LicensePersist.setIsProUser( act, true);
-                                LicensePersist.setProUserUpgradeTime( act);
 
                                 DialogUtil.dismissDialog( act, "A New Pro User!",
                                         "Congrats! You are now a Pro User!");

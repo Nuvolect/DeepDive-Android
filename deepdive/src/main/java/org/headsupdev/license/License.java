@@ -24,48 +24,48 @@ import java.util.Properties;
  * @since 1.0
  */
 public class License {
-    protected static final String LICENSED_TO         = "license.name";
-    protected static final String LICENSE_INSTALL_ID  = "license.install.id";
-    protected static final String LICENSE_DATE        = "license.date";
-    protected static final String LICENSE_PERIOD_DAYS = "license.period.days";
+    private static final String LICENSE_NAME        = "license.name";
+    private static final String LICENSE_ADDRESS     = "license.address";
+    private static final String LICENSE_PHONE       = "license.phone";
+    private static final String LICENSE_EMAIL       = "license.email";
+    private static final String LICENSE_DEVICE_ID   = "license.device.id";
+    private static final String LICENSE_DATE        = "license.date";
+    private static final String LICENSE_PERIOD_DAYS = "license.period.days";
 
     private Properties properties = new Properties();
 
     public License() {
     }
 
-    public String getLicenseTitle() {
-        return "Basic License File";
-    }
+    public String getLicenseTitle()      { return "Basic License File"; }
+    public String getLicenseName()       { return getProperty(LICENSE_NAME); }
+    public String getLicenseAddress()    { return getProperty(LICENSE_ADDRESS); }
+    public String getLicensePhone()      { return getProperty(LICENSE_PHONE); }
+    public String getLicenseEmail()      { return getProperty(LICENSE_EMAIL); }
+    public String getLicenseDeviceId()   { return getProperty(LICENSE_DEVICE_ID); }
+    public String getLicenseDate()       { return getProperty(LICENSE_DATE); }
+    public String getLicensePeriodDays() { return getProperty(LICENSE_PERIOD_DAYS); }
 
-    public String getLicensedTo() {
-        return getProperty(LICENSED_TO);
-    }
-
-    public String getLicenseInstallId() {
-        return getProperty(LICENSE_INSTALL_ID);
-    }
-
-    public String getLicenseDate() {
-        return getProperty(LICENSE_DATE);
-    }
-
-    public String getLicensePeriodDays() {
-        return getProperty(LICENSE_PERIOD_DAYS);
-    }
+    public void setLicenseName(String licensedName)            { setProperty(LICENSE_NAME, licensedName); }
+    public void setLicenseAddress(String licenseAddress)       { setProperty(LICENSE_ADDRESS, licenseAddress); }
+    public void setLicensePhone(String licensePhone)           { setProperty(LICENSE_PHONE, licensePhone); }
+    public void setLicenseEmail(String licenseEmail)           { setProperty(LICENSE_EMAIL, licenseEmail); }
+    public void setLicenseDeviceId(String licenseDeviceId)     { setProperty(LICENSE_DEVICE_ID, licenseDeviceId); }
+    public void setLicenseDate(String licenseDate)             { setProperty(LICENSE_DATE, licenseDate); }
+    public void setLicensePeriodDays(String licensePeriodDays) { setProperty(LICENSE_PERIOD_DAYS, licensePeriodDays); }
 
     public String getSummary(){
 
         String newLine = System.lineSeparator();
 
-        return "Licensed to: "+getProperty(LICENSED_TO) + newLine
-        +"Install ID: "+ getProperty(LICENSE_INSTALL_ID) + newLine
-        +"License date: "+ getProperty(LICENSE_DATE) + newLine
-        +"License period: "+ getProperty(LICENSE_PERIOD_DAYS);
-    }
-
-    public void setLicensedTo(String licensedTo) {
-        setProperty(LICENSED_TO, licensedTo);
+        return "Licensed to: "+ getProperty(LICENSE_NAME) + newLine
+                +"User name: "     + getProperty(LICENSE_NAME) + newLine
+                +"User address: "  + getProperty(LICENSE_ADDRESS) + newLine
+                +"User email: "    + getProperty(LICENSE_EMAIL) + newLine
+                +"User phone: "    + getProperty(LICENSE_PHONE) + newLine
+                +"Device ID: "     + getProperty(LICENSE_DEVICE_ID) + newLine
+                +"License date: "  + getProperty(LICENSE_DATE) + newLine
+                +"License period:" + getProperty(LICENSE_PERIOD_DAYS);
     }
 
     protected String getProperty(String key) {
@@ -83,4 +83,5 @@ public class License {
     protected Properties getProperties() {
         return properties;
     }
+
 }

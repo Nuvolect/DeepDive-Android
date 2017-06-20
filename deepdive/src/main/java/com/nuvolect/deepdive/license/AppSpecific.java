@@ -20,9 +20,9 @@ public class AppSpecific {
     public final static String TOC_HREF_URL               = CConst.APP_TOC_HREF_URL;
     public final static String PP_HREF_URL                = CConst.APP_PP_HREF_URL;
 
-    public static final String APP_WIKI_URL               = "https://github.com/Nuvolect/DeepDive-Android/wiki";
     public static final String APP_INFO_URL               = "https://nuvolect.com/deepdive/";
-    public static final String APP_ISSUES_URL             = "https://github.com/TeamNuvolect/DeepDive/issues";
+    public static final String APP_WIKI_URL               = "https://github.com/Nuvolect/DeepDive-Android/wiki";
+    public static final String APP_ISSUES_URL             = "https://github.com/Nuvolect/DeepDive-Android/issues";
     public static final String APP_PRIVACY_URL            = "https://nuvolect.com/privacy/";
     public static final String APP_ROADMAP_URL            = "https://nuvolect.com/blog/posts/dd-roadmap";
     public static final String APP_TERMS_URL              = "https://nuvolect.com/deepdive_terms/";
