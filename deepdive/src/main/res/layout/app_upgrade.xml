@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/appUpgradeLl"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="460dp"
+    android:minHeight="250dp"
+    android:background="@drawable/rounded_box" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="App upgrade"
+        android:textColor="@color/navy"
+        android:id="@+id/textView99"
+        android:paddingLeft="5dp" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@color/linen"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp">
+
+        <TextView
+            android:id="@+id/upgradeDialogTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/navy"
+            android:text="Checking for upgrade..."
+            android:clickable="true"
+            android:padding="5dp"
+            android:maxLines="50" />
+    </ScrollView>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/closeAppUpgradeButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Close"
+            android:textColor="@color/navy"
+            />
+
+    </LinearLayout>
+</LinearLayout>

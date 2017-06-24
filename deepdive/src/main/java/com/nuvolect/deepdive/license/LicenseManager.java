@@ -242,7 +242,7 @@ public class LicenseManager {
     }
 
     private static License out;
-    private static String m_licenseInstallId;
+    private static String m_licenseDeviceId;
     private static String m_licenseDate;
     private static String m_licensePeriodDays;
 
@@ -290,12 +290,12 @@ public class LicenseManager {
             return;
         }
 
-        m_licenseInstallId = out.getLicenseDeviceId();
+        m_licenseDeviceId = out.getLicenseDeviceId();
         m_licenseDate = out.getLicenseDate();
         m_licensePeriodDays = out.getLicensePeriodDays();
 
         LogUtil.log( "License decoding success, licenseName      : "+out.getLicenseName());
-        LogUtil.log( "License decoding success, licenseInstallId : "+out.getLicenseDeviceId());
+        LogUtil.log( "License decoding success, licenseDeviceId  : "+out.getLicenseDeviceId());
         LogUtil.log( "License decoding success, licenseDate      : "+out.getLicenseDate());
         LogUtil.log( "License decoding success, licensePeriodDays: "+out.getLicensePeriodDays());
 
@@ -306,12 +306,12 @@ public class LicenseManager {
 
         if (DEBUG) LogUtil.log("LicenseManager: step_4b_check_for_invalid_device");
 
-        String installId = DeviceInfo.getUniqueDeviceId( m_act);
-        String licenseId = m_licenseInstallId;
+        String deviceId = DeviceInfo.getUniqueDeviceId( m_act);
+        String licenseId = m_licenseDeviceId;
 
-        if( licenseId == null || licenseId.isEmpty() || ! installId.contentEquals( licenseId)) {
+        if( licenseId == null || licenseId.isEmpty() || ! deviceId.contentEquals( licenseId)) {
 
-            mLicenseSummary = "App license invalid for this device ("+installId+")";
+            mLicenseSummary = "App license invalid for this device ("+ deviceId +")";
             mListener.licenseResult(LicenseResult.INVALID_DEVICE);
             // All done here, calling class will take over with returned result
            return;

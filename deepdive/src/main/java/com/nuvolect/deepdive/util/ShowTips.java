@@ -1,4 +1,4 @@
-package com.nuvolect.deepdive.util;//
+package com.nuvolect.deepdive.util;
 
 import android.app.Activity;
 import android.app.Dialog;

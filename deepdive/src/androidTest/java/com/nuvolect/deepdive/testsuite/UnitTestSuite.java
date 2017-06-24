@@ -22,6 +22,7 @@ package com.nuvolect.deepdive.testsuite;
 
 import com.nuvolect.deepdive.connector.CmdMkfileTest;
 import com.nuvolect.deepdive.connector.CmdRmFileTest;
+import com.nuvolect.deepdive.util.JsonReaderTest;
 import com.nuvolect.deepdive.util.KeystoreUtilTest;
 import com.nuvolect.deepdive.util.OmniTest;
 
@@ -34,13 +35,15 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses(
-        {
-                KeystoreUtilTest.class,
-                OmniTest.class,
-                CmdMkfileTest.class,
-                CmdRmFileTest.class,
-                LicenseTest.class
-        }
+    {
+        KeystoreUtilTest.class,
+        OmniTest.class,
+        CmdMkfileTest.class,
+        CmdRmFileTest.class,
+        LicenseTest.class,
+        JsonReaderTest.class,
+    }
 )
+
 public class UnitTestSuite {
 }

@@ -59,7 +59,6 @@ public class License {
         String newLine = System.lineSeparator();
 
         return "Licensed to: "+ getProperty(LICENSE_NAME) + newLine
-                +"User name: "     + getProperty(LICENSE_NAME) + newLine
                 +"User address: "  + getProperty(LICENSE_ADDRESS) + newLine
                 +"User email: "    + getProperty(LICENSE_EMAIL) + newLine
                 +"User phone: "    + getProperty(LICENSE_PHONE) + newLine

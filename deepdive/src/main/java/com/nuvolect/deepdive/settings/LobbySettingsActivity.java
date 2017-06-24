@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.nuvolect.deepdive.R;
 import com.nuvolect.deepdive.license.AppSpecific;
+import com.nuvolect.deepdive.license.AppUpgrade;
 import com.nuvolect.deepdive.util.ActionBarUtil;
 import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.main.CConst;
@@ -80,6 +81,11 @@ public class LobbySettingsActivity extends PreferenceActivity
                 LobbySettingsFragment.startSettingsFragment(m_act, R.id.settings_fragmment_container);
                 return true;
             }
+            case R.id.menu_app_upgrade:{
+                // Check app version on background thread and present results to UI
+                AppUpgrade.getInstance(m_act).showDialog();
+                break;
+            }
             case R.id.menu_show_tips:{
 
                 boolean showTipsCheckBox = false;
@@ -88,13 +94,6 @@ public class LobbySettingsActivity extends PreferenceActivity
             }
             case R.id.menu_help:{
                 String url = AppSpecific.APP_WIKI_URL;
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-                break;
-            }
-            case R.id.menu_whats_new:{
-                String url = CConst.BLOG_URL;
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
@@ -126,7 +125,7 @@ public class LobbySettingsActivity extends PreferenceActivity
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("message/rfc822");
                 i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"team@nuvolect.com"});
-                i.putExtra(Intent.EXTRA_SUBJECT, "CounterCloud Feedback, App Version: "+appVersion);
+                i.putExtra(Intent.EXTRA_SUBJECT, "DeepDive Feedback, App Version: "+appVersion);
                 i.putExtra(Intent.EXTRA_TEXT   , "Please share your thoughts or ask a question.");
 
                 try {

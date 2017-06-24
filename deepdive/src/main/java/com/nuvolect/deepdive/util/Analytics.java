@@ -144,7 +144,7 @@ public class Analytics {//SPRINT review analytics
             case R.id.menu_help:
                 action = "menu_help";
                 break;
-            case R.id.menu_whats_new:
+            case R.id.menu_app_upgrade:
                 action = "menu_whats_new";
                 break;
             case R.id.menu_roadmap:

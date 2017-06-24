@@ -166,6 +166,29 @@ public class MainActivity extends FragmentActivity {
 
                 break;
             }
+            case INVALID_DEVICE:{
+
+                String deviceId = DeviceInfo.getUniqueDeviceId( m_act);
+
+                DialogUtil.inputDialog( m_act, "License device ID incorrect",
+                        "The key provided is not associated with this device. Complete the license request form on Nuvolect.com using device ID: "
+                                + deviceId,"Enter key", true,
+                        new DialogUtil.InputDialogCallbacks() {
+                            @Override
+                            public void done(String result) {
+
+                                LicensePersist.putLicenseCryp( m_ctx, result);
+                                Util.restartApplication( m_act);
+                            }
+
+                            @Override
+                            public void cancel() {
+                                m_act.finish();
+                            }
+                        }
+                );
+                break;
+            }
             case WHITELIST_USER:
             case PRO_USER: {
 
