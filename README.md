@@ -41,7 +41,6 @@ Search Sets are collections of Lucene Searches. Search for up to a 100 keywords 
 * Root not required
 
 ## Licensing
-* Fully functional free version
 * Pro version with advanced features
 * Site license and educational bundling
 * Coming soon: Linux version
