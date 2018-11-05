@@ -12,6 +12,10 @@
     "description":"Crashlytics"
   },
   {
+    "query": "\"localytics\"",
+    "description":"https://www.localytics.com/"
+  },
+  {
     "query": "\"org.piwik.sdk\"",
     "description":"Piwik Tracking SDK"
   },

@@ -55,6 +55,8 @@ public class Whitelist {
 	{
 //		add("bfdcdf9d4013bd90"); // Matt's nexus 9
         add("d5e36d9ee98729a6"); // Matt's samsung 9
+		add("f558c6d483a6c1c2"); // Matt's moto x
+		add("aaf80fa7c5f683d6"); // Matt's moto x
 
 	}};
 

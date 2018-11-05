@@ -8,9 +8,10 @@ import java.io.IOException;
 
 import static junit.framework.Assert.assertTrue;
 
-//
-//TODO create class description
-//
+/**
+ * Test JsonReader by loading a json object from the server and confirming a set
+ * of keys exist.
+ */
 public class JsonReaderTest {
 
     String[] keys = {
