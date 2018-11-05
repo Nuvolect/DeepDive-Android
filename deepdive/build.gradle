@@ -131,7 +131,8 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     // DEX2JAR
-    implementation 'com.google.guava:guava:24.1-jre'
+    implementation 'com.google.guava:guava:20.0'
+//    implementation 'com.google.guava:guava:24.1-jre'// Version has 10 errors, will not compile
     implementation 'asm:asm-all:3.3.1'
     implementation 'org.antlr:antlr:3.5.2'
 

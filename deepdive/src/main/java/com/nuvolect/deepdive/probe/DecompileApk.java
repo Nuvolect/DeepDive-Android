@@ -539,7 +539,7 @@ public class DecompileApk {
 
                 m_progressStream = new ProgressStream(new OmniFile(m_volumeId, m_appFolderPath+ DEX_OPTIMIZATION_LOG_FILE));
 
-                List<ClassDef> classes = new ArrayList<>();//mkk
+                List<ClassDef> classes = new ArrayList<>();
                 m_progressStream.putStream("Optimizing classes, reference: "+ OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
 
                 Scanner s = null;
@@ -777,7 +777,6 @@ public class DecompileApk {
             @Override
             public void run() {
 
-                //mkk
                 m_progressStream = new ProgressStream(new OmniFile(m_volumeId, m_srcCfrFolderPath+ "cfr_decompile_log.txt"));
                 m_progressStream.putStream("CFR starting");
                 OmniFile jarFile = null;
