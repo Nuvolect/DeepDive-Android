@@ -3,19 +3,37 @@ An educational tool for the reverse engineering and security assessment of Andro
 
 We initially experimented with reverse engineering to explore vulnerabilities of our own apps. We learned how hackers find security gaps in our apps. Looking other apps on our phone, we also learned how seemingly legitimate apps invade our privacy.
 
-## Finally, a workflow you can live with
-Android is the server. Access the details of reverse engineering from the convenience of your Mac or PC.
-* The source code is at your fingertips using the elFinder "Mac-like" file manager.
-* Your code is secure on your hardware, not on an unknown server in the Cloud.
-* Additional tools include Keystore, Shell, and Logcat.
-* DeepDive maintains the tools, you simply point and click.
+## Finally, an easy workflow you can live with
+Android is the server. Access the details of reverse engineering from your handheld device or from the convenience of your large Mac or PC screen. How we use Deep Dive:
+1. Join the same WiFi on your Android phone or tablet as your Mac or PC.
+1. Install and start Deep Dive on your Android phone or tablet.
+1. Note the IP address on the home screen and go to that address from your Mac or PC. See Notes On Security.
+
+## Notes On Security
+All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address. You will see a security warning or error message. Also, the security certificate is posted on Github. For best security, create your own security certificate.
+More details: https://securesuite.org/securesuite_security.pdf
 
 ## Lucene — Ultra-fast search
 A decompiled app can have hundreds of thousands of files and millions of lines of code.
 That's why DeepDive has Lucene, a near-instant search capability, the search engine behind Amazon, AOL, LinkedIn, and Twitter.
+You can index the source code from a single app or index the entire virtual filesystem and search across hundreds of apps.
 
 #### Search for hundreds of keywords at a time
 Search Sets are collections of Lucene Searches. Search for up to a 100 keywords at a time. The app comes with default Search Sets and you can create your own.
+
+## Features
+* The source code is at your fingertips using the elFinder "Mac-like" file manager.
+* Your code is secure on your hardware, not on an unknown server in the Cloud.
+* Additional tools include Keystore, Shell, and Logcat.
+* APK extraction and unpacking
+* DEX optimization
+* Convert Android DEX to Jar
+* Decompile most Android apps
+* Private and crypto file storage
+* Instant search and search sets
+* Shell, Logcat & Keystore utilities
+* Android API 19+ (KitKat+)
+* Root not required
 
 ## Tools included
 * <a href="https://github.com/jaredrummler/APKParser">APK parser by Jared Rummler</a>
@@ -29,20 +47,13 @@ Search Sets are collections of Lucene Searches. Search for up to a 100 keywords 
 * <a href="https://github.com/Studio-42/elFinder">elFinder file manager</a>
 * <a href="https://lucene.apache.org/">Apache Lucene</a>
 
-## Features
-* APK extraction and unpacking
-* DEX optimization
-* Convert Android DEX to Jar
-* Decompile most Android apps
-* Private and crypto file storage
-* Instant search and search sets
-* Shell, Logcat & Keystore utilities
-* Android API 19+ (KitKat+)
-* Root not required
+# We Use Analytics
+The purpose is for engineering and user experience. 
+Analytics provide anonymous eyes into use of the application that can help with 
+unserstanding user intent and how to improve the application.
 
 ## Licensing
-* Pro version with advanced features
-* Site license and educational bundling
+* This version is free, enjoy! Please provide feedback.
 * Coming soon: Linux version
 ## Contributing Bug Reports
 We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked.
