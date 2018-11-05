@@ -1,11 +1,11 @@
-MM Security  
+DD Security  
 -----------  
 
 Security Dependencies  
 ---------------------  
 
-MM uses the Guardian Project IOCipher encrypted filesystem which is based on SQLCipher
-MM also uses Java's standard security packages
+DD uses the Guardian Project IOCipher encrypted filesystem which is based on SQLCipher
+DD also uses Java's standard security packages
 
 
 Data in Place  
@@ -21,7 +21,7 @@ Data in Place
 Data in Motion  
 --------------  
 
-1. MM uses a self signed security certificate for https communications
+1. DD uses a self signed security certificate for https communications
 2. The certificate cannot be validated by the browser, hence it generates nasty warnings
 
 

@@ -25,8 +25,6 @@ import com.nuvolect.deepdive.license.LicenseUtil;
 import com.nuvolect.deepdive.settings.LobbySettingsActivity;
 import com.nuvolect.deepdive.util.ActionBarUtil;
 import com.nuvolect.deepdive.util.Analytics;
-import com.nuvolect.deepdive.util.DeviceInfo;
-import com.nuvolect.deepdive.util.DialogUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Util;
 import com.nuvolect.deepdive.webserver.WebService;
@@ -122,114 +120,10 @@ public class MainActivity extends FragmentActivity {
                 m_act.finish();
                 break;
             }
-            case EMPTY_KEY: {
-
-                String deviceId = DeviceInfo.getUniqueDeviceId( m_act);
-
-                DialogUtil.inputDialog( m_act, "License key empty",
-                        "The key is empty. Complete the license request form on Nuvolect.com using device ID: "
-                                + deviceId,"Enter key", true,
-                        new DialogUtil.InputDialogCallbacks() {
-                            @Override
-                            public void done(String result) {
-
-                                LicensePersist.putLicenseCryp( m_ctx, result);
-                                Util.restartApplication( m_act);
-                            }
-
-                            @Override
-                            public void cancel() {
-                                m_act.finish();
-                            }
-                        }
-                );
-                break;
-            }
-            case INVALID_KEY: {
-
-                DialogUtil.inputDialog( m_act, "License key invalid",
-                        "The key cannot have any extra characters, newline characters, etc.","Enter key", true,
-                        new DialogUtil.InputDialogCallbacks() {
-                            @Override
-                            public void done(String result) {
-
-                                LicensePersist.putLicenseCryp( m_ctx, result);
-                                Util.restartApplication( m_act);
-                            }
-
-                            @Override
-                            public void cancel() {
-                                m_act.finish();
-                            }
-                        }
-                );
-
-                break;
-            }
-            case INVALID_DEVICE:{
-
-                String deviceId = DeviceInfo.getUniqueDeviceId( m_act);
-
-                DialogUtil.inputDialog( m_act, "License device ID incorrect",
-                        "The key provided is not associated with this device. Complete the license request form on Nuvolect.com using device ID: "
-                                + deviceId,"Enter key", true,
-                        new DialogUtil.InputDialogCallbacks() {
-                            @Override
-                            public void done(String result) {
-
-                                LicensePersist.putLicenseCryp( m_ctx, result);
-                                Util.restartApplication( m_act);
-                            }
-
-                            @Override
-                            public void cancel() {
-                                m_act.finish();
-                            }
-                        }
-                );
-                break;
-            }
             case WHITELIST_USER:
             case PRO_USER: {
 
                 startGui();
-                break;
-            }
-            case PRO_USER_EXPIRED:{
-
-                DialogUtil.twoButtonMlDialog(m_act,
-                        "App License Expired",
-                        "The Pro license has expired. To enable Pro features please upgrade your license.\n",
-                        "Not now", "Upgrade",
-                        new DialogUtil.DialogUtilCallbacks() {
-                            @Override
-                            public void confirmed(boolean confirmed) {
-
-                                if( confirmed){
-                                    // Send the user on to ponder an upgrade to pro
-                                    LicenseManager.upgradeLicense(m_act);
-                                }else{
-                                    // User can continue without pro features
-                                    startGui();
-                                }
-                            }
-                        }
-                );
-                break;
-            }
-            case APP_EXPIRED:{
-                DialogUtil.oneButtonMlDialog(m_act,
-                        "App Version Expired",
-                        "This app version has expired and is no longer supported.\n"+
-                        "Please update the app from "+CConst.APP_NUVOLECT_HREF_URL+".",
-                        "Exit",
-                        new DialogUtil.DialogUtilCallbacks() {
-                            @Override
-                            public void confirmed(boolean confirmed) {
-
-                                m_act.finish();
-                            }
-                        });
                 break;
             }
             default:
@@ -250,35 +144,6 @@ public class MainActivity extends FragmentActivity {
             Toast.makeText(getApplicationContext(), "Application upgraded", Toast.LENGTH_LONG).show();
 
             // Execute upgrade methods
-        }
-
-        switch ( LicenseManager.getAppExpireStatus()){
-
-            case APP_EXPIRE_WITHIN_30_DAYS: {// Annoy every week within last 30 days.
-                String expireDate = LicenseManager.getAppExpireDate();
-                if (LicensePersist.timeToNagUser(m_ctx, "within_30_days", CConst.DURATION_7_DAYS_MS)) {
-
-                    DialogUtil.dismissDialog(m_act, "App will expire within 30 days",
-                    "Better upgrade soon. App will expire on "+expireDate);
-                }
-                break;
-            }
-            case APP_EXPIRE_WITHIN_7_DAYS: {// Annoy every day during last 7 days.
-                String expireDate = LicenseManager.getAppExpireDate();
-                if (LicensePersist.timeToNagUser(m_ctx, "within_7_days", CConst.DURATION_1_DAY_MS)) {
-
-                    DialogUtil.dismissDialog(m_act, "App will expire within 7 days",
-                            "Better upgrade soon. App will expire on "+expireDate);
-                }
-                break;
-            }
-            case APP_EXPIRED:
-                m_act.finish();
-                break;
-
-            case NIL:// Do nothing, error will not happen
-            case APP_VALID:// Do nothing
-                break;
         }
 
         if (!haveNecessaryPermissions()) {

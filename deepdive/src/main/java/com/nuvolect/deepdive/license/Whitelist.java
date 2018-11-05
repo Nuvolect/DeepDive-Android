@@ -24,30 +24,6 @@ public class Whitelist {
 		else
 			return "";
 	}
-//	/**
-//	 * Check if user is on whitelist.
-//	 * @param ctx
-//	 * @return  Returns the email address of a developer otherwise an empty string.
-//	 */
-//	public static String onWhitelist(Context ctx) {
-//
-//        Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$", Pattern.CASE_INSENSITIVE);
-//
-//        Account[] myAccounts = AccountManager.get(ctx).getAccounts();
-//
-//        for (Account myAccount : myAccounts) {
-//
-//            String account_email = myAccount.name.toLowerCase(Locale.US).trim();
-//
-//            if (EMAIL_PATTERN.matcher(account_email).matches()){
-//
-//                if( developers.contains( account_email))
-//                    return account_email;
-//            }
-//        }
-//
-//		return "";
-//	}
 
 	/** Build the set of whitelist emails, all must be lower case */
 	private static Set<String> developers = new HashSet<String>() {

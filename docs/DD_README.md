@@ -1,119 +1,71 @@
-Media MicroCloud, Encrypted Photo and File Micro-Cloud App
-====================================================
+# DeepDive-Android
+An educational tool for the reverse engineering and security assessment of Android apps
 
-Media MicroCloud (MM) is a highly innovative security app for your Android phone or tablet. 
-It combines the CamCipher camera, the IOCipher AES encrypted file system and a Nanohttpd 
-web server.  You can record, save and manage encrypted photos and videos. The encrypted 
-file system can not only protect jpg and mp4 files, but any files you want to keep safe 
-and secure. This includes PDF files, PowerPoint, MS Word documents and dozens of other 
-file types. Do you have important files you want to keep encrypted in your pocket?  
-This app is for you.
+We initially experimented with reverse engineering to explore vulnerabilities of our own apps. We learned how hackers find security gaps in our apps. Looking other apps on our phone, we also learned how seemingly legitimate apps invade our privacy.
 
-The popular elFinder and PhotoSlide apps make access to all your files easy.  A secure 
-MicroCloud web server provides access your files to every browser on your WiFi LAN to 
-authenticated users. This means you can keep an encrypted volume of information on the 
-Android in your pocket, and have access to it from all the computers, tablets, and TVs 
-on work or home network. If you have hotspot capability it works with any device that 
-can connect to your hotspot.
+## Finally, an easy workflow you can live with
+Android is the server. Access the details of reverse engineering from your handheld device or from the convenience of your large Mac or PC screen. How we use Deep Dive:
+1. Join the same WiFi on your Android phone or tablet as your Mac or PC.
+1. Install and start Deep Dive on your Android phone or tablet.
+1. Note the IP address on the home screen and go to that address from your Mac or PC. See Notes On Security.
 
-App Objectives
-------------------
-The #1 objective is to maintain privacy for your photos and files.
-Based on a survey of 100 users by the author, on average 69 apps can access
-your photos and files on Android. Combine photo file access and Internet access
-and your privacy is at risk.
+## Notes On Security
+All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address. You will see a security warning or error message. Also, the security certificate is posted on Github. For best security, create your own security certificate.
+More details: https://securesuite.org/securesuite_security.pdf
 
-Media MicroCloud creates an encrypted `Crypto` volume.  The native photo app saves photos
-directly to the Crypto volume. The photo gallery provides a rich environment to 
-view your Crypto photos and if you so choose, share your Crypto photos.
+## Lucene — Ultra-fast search
+A decompiled app can have hundreds of thousands of files and millions of lines of code.
+That's why DeepDive has Lucene, a near-instant search capability, the search engine behind Amazon, AOL, LinkedIn, and Twitter.
+You can index the source code from a single app or index the entire virtual filesystem and search across hundreds of apps.
 
-An additional objective is to protect files.  The Crypto volume is an excellent place to keep 
-legal documents such as PDF files, MS Word or PowerPoint files, or simple text files.
-The Crypto volume is carried in your pocket for use on the go. When you return to your 
-home or work WiFi LAN, use a micro-cloud bookmark to access all your files on using
-the big screen on your PC or Mac.
+#### Search for hundreds of keywords at a time
+Search Sets are collections of Lucene Searches. Search for up to a 100 keywords at a time. The app comes with default Search Sets and you can create your own.
 
-Installation
-------------
-1. Connect to a WiFi access point or start your Android hotspot.
-2. Download Media MicroCloud from Google Play or directly from nuvolect.com/mediamicrocloud.
-3. Start the app, agree to terms and conditions and on the home screen note
-the IP address used by the MicroCloud server.
-4. Select Camera, note '--CRYPTO --' in the menu bar, and take a test photo.
-5. Enter the micro-cloud IP address in any browser that is on the WiFI network, bookmark it.
-6. Select `Crypto Gallery` to see your new photo.
+## Features
+* The source code is at your fingertips using the elFinder "Mac-like" file manager.
+* Your code is secure on your hardware, not on an unknown server in the Cloud.
+* Additional tools include Keystore, Shell, and Logcat.
+* APK extraction and unpacking
+* DEX optimization
+* Convert Android DEX to Jar
+* Decompile most Android apps
+* Private and crypto file storage
+* Instant search and search sets
+* Shell, Logcat & Keystore utilities
+* Android API 19+ (KitKat+)
+* Root not required
 
-To Secure Your Crypto Volume
-----------------------------
-Initially the app is wide open. To secure the app you need to define username and password
-for the web app and also enable the entry lock.
-1. Select Settings-Web user credentials and enter a username and password.
-2. Select Settings-Media MicroCloud entry lock and either register your YubiKey 
-device or set a good enty passphrase.
+## Tools included
+* <a href="https://github.com/jaredrummler/APKParser">APK parser by Jared Rummler</a>
+* <a href="https://github.com/JesusFreke/smali/wiki">DEX disassembler by Jeasus Freke</a>
+* <a href="https://github.com/pxb1988/dex2jar">DEX2JAR by Bob Pan</a>
+* <a href="http://www.benf.org/other/cfr/">CFR by Lee Benfield</a>
+* <a href="https://github.com/skylot/jadx">Jadx by Skylot</a>
+* <a href="https://github.com/JetBrains/intellij-community/tree/master/plugins/java-decompiler/engine">Fernflower by JetBrains</a>
+* <a href="https://lucene.apache.org/">Lucene search engine</a>
+* <a href="https://github.com/NanoHttpd/nanohttpd">Nanohttpd web server</a>
+* <a href="https://github.com/Studio-42/elFinder">elFinder file manager</a>
+* <a href="https://lucene.apache.org/">Apache Lucene</a>
 
-Basic Usage
------------
-It is important to understand the utility of the Android back-button. 
-From the Home screen, the back-button exits and locks the app.
-If you don't want to continually lock and ulock the app, exit the app
-by migrating to another app.  It will remain ulocked until either the 
-device is restarted or exited with the back-button.
+# We Use Analytics
+The purpose is for engineering and user experience. 
+Analytics provide anonymous eyes into use of the application that can help with 
+unserstanding user intent and how to improve the application.
 
-Files can be moved to the Crypto volume using the File Manager app.
-Simply select `copy` and then `paste`.
-You can run the File Manager either from your Android device or the
-large screen on your PC or Mac.
-Certain operations may be a little slower on the Crypt volume do to the 
-computing required for encryption.
+## Licensing
+* This version is free, enjoy! Please provide feedback.
+* Coming soon: Linux version
+## Contributing Bug Reports
+We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked.
+<https://github.com/teamnuvolect/securesuite/issues>
 
-If you frequently use a hotspot in addition to a WiFi LAN, note and 
-bookmark the micro-cloud IP address. If you use different WiFi environments
-the IP address for the micro-cloud will likely be different for each one.
+## Support
+For troubleshooting and support information, please visit the wiki.
+<https://github.com/teamnuvolect/DeepDive-Android/wiki>
 
-Note that some WiFi routers will block certain server prototcols.  This is 
-is to protect users from man-in-the-middle attacks.
+For general questions and discussion about features, visit the forum.
+<a href="https://nuvolect.freeforums.net/board/4/discussion-deepdive">
+<img src="https://securesuite.org/img/forum_join_chat.png"  height="50" width="134"></a>
 
-About Security
---------------
-Media MicroCloud is a micro-cloud application that only allows access to devices on your
-WiFi LAN. Data is stored in an `IOCipher` AES 256 bit encrypted volume.
-Network communications are protected with HTTPS TLS 1.2 encryption.
-Google Analytics is used for software quality purposes, otherwise no 
-communications are made with the Internet.
-
-The micro-cloud server is hosted on your Android device and does not use
-a domain name or static IP address as a traditional web server will.
-Consequently, a self-signed secruity certificate is used for HTTPS encryption.
-Upon inspection, this certificate can be saved into your computers keychain to
-avoid the "THIS SERVER IS NOT SAFE" warning. Note that a self-signed certificate 
-still provides high-grade AES encryption but the certificate cannot be verified as attached
-to a domain name or static IP address, hence the warning.
-
-Tested Devices
---------------
-The [compatibility status page](https://nuvolect/blog/mm_supported_devices) outlines
-what devices have been tested with this app.
-
-Additional Documentation
-------------------------
-
-License
--------
-
-[End-User License Agreement](https://nuvolect/blog/mediamicrocloud_terms) 
-
-Questions
----------
-For problems or feature suggestions, use the "Issues" link on this page.
-
-For offline discussion email the developer at team@nuvolect.com or for secure
-email use nuvolect@protonmail.com.
-
-**Be certain to include complete steps for reproducing the issue.**
-
-Do not ask for help via social media.
-
-Who Made This?
---------------
-<a href="http://nuvolect.com">![Nuvolect LLC](https://nuvolect.com/img/nuvolect_logo_name_low_59x180.png)</a>
+Copyright Nuvolect LLC
 

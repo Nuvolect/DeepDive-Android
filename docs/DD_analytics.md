@@ -1,16 +1,15 @@
 # DeepDive Analytics
 
 ## Rationale
-The purpose is for engineering and business efficiency. 
+The purpose is for engineering and user experience. 
 Analytics provide anonymous eyes into use of the application that can help with 
-application and business model improvement.
-
+unserstanding user intent and how to improve the application.
 
 ## Rest Interfaces
 * The obvious cmds are logged. 
 * Value may be either 1 or execution time.
 
-## Decompile Challenge //TODO
+## Decompile Challenge
 The problem is capturing application failure.  When a stage of decompile is started but 
 fails with result other than an exception.
 

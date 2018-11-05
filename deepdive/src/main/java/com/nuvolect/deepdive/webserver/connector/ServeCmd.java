@@ -21,7 +21,6 @@ package com.nuvolect.deepdive.webserver.connector;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.license.LicenseManager;
 import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.LogUtil;
 
@@ -155,17 +154,14 @@ public class ServeCmd {
                 LogUtil.log(LogUtil.LogType.CONNECTOR_SERVE_CMD, "Invalid connector command: "+error);
         }
 
-        if(LicenseManager.isFreeUser()){
+        String category = Analytics.FINDER;
+        String action = cmd.toString();
+        String label = "";
+        long value = 1;
 
-            String category = Analytics.FINDER;
-            String action = cmd.toString();
-            String label = "";
-            long value = 1;
-
-            Analytics.send( ctx, category, action, label, value);
+        Analytics.send( ctx, category, action, label, value);
 
 //                LogUtil.log(ServeCmd.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
-        }
 
         return inputStream;
     }

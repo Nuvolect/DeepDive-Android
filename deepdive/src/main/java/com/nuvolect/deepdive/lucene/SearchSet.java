@@ -2,7 +2,6 @@ package com.nuvolect.deepdive.lucene;//
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.license.LicenseManager;
 import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.FileUtil;
@@ -126,8 +125,6 @@ public class SearchSet {
             LogUtil.logException(SearchSet.class, e);
             success = false;
         }
-        if(LicenseManager.isFreeUser()){
-
             String category = Analytics.SEARCH_SET;
             String action = fileName;
             String label = set.toString();
@@ -136,7 +133,7 @@ public class SearchSet {
             Analytics.send( ctx, category, action, label, value);
 
 //            LogUtil.log(Search.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
-        }
+
         JSONObject result = successResult( success);
         try {
             result.put("name",fileName);

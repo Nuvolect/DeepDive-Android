@@ -27,7 +27,6 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.nuvolect.deepdive.BuildConfig;
-import com.nuvolect.deepdive.license.LicenseManager;
 import com.nuvolect.deepdive.license.LicensePersist;
 import com.nuvolect.deepdive.util.CustomDialog;
 import com.nuvolect.deepdive.util.DialogUtil;
@@ -60,8 +59,6 @@ public class DeveloperDialog {
      */
     private static enum DevMenu {
         Toggle_Verbose_LogCat,
-        Toggle_Pro_User,
-        Toggle_Pro_UserExpired,
         Clear_Data_Close_App,
         Temporary_Disable_Developer_Menu,
         Decrement_App_Version,
@@ -98,37 +95,6 @@ public class DeveloperDialog {
                                 if( LogUtil.VERBOSE){
                                     LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "Verbose logging active.");
                                 }
-                                break;
-                            }
-                            case Toggle_Pro_User:{
-                                LicensePersist.setIsProUser( m_act, ! LicensePersist.isProUser(m_act));
-                                LicenseManager.setIsProUser( LicensePersist.isProUser(m_act));
-                                /**
-                                 * Can never be a pro user and also be expired
-                                 */
-                                if( LicenseManager.isProUser())
-                                    LicenseManager.setIsProUserExpired( false );
-
-                                Toast.makeText(m_act, "pro user: "+LicenseManager.isProUser() , Toast.LENGTH_SHORT).show();
-                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUser: "+LicenseManager.isProUser() );
-                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUserExpired: "+LicenseManager.isProUserExpired() );
-                                break;
-                            }
-                            case Toggle_Pro_UserExpired:{
-
-                                /**
-                                 * In-memory only, will reset next app start
-                                 */
-                                LicenseManager.setIsProUserExpired( ! LicenseManager.isProUserExpired());
-                                /**
-                                 * Can never be a pro user and also be expired
-                                 */
-                                if( LicenseManager.isProUserExpired())
-                                    LicenseManager.setIsProUser( false);
-
-                                Toast.makeText(m_act, "pro user: "+LicenseManager.isProUserExpired() , Toast.LENGTH_SHORT).show();
-                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUser: "+LicenseManager.isProUser() );
-                                LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "isProUserExpired: "+LicenseManager.isProUserExpired() );
                                 break;
                             }
                             case Clear_Data_Close_App:{
