@@ -7,10 +7,10 @@ We initially experimented with reverse engineering to explore vulnerabilities of
 Android is the server. Access the details of reverse engineering from your handheld device or from the convenience of your large Mac or PC screen. How we use Deep Dive:
 1. Join the same WiFi on your Android phone or tablet as your Mac or PC.
 1. Install and start Deep Dive on your Android phone or tablet.
-1. Note the IP address on the home screen and go to that address from your Mac or PC. See Notes On Security.
+1. Note the IP address on the home screen and go to that address from your Mac or PC. 
 
 ## Notes On Security
-All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address. You will see a security warning or error message. Also, the security certificate is posted on Github. For best security, create your own security certificate.
+Configure a user login from app Settings. All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address. You will see a security warning or error message. Also, the security certificate is posted on Github. For best security, create your own security certificate.
 More details: https://securesuite.org/securesuite_security.pdf
 
 ## Lucene — Ultra-fast search
@@ -47,7 +47,7 @@ Search Sets are collections of Lucene Searches. Search for up to a 100 keywords 
 * <a href="https://github.com/Studio-42/elFinder">elFinder file manager</a>
 * <a href="https://lucene.apache.org/">Apache Lucene</a>
 
-# We Use Analytics
+## We Use Analytics
 The purpose is for engineering and user experience. 
 Analytics provide anonymous eyes into use of the application that can help with 
 unserstanding user intent and how to improve the application.
