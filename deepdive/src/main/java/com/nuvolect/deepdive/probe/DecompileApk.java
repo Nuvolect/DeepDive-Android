@@ -555,7 +555,7 @@ public class DecompileApk {
 
                     if (dexFile.exists() && dexFile.isFile()) {
 
-
+                        m_progressStream.putStream("Processing: "+fileName+".dex");
                         org.jf.dexlib2.iface.DexFile memoryDexFile = null;
                         try {
                             memoryDexFile = DexFileFactory.loadDexFile( dexFile.getStdFile(), 19);
@@ -583,17 +583,16 @@ public class DecompileApk {
 
                         m_progressStream.putStream("Excluded classes #" + excludedClassCount);
                         m_progressStream.putStream("Included classes #" + classes.size());
-                        m_progressStream.putStream("Rebuilding immutable dex: "+fileName);
+                        m_progressStream.putStream("Rebuilding immutable dex: "+fileName+".dex");
 
                         org.jf.dexlib2.iface.DexFile optimizedDexFile = null;
                         optimizedDexFile = new ImmutableDexFile(classes);
 
                         try {
-                            m_progressStream.putStream("Writing optimized dex: "+dexFile.getName());
-                            dexFile.delete();
+//                            dexFile.delete();
                             DexFileFactory.writeDexFile( dexFile.getStdFile().getAbsolutePath(), optimizedDexFile);
                         } catch (Exception e) {
-                            m_progressStream.putStream("The app DEX file cannot be decompiled: "+dexFile.getName());
+                            m_progressStream.putStream("DEX write error: "+dexFile.getName());
                         }
                     }
                 }

@@ -16,7 +16,6 @@ public class CConst {
     public static final String ELF_                 = "elf_";
     public static final String ELFINDER_PAGE        = "/elFinder-2.1.24-nightly/finder.html";
     public static final String EMBEDDED_USER        = "embedded_user";
-    public static final String FALSE                = "false";
     public static final String FIELD_CONTENT        = "content";
     public static final String FIELD_FILENAME       = "filename";
     public static final String FIELD_PATH           = "path";
@@ -40,7 +39,6 @@ public class CConst {
     public static final String TARGET               = "target";
     public static final String THREAD_STACK_SIZE    = "thread_stack_size";
     public static final String TMP                  = "tmp";
-    public static final String TRUE                 = "true";
     public static final String UNIQUE_ID            = "unique_id";
     public static final String URL                  = "url";
     public static final String USER_FOLDER_PATH     = "/DeepDive/";
@@ -49,12 +47,6 @@ public class CConst {
 
     public final static int SMALL_ICON              = R.drawable.icon_64;
     public static final int IP_TEST_TIMEOUT_MS      = 8000;// Time for testing for companion device IP
-
-    public static final long DURATION_1_DAY_MS      = 24 * 60 * 60 * 1000L;// 1 day
-    public static final long DURATION_7_DAYS_MS     =   7 * DURATION_1_DAY_MS;
-    public static final long DURATION_30_DAYS_MS    =  30 * DURATION_1_DAY_MS;
-    public static final long DURATION_HALF_YEAR_MS  = 182 * DURATION_1_DAY_MS;
-    public static final long DURATION_1_YEAR_MS     = 365 * DURATION_1_DAY_MS;
 
     public static final String BLOG_URL             = "https://nuvolect.com/blog";
     public static final String APP_TOC_HREF_URL     = "<a href='http://nuvolect.com/deepdive/terms.htm'>Terms and Conditions</a>";

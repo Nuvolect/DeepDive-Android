@@ -84,6 +84,9 @@ public class DeviceInfo {
 			case 23: return "Android 6.0 - 6.0.1 API 23 Marshmallow";
 			case 24:
 			case 25: return "Android 7.0 - 7.1 API 24-25 Nougat";
+			case 26: return "Android 8.0.0 26 Oreo";
+			case 27: return "Android 8.1.0 27 Oreo";
+			case 28: return "Android 9 28 Pie";
 		}
 
 		return String.valueOf( sdk );
