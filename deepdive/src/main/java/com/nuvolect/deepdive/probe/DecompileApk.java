@@ -455,8 +455,8 @@ public class DecompileApk {
                         /**
                          * Create a file for the user to include classes to omit in the optimize DEX task.
                          */
-                        OmniFile optimizedDex = new OmniFile( m_volumeId,m_appFolderPath+ OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
-                        if( ! optimizedDex.exists()){
+                        OmniFile optimizedDexOF = new OmniFile( m_volumeId,m_appFolderPath+ OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
+                        if( ! optimizedDexOF.exists()){
 
                             String assetFilePath = CConst.ASSET_DATA_FOLDER+OPTIMIZED_CLASSES_EXCLUSION_FILENAME;
                             OmniFile omniFile = new OmniFile( m_volumeId, m_appFolderPath+ OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
@@ -531,7 +531,6 @@ public class DecompileApk {
 
                 m_progressStream = new ProgressStream(new OmniFile(m_volumeId, m_appFolderPath+ DEX_OPTIMIZATION_LOG_FILE));
 
-                List<ClassDef> classes = new ArrayList<>();
                 m_progressStream.putStream("Optimizing classes, reference: "+ OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
 
                 Scanner s = null;
@@ -555,6 +554,7 @@ public class DecompileApk {
 
                     if (dexFile.exists() && dexFile.isFile()) {
 
+                        List<ClassDef> classes = new ArrayList<>();
                         m_progressStream.putStream("Processing: "+fileName+".dex");
                         org.jf.dexlib2.iface.DexFile memoryDexFile = null;
                         try {
@@ -585,14 +585,25 @@ public class DecompileApk {
                         m_progressStream.putStream("Included classes #" + classes.size());
                         m_progressStream.putStream("Rebuilding immutable dex: "+fileName+".dex");
 
-                        org.jf.dexlib2.iface.DexFile optimizedDexFile = null;
-                        optimizedDexFile = new ImmutableDexFile(classes);
+                        if( classes.size() > 0){
 
-                        try {
-//                            dexFile.delete();
-                            DexFileFactory.writeDexFile( dexFile.getStdFile().getAbsolutePath(), optimizedDexFile);
-                        } catch (Exception e) {
-                            m_progressStream.putStream("DEX write error: "+dexFile.getName());
+                            org.jf.dexlib2.iface.DexFile optimizedDexFileDexLib2 = null;
+                            optimizedDexFileDexLib2 = new ImmutableDexFile(classes);
+
+                            try {
+                                dexFile.delete();
+                                DexFileFactory.writeDexFile( dexFile.getStdFile().getAbsolutePath(), optimizedDexFileDexLib2);
+                                m_progressStream.putStream("Optimized DEX file created: "
+                                        +dexFile.getName()+", size: "+dexFile.length());
+                            } catch (Exception e) {
+                                m_progressStream.putStream("DEX write error: "+dexFile.getName());
+                            }
+                        }
+                        else{
+
+                            m_progressStream.putStream("All classes excluded, DEX file not needed: "+dexFile.getName());
+                            m_progressStream.putStream("Deleting: "+dexFile.getName());
+                            dexFile.delete();
                         }
                     }
                 }
