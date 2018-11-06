@@ -14,6 +14,7 @@
 
 # Backlog
  
+* Add a 'x' to Working Apps, delete working storage, search cache, all things for that app
 * apps.htm, show "No current working apps" when there are none
 * Indexing... eliminate multiple lines Indexing: /DeepDive/[package name]
 * Test refactoring of file links and preview

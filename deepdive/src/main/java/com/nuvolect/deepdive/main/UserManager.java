@@ -50,12 +50,6 @@ public class UserManager {
         try {
             users = new JSONArray(Cryp.get(m_ctx, CConst.USERS, emptyArray.toString()));
 
-//                users = new JSONArray( "[\n" +
-//                        "    {\n" +
-//                        "        \"username\": \"matt\",\n" +
-//                        "        \"password\": \"pass\"\n" +
-//                        "    }\n" +
-//                        "]");
         } catch (JSONException e) {
             e.printStackTrace();
         }
