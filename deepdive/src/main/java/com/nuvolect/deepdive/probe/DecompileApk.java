@@ -593,8 +593,9 @@ public class DecompileApk {
                             try {
                                 dexFile.delete();
                                 DexFileFactory.writeDexFile( dexFile.getStdFile().getAbsolutePath(), optimizedDexFileDexLib2);
+                                String size = NumberFormat.getNumberInstance(Locale.US).format(dexFile.length());
                                 m_progressStream.putStream("Optimized DEX file created: "
-                                        +dexFile.getName()+", size: "+dexFile.length());
+                                        +dexFile.getName()+", size: "+size);
                             } catch (Exception e) {
                                 m_progressStream.putStream("DEX write error: "+dexFile.getName());
                             }
