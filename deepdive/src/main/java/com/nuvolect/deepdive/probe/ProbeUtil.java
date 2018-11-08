@@ -101,7 +101,6 @@ public class ProbeUtil {
         String name = apkPackageFolder.getName();
         try {
             object.put("name", name);
-//            object.put("url", OmniHash.getHashedServerUrl( ctx, Omni.userVolumeId_0, CConst.USER_FOLDER_PATH+ name));//FIXME remove
             object.put("url", OmniHash.getStartPathUrl( ctx, apkPackageFolder));
 
         } catch (JSONException e) {

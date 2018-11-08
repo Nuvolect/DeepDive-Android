@@ -242,16 +242,6 @@ public class MainActivity extends FragmentActivity {
                 quitApp();
                 break;
             }
-//            case R.id.menu_upgrade:{//PRO-USER
-//
-//                Analytics.send(getApplicationContext(),
-//                        Analytics.MAIN_MENU,
-//                        Analytics.UPGRADE_MENU,
-//                        Analytics.COUNT, 1);
-//
-//                LicenseManager.upgradeLicense( m_act);//mkk
-//                break;
-//            }
             case R.id.menu_help:{
 
                 Analytics.send(getApplicationContext(),

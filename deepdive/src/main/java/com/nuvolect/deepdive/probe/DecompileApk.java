@@ -125,6 +125,7 @@ public class DecompileApk {
     private List<String> ignoredLibs = new ArrayList();
     private String OPTIMIZED_CLASSES = "optimized_classes";
     private String OPTIMIZED_CLASSES_EXCLUSION_FILENAME = "dex_class_exclusion.txt";
+    private String README_FILENAME = "README.txt";
     private String DEX_OPTIMIZATION_LOG_FILE = "dex_optimization_log.txt";
     private String[] m_dexFileNames = {}; // Generated list of candidate dex file names
 
@@ -463,6 +464,18 @@ public class DecompileApk {
                             OmniUtil.copyAsset( m_ctx, assetFilePath, omniFile);
 
                             m_progressStream.putStream("File created: "+OPTIMIZED_CLASSES_EXCLUSION_FILENAME);
+                        }
+                        /**
+                         * Create a README file for the user.
+                         */
+                        OmniFile README_file = new OmniFile( m_volumeId,m_appFolderPath+ README_FILENAME);
+                        if( ! README_file.exists()){
+
+                            String assetFilePath = CConst.ASSET_DATA_FOLDER+README_FILENAME;
+                            OmniFile omniFile = new OmniFile( m_volumeId, m_appFolderPath+ README_FILENAME);
+                            OmniUtil.copyAsset( m_ctx, assetFilePath, omniFile);
+
+                            m_progressStream.putStream("File created: "+README_FILENAME);
                         }
                     }
                     else{

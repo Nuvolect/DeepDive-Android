@@ -43,7 +43,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
  * It provides methods that can operate between clear-text and encrypted files.
  * It provides an abstraction for the root path of a file system.
  *
- * An physical file path is derived from two parts, a volumeId and a path.
+ * A physical file path is derived from two parts, a volumeId and a path.
  * The volumeId represents root of the path upto the root '/';
  * The path is appended to the root to make the full physical path.
  *
@@ -166,7 +166,8 @@ public class Omni {
             volHash.put( cryptoVolumeId + "_" + OmniHash.encode( CConst.ROOT), cryptoVolumeId);
 
             JSONArray privateStorage = StoragePrivate.getStoragePrivate(ctx);
-            if( privateStorage.length() > 1){
+            if( privateStorage.length() > 1){//FIXME looks odd, only works with 2 or more?
+                //FIXME look for ExFAT removable storage, you can see it from Device Details
 
                 JSONObject priv_1 = privateStorage.getJSONObject(1);
                 String userRoot_1 = priv_1.getString( "path")+"/omni/";

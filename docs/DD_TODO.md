@@ -1,24 +1,17 @@
-# Sprint- minimal Tasks for pilot study
-* search path has double //
-* Current index conflict
-* Fix search result Angular errors
+# Sprint- minimal Tasks for simple APK download release
+* Continue removing dead code, developer code, private information
+* Select appropriate license, document license on web and in code
+* Review goals for analytics and analytics collection
+* Decide to store the APK on nuvolect.com or in Github
 
-* Header design, developer menu
-
-* Include common header.htm 
-* Include common footer.htm
-
-** Update ? help with working examples
-* Clear upload package name from dialog
- * Provide pop-up/user feedback folder created
+# Sprint- minimal Tasks for F-Droid release
+* Review written procedure and YouTube docs
 
 # Backlog
  
 * Add a 'x' to Working Apps, delete working storage, search cache, all things for that app
 * apps.htm, show "No current working apps" when there are none
-* Indexing... eliminate multiple lines Indexing: /DeepDive/[package name]
 * Test refactoring of file links and preview
-* Add Probe and ProbeMgr classes, convert Decompile.java to be an instance of Probe
 * Background thread creation of bitmaps
 * Document multi-browser decompilier conflicts
 * Is there a better way to organize processess to monitor progress and kill-all

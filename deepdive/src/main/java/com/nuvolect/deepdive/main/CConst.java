@@ -14,7 +14,7 @@ public class CConst {
     public static final String DEFAULT_PASSPHRASE   = "WhenAllElseFails";
     public static final String DEVICE_PAGE          = "/device.htm";
     public static final String ELF_                 = "elf_";
-    public static final String ELFINDER_PAGE        = "/elFinder-2.1.24-nightly/finder.html";
+    public static final String ELFINDER_PAGE        = "/elFinder-2.1.42/finder.html";// also navbar.htm, lobby.htm {release, debug}
     public static final String EMBEDDED_USER        = "embedded_user";
     public static final String FIELD_CONTENT        = "content";
     public static final String FIELD_FILENAME       = "filename";

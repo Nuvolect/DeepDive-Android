@@ -11,12 +11,6 @@
         android:title="Settings"
         android:titleCondensed="Settings">
     </item>
-    <!--TODO PRO-USER -->
-    <!--<item-->
-        <!--android:id="@+id/menu_upgrade"-->
-        <!--android:title="Free Pro Upgrade"-->
-        <!--android:titleCondensed="Free Pro Upgrade">-->
-    <!--</item>-->
     <item
         android:visible="false"
         android:id="@+id/menu_developer"
