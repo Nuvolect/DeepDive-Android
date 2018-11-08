@@ -27,7 +27,8 @@ import com.nuvolect.deepdive.util.Util;
 import org.apache.commons.io.FilenameUtils;
 import org.benf.cfr.reader.state.ClassFileSourceImpl;
 import org.benf.cfr.reader.state.DCCommonState;
-import org.benf.cfr.reader.util.getopt.GetOptParser;
+import org.benf.cfr.reader.util.MiscConstants;
+import org.benf.cfr.reader.util.getopt.Options;
 import org.benf.cfr.reader.util.getopt.OptionsImpl;
 import org.benf.cfr.reader.util.output.DumperFactoryImpl;
 import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler;
@@ -502,7 +503,6 @@ public class DecompileApk {
 
                 Analytics.send( m_ctx, category, action, label, value);
 
-//                    LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
             }
         }, UNZIP_APK_THREAD, STACK_SIZE);
 
@@ -711,8 +711,8 @@ public class DecompileApk {
                                     .topoLogicalSort(topologicalSort || topologicalSort1)
                                     .skipDebug(!debugInfo)
                                     .optimizeSynchronized(optimizeSynchronized)
-                                    .printIR(printIR)
-                                    .verbose(verbose);
+                                    .printIR(printIR);
+                                    //.verbose(verbose);
                             dex2jar.setExceptionHandler(dexExceptionHandlerMod);
                             dex2jar.to(jarFile.getStdFile());
                             success = true;
@@ -787,7 +787,7 @@ public class DecompileApk {
             public void run() {
 
                 m_progressStream = new ProgressStream(new OmniFile(m_volumeId, m_srcCfrFolderPath+ "cfr_decompile_log.txt"));
-                m_progressStream.putStream("CFR starting");
+                m_progressStream.putStream("CFR "+MiscConstants.CFR_VERSION+" starting");
                 OmniFile jarFile = null;
                 try {
                     for (String fileName : m_dexFileNames) {
@@ -801,23 +801,32 @@ public class DecompileApk {
                                     "--outputdir",
                                     m_srcCfrFolder.getStdFile().toString()
                             };
-                            GetOptParser getOptParser = new GetOptParser();
 
-                            org.benf.cfr.reader.util.getopt.Options options =
-                                    getOptParser.parse(args, OptionsImpl.getFactory());
+                            Map<String, String> optionArgs = new HashMap<String, String>();
+                            optionArgs.put("outputdir", m_srcCfrFolder.getStdFile().toString());
+                            Options options = new OptionsImpl( optionArgs);
+                            ClassFileSourceImpl classFileSource = new ClassFileSourceImpl(options);
+                            final DCCommonState dcCommonState = new DCCommonState(options, classFileSource);
+                            DumperFactoryImpl dumperFactory = new DumperFactoryImpl(options);
+                            org.benf.cfr.reader.Main.doJar( dcCommonState, jarFile.getAbsolutePath(), dumperFactory);
 
-                            if (!options.optionIsSet(OptionsImpl.HELP) && options.getOption(OptionsImpl.FILENAME) != null) {
-
-                                m_progressStream.putStream("CFR starting from DEX: "+fileName);
-
-                                ClassFileSourceImpl classFileSource = new ClassFileSourceImpl(options);
-                                final DCCommonState dcCommonState = new DCCommonState(options, classFileSource);
-                                final String path = options.getOption(OptionsImpl.FILENAME);
-                                DumperFactoryImpl dumperFactory = new DumperFactoryImpl(options);
-                                org.benf.cfr.reader.Main.doJar( dcCommonState, path, dumperFactory);
-                                m_progressStream.putStream("See srcCfr/summary.txt");
-                                m_progressStream.putStream("CFR from DEX complete: "+fileName);
-                            }
+//                            GetOptParser getOptParser = new GetOptParser();
+//
+//                            org.benf.cfr.reader.util.getopt.Options options =
+//                                    getOptParser.parse(args, OptionsImpl.getFactory());
+//
+//                            if (!options.optionIsSet(OptionsImpl.HELP) && options.getOption(OptionsImpl.FILENAME) != null) {
+//
+//                                m_progressStream.putStream("CFR starting from DEX: "+fileName);
+//
+//                                ClassFileSourceImpl classFileSource = new ClassFileSourceImpl(options);
+//                                final DCCommonState dcCommonState = new DCCommonState(options, classFileSource);
+//                                final String path = options.getOption(OptionsImpl.FILENAME);
+//                                DumperFactoryImpl dumperFactory = new DumperFactoryImpl(options);
+//                                org.benf.cfr.reader.Main.doJar( dcCommonState, path, dumperFactory);
+//                                m_progressStream.putStream("See srcCfr/summary.txt");
+//                                m_progressStream.putStream("CFR from DEX complete: "+fileName);
+//                            }
                         }
                     }
 
@@ -834,8 +843,6 @@ public class DecompileApk {
 
                 Analytics.send( m_ctx, category, action, label, value);
 
-//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
-
                 m_cfr_time = 0;
             }
         }, DEEPDIVE_THREAD_GROUP, STACK_SIZE);
@@ -844,8 +851,6 @@ public class DecompileApk {
         m_cfrThread.setUncaughtExceptionHandler(uncaughtExceptionHandler);
         m_cfrThread.start();
 
-//                processStatus = getThreadStatus( true, m_cfrThread);
-//                url = OmniHash.getHashedServerUrl(m_ctx, m_volumeId, m_srcCfrFolderPath);
         String processKey = "cfr_thread";
         String urlKey = "cfr_url";
 
@@ -1116,8 +1121,6 @@ public class DecompileApk {
         long value = 1;
 
         Analytics.send( m_ctx, category, action, label, value);
-
-//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
 
         return getStatus();
     }

@@ -174,12 +174,10 @@ public class OmniUtil {
 
         while( file.exists()) {
 
-//            LogUtil.log("File exists: "+file.getPath());
             baseName += "~";
             String fullPath = basePath+baseName+dot+extension;
             file = new OmniFile(volumeId, fullPath);
         }
-//        LogUtil.log("File unique: "+file.getPath());
         return file;
     }
 
