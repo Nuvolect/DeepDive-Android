@@ -186,7 +186,11 @@ public class MainActivity extends FragmentActivity {
 
     private void quitApp(){
 
+        Toast.makeText(getApplicationContext(), "Terminating server", Toast.LENGTH_LONG).show();
+        Intent serverIntent = new Intent(m_ctx, WebService.class);
+        m_ctx.stopService( serverIntent);
         m_act.finish();
+        System.exit(0);
     }
 
     private boolean haveNecessaryPermissions() {
