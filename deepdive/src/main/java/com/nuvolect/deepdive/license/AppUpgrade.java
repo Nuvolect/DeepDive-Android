@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.nuvolect.deepdive.R;
 import com.nuvolect.deepdive.util.JsonReader;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -91,15 +92,15 @@ public class AppUpgrade {
         @Override
         protected String doInBackground(Void... params) {
 
-            JSONObject json = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
             String result = "No update available. You are running the current version.";
             String communicationError = "Error, cannot reach server.";
 
             try {
-                json = JsonReader.readJsonFromUrl("https://nuvolect.com/deepdive/current_version.json");
-                if (updateAvaliable(json)) {
+                jsonArray = JsonReader.readJsonFromUrl("https://nuvolect.com/deepdive/output.json");
+                if (updateAvaliable(jsonArray)) {
 
-                    result = getVersionMessage( json );
+                    result = getVersionMessage( jsonArray );
                 }
             } catch (IOException e) {
                 result = communicationError;
@@ -134,14 +135,40 @@ public class AppUpgrade {
         }
     }
 
-    private boolean updateAvaliable(JSONObject json) throws JSONException {
+    /** output.json, produced by Android Studio
+     * [
+     *   {
+     *     "outputType": {
+     *       "type": "APK"
+     *     },
+     *     "apkInfo": {
+     *       "type": "MAIN",
+     *       "splits": [
+     *
+     *       ],
+     *       "versionCode": 9401,
+     *       "versionName": "0.9.4",
+     *       "enabled": true,
+     *       "outputFile": "deepdive-release.apk",
+     *       "fullName": "release",
+     *       "baseName": "release"
+     *     },
+     *     "path": "deepdive-release.apk",
+     *     "properties": {
+     *
+     *     }
+     *   }
+     * ]
+     * @param jsonArray
+     * @return
+     * @throws JSONException
+     */
 
-        int versionMajor = json.getInt("versionMajor");
-        int versionMinor = json.getInt("versionMinor");
-        int versionPatch = json.getInt("versionPatch");
-        int versionBuild = json.getInt("versionBuild");
+    private boolean updateAvaliable(JSONArray jsonArray) throws JSONException {
 
-        long versionAval  = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild;
+        JSONObject json = jsonArray.getJSONObject(0).getJSONObject("apkInfo");
+
+        long versionAval  = json.getInt( "versionCode");
 
         int versionRunning = 0;
         try {
@@ -152,18 +179,15 @@ public class AppUpgrade {
         return versionAval > versionRunning;
     }
 
-    private String getVersionMessage(JSONObject json) throws JSONException {
+    private String getVersionMessage(JSONArray jsonArray) throws JSONException {
 
-        int versionMajor = json.getInt("versionMajor");
-        int versionMinor = json.getInt("versionMinor");
-        int versionPatch = json.getInt("versionPatch");
-        int versionBuild = json.getInt("versionBuild");
+        JSONObject json = jsonArray.getJSONObject(0).getJSONObject("apkInfo");
+        String versionName = json.getString( "versionName");
 
-        String versionName = versionMajor + "." + versionMinor + "." + versionPatch + "." +versionBuild;
-        String versionDate = json.getString("date");
-
-        String message = "Version "+versionName+" dated "+versionDate+" is available."
-                +json.getString("description");
+        String message = json.getString("outputFile")
+                + " Version "+versionName+" is available."+
+                "<br><br>"+
+                "<a href='https://nuvolect.com/deepdive/deepdive-release.apk'>Download DeepDive</a>";
         return message;
     }
 }
