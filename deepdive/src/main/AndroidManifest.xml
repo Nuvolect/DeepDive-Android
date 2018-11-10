@@ -42,12 +42,6 @@
         <service
             android:name="com.nuvolect.deepdive.webserver.WebService" >
         </service>
-        <receiver android:name="com.nuvolect.deepdive.main.BootReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <category android:name="android.intent.category.HOME" />
-            </intent-filter>
-        </receiver>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
