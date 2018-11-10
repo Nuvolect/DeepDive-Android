@@ -74,16 +74,19 @@ public class SearchRest {
                 case delete_index: {
                     JSONObject result = IndexUtil.deleteIndex( volumeId, search_path);
                     wrapper.put("result", result.toString());
+                    extra = search_path;
                     break;
                 }
                 case new_index: {
                     JSONObject result = IndexUtil.newIndex( volumeId, search_path);
                     wrapper.put("result", result.toString());
+                    extra = search_path;
                     break;
                 }
                 case get_indexes:{
                     JSONArray result = IndexUtil.getIndexes( volumeId);
                     wrapper.put("result", result.toString());
+                    extra = String.valueOf( result.length());
                     break;
                 }
                 case index:{
@@ -93,17 +96,20 @@ public class SearchRest {
                     }
                     JSONObject result = Index.index( volumeId, search_path, forceReindex);
                     wrapper.put("result", result.toString());
+                    extra = search_path;
                     break;
                 }
                 case interrupt_indexing:{
                     //TODO consider adding volumeId for concurrent indexing of multiple volumes
                     JSONObject result = interrupt();
                     wrapper.put("result", result.toString());
+                    extra = String.valueOf( result.getInt( "total_docs"));
                     break;
                 }
                 case get_sets:{
                     JSONObject result = SearchSet.getSetss( ctx, volumeId);
                     wrapper.put("result", result.toString());
+                    extra = String.valueOf( result.length());
                     break;
                 }
                 case put_set: {// Post method
@@ -131,6 +137,7 @@ public class SearchRest {
                 }
                 case set_current_set:{
                     String name = params.get("name");
+                    extra = name;
                     JSONObject result = SearchSet.setCurrentSetFileName( ctx, volumeId, name);
                     wrapper.put("result", result.toString());
                     break;
@@ -138,6 +145,7 @@ public class SearchRest {
                 case get_current_set:{
                     JSONObject result = SearchSet.getCurrentSet( ctx, volumeId);
                     wrapper.put("result", result.toString());
+                    extra = SearchSet.getCurrentSetName( ctx, volumeId);
                     break;
                 }
                 case search:{

@@ -39,7 +39,7 @@ public class Search {
 
     private static Analyzer m_analyzer;
     private static Directory m_directory = null;
-    private static final int MAX_HITS = 50;
+    private static final int MAX_HITS = 500;
 
     private static void preSearch( String volumeId, String searchPath) {
 

@@ -230,4 +230,8 @@ public class SearchSet {
 
         return currentSet;
     }
+    public static String getCurrentSetName(Context ctx, String volumeId){
+
+        return Persist.get(ctx, CURRENT_SET, DEFAULT_SEARCH_SET_FILENAME);
+    }
 }
