@@ -1,5 +1,6 @@
 package com.nuvolect.deepdive.util;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -11,25 +12,46 @@ import static junit.framework.Assert.assertTrue;
 /**
  * Test JsonReader by loading a json object from the server and confirming a set
  * of keys exist.
+ *      [
+ *        {
+ *          "outputType": {
+ *            "type": "APK"
+ *          },
+ *          "apkInfo": {
+ *            "type": "MAIN",
+ *            "splits": [
+ *
+ *            ],
+ *            "versionCode": 9401,
+ *            "versionName": "0.9.4",
+ *            "enabled": true,
+ *            "outputFile": "deepdive-release.apk",
+ *            "fullName": "release",
+ *            "baseName": "release"
+ *          },
+ *          "path": "deepdive-release.apk",
+ *          "properties": {
+ *
+ *          }
+ *        }
+ *      ]
  */
 public class JsonReaderTest {
 
     String[] keys = {
-            "versionMajor",
-            "versionMinor",
-            "versionPatch",
-            "versionBuild",
-            "description",
-            "date"
+            "outputType",
+            "apkInfo",
+            "path",
+            "properties"
     };
 
     @Test
     public void testReadJson() throws Exception {
 
-        JSONObject json = new JSONObject();
 
         try {
-            json = JsonReader.readJsonFromUrl("https://nuvolect.com/deepdive/current_version.json");
+            JSONArray jsonArray = JsonReader.readJsonFromUrl("https://nuvolect.com/deepdive/output.json");
+            JSONObject json = jsonArray.getJSONObject(0);
 
             assertTrue( true );
 

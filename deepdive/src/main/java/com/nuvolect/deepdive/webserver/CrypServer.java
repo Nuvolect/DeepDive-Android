@@ -3,13 +3,14 @@ package com.nuvolect.deepdive.webserver;//
 import android.content.Context;
 
 import com.nuvolect.deepdive.main.CConst;
+import com.nuvolect.deepdive.main.UserManager;
+import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.CrypUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniUtil;
 import com.nuvolect.deepdive.util.Passphrase;
-import com.nuvolect.deepdive.main.UserManager;
 import com.nuvolect.deepdive.webserver.admin.AdminCmd;
 import com.nuvolect.deepdive.webserver.connector.CmdZipdl;
 import com.nuvolect.deepdive.webserver.connector.ServeCmd;
@@ -161,11 +162,13 @@ public class CrypServer extends NanoHTTPD{
                      */
                     if( uri.contentEquals("/") || uri.contentEquals("/login.htm")) {
 
+                        Analytics.sendScreen(m_ctx, "login.htm","");
                         is = m_ctx.getAssets().open("login.htm");
                         return new Response(HTTP_OK, MimeUtil.MIME_HTML, is, -1);
 
                     } else if( uri.contentEquals("/logout.htm")) {
 
+                        Analytics.sendScreen(m_ctx, "logout.htm","");
                         is = m_ctx.getAssets().open( "logout.htm");
                         return new Response(HTTP_OK, MimeUtil.MIME_HTML, is, -1);
 
@@ -374,7 +377,10 @@ public class CrypServer extends NanoHTTPD{
                 /**
                  * 5. File is in assets
                  */
-
+                String packageName = "undef";
+                if( params.containsKey("package"))
+                    packageName= params.get("package");
+                Analytics.sendScreenSelect( m_ctx, uri, packageName);
                 is = m_ctx.getAssets().open(uri.substring(1));
                 String mime = MimeUtil.getMime( fileExtension);
                 return new Response(HTTP_OK, mime, is, -1);

@@ -12,6 +12,7 @@ import android.content.Context;
 import android.view.MenuItem;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.nuvolect.deepdive.R;
 
@@ -159,5 +160,84 @@ public class Analytics {//SPRINT review analytics
             default:
         }
         send(ctx, category, action, "label", 1L);
+    }
+
+    /**
+     * Send a specific screen manually to analytics. This is used when the app is serving
+     * web screens from the embedded server. It avoids confusing web page analytics with
+     * mobile app analytics.
+     *
+     * @param ctx
+     * @param screen
+     */
+    public static void sendScreen(Context ctx, String screen, String data) {
+
+        try {
+            if( easyTracker == null ){
+
+                easyTracker = EasyTracker.getInstance(ctx);
+                LogUtil.log(LogUtil.LogType.ANALYTICS, "Analytics.sendScreen, restored from NULL");
+            }
+
+            send(ctx, "screen", screen, data, 1L);
+
+            // Post a "screen" for next day analysis
+            easyTracker.set(Fields.SCREEN_NAME, screen);
+
+            easyTracker.send( MapBuilder
+                    .createAppView()
+                    .build()
+            );
+
+        } catch (Exception e) {
+            LogUtil.log(LogUtil.LogType.ANALYTICS, "exception in Analytics.sendScreen");
+            LogUtil.logException( ctx, LogUtil.LogType.ANALYTICS, e);
+        }
+    }
+
+    public static void sendScreenSelect(Context ctx, String uri, String data) {
+
+        if( uri.startsWith("/apps")){
+           sendScreen( ctx, "apps.htm", data);
+        }
+        else if( uri.startsWith("/app.")){
+            sendScreen( ctx, "app.htm", data);
+        }
+        else if( uri.startsWith("/decompile.")){
+            sendScreen( ctx, "decompile.htm", data);
+        }
+        else if( uri.startsWith("/device.")){
+            sendScreen( ctx, "device.htm", data);
+        }
+        else if( uri.startsWith("/keystore.")){
+            sendScreen( ctx, "keystore.htm", data);
+        }
+        else if( uri.startsWith("/lobby.")){
+            sendScreen( ctx, "lobby.htm", data);
+        }
+        else if( uri.startsWith("/logcat.")){
+            sendScreen( ctx, "logcat.htm", data);
+        }
+        else if( uri.startsWith("/login.")){
+            sendScreen( ctx, "login.htm", data);
+        }
+        else if( uri.startsWith("/logout.")){
+            sendScreen( ctx, "logout.htm", data);
+        }
+        else if( uri.startsWith("/search.")){
+            sendScreen( ctx, "search.htm", data);
+        }
+        else if( uri.startsWith("/search_manager.")){
+            sendScreen( ctx, "search_manager.htm", data);
+        }
+        else if( uri.startsWith("/search_set.")){
+            sendScreen( ctx, "search_set.htm", data);
+        }
+        else if( uri.startsWith("/shell.")){
+            sendScreen( ctx, "shell.htm", data);
+        }
+        else if( uri.startsWith("/view_text.")){
+            sendScreen( ctx, "view_text.htm", data);
+        }
     }
 }
