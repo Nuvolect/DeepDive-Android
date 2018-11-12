@@ -27,16 +27,6 @@ public class AppSpecific {
     public static final String APP_ROADMAP_URL            = "https://nuvolect.com/blog/posts/dd-roadmap";
     public static final String APP_TERMS_URL              = "https://nuvolect.com/deepdive_terms/";
 
-    public static final int EVAL_DAYS                     = 7;
-    public static final long EVALUATION_PERIOD_MS         = EVAL_DAYS * 24 * 60 * 60 * 1000L;
-    /**
-     * Period between nags
-     */
-    public static final long EVAL_EXPIRED_NO_NAG_PERIOD   = 6 * 24 * 60 * 60 * 1000L;// 6 days between nags
-    public static final String EVAL_EXPIRED_NAG_KEY       = "eval_expired_nag";
-    public static final String WHATS_NET_NAG_KEY          = "whats_new_nag";
-    public static final long WHATS_NEW_NAG_PERIOD         = 7 * 24 * 60 * 60 * 1000L;// 7 days between nags
-
     public static String getAppFolderPath(Context ctx) {
 
         return ctx.getString(R.string.APP_PUBLIC_FOLDER_RELATIVE_PATH);

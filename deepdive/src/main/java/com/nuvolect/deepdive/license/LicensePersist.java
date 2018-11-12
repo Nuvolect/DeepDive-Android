@@ -3,19 +3,9 @@ package com.nuvolect.deepdive.license;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
-import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.CrypUtil;
-import com.nuvolect.deepdive.util.JsonUtil;
-import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.TimeUtil;
-
-import org.headsupdev.license.License;
-import org.headsupdev.license.LicenseDecoder;
-import org.headsupdev.license.LicenseUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 @SuppressLint("CommitPrefEdits")
 public class LicensePersist {
@@ -23,11 +13,9 @@ public class LicensePersist {
     private static final String PERSIST_NAME           = "license_persist";
 
     // Persist keys
-    private static final String LAST_NAG_TIME          = "last_nag_time";
     private static final String LEGAL_AGREE            = "legal_agree";
     private static final String LEGAL_AGREE_TIME       = "legal_agree_time";
     private static final String LICENSE_RESULT         = "license_result";
-    private static final String PRO_USER               = "pro_user";
 
     /**
      * Remove all persistent data.
@@ -76,32 +64,8 @@ public class LicensePersist {
                         + "\nUser accepted terms " + TimeUtil.friendlyTimeString(legalAgreeTime);
                 break;
             case PRO_USER:{
-                LicenseDecoder decoder = new LicenseDecoder();
-                try {
-                    AppConfig config = new AppConfig();
-                    decoder.setPublicKey(LicenseUtils.deserialiseKey(config.getPublicKeyFile(ctx)));
-                    decoder.setSharedKey(LicenseUtils.deserialiseKey(config.getSharedKeyFile(ctx)));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                String licDetails = "";
-
-                License out = new License();
-                try {
-                    String licenseCryp = LicensePersist.getLicenseCryp( ctx);
-                    decoder.decodeLicense( licenseCryp, out);
-                } catch (Exception e) {
-                    licDetails = "License invalid";
-                    LogUtil.log( licDetails);
-                }
-                if( licDetails.isEmpty()){// no decoder error, get license specifics
-
-                    licDetails = out.getSummary();
-                }
-
                 summary = "License: Pro User"
-                        + "\nUser accepted terms " + TimeUtil.friendlyTimeString(legalAgreeTime)
-                        + "\n" + licDetails;
+                        + "\nUser accepted terms " + TimeUtil.friendlyTimeString(legalAgreeTime);
                 break;
             }
             default:
@@ -120,63 +84,6 @@ public class LicensePersist {
     }
 
     /**
-     * Keep track of when you are nagging the user on various issues.
-     * Return false when current time is within a sincePeriod, it is not time to nag.
-     * This method can can be called multiple times and will continue to return false until outside
-     * of the pest period when it returns true a single time.
-     *
-     * @param ctx
-     * @param key key to find last nag time
-     * @param noNagPeriodMs  How long the period is in ms
-     * @return
-     */
-    public static boolean timeToNagUser(Context ctx, String key, long noNagPeriodMs) {
-
-        long currentTime = System.currentTimeMillis();
-
-        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
-        try {
-
-            JSONObject object = new JSONObject( pref.getString(LAST_NAG_TIME, "{}"));
-            if( object.has( key )){
-
-                long timeSinceLastNag = currentTime - JsonUtil.getLong(key, object);
-
-                /**
-                 * Check if we are outside the no-nag period
-                 */
-                if( timeSinceLastNag > noNagPeriodMs){
-
-                    /**
-                     * Time to nag the user again.
-                     */
-                    object.put(key, currentTime);
-                    pref.edit().putString(LAST_NAG_TIME, object.toString()).commit();
-
-                    return true;
-                }else{
-                    /**
-                     * You are a pest and within the pest period, return true
-                     */
-                    return false;
-                }
-            }else{
-                /**
-                 * First time, definitely time to nag the user
-                 */
-                object.put(key, currentTime);
-                pref.edit().putString(LAST_NAG_TIME, object.toString()).commit();
-
-                return true;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
-
-    /**
      * Returns the current app version or zero when the app version has never been set.
      * @param ctx
      * @return
@@ -190,32 +97,4 @@ public class LicensePersist {
 
         CrypUtil.putInt(ctx, CrypUtil.APP_VERSION, appVersion);
     }
-
-    public static void setIsProUser(Context ctx, boolean b) {
-
-        CrypUtil.put( ctx, PRO_USER, b?"true":"false");
-    }
-
-    public static boolean isProUser(Context ctx) {
-
-        return CrypUtil.get( ctx, PRO_USER, "false").contentEquals("true");
-    }
-
-    /**
-     * Return encrypted license key as saved in app Settings.
-     * @param ctx
-     * @return
-     */
-    public static String getLicenseCryp(Context ctx ){
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences( ctx);
-        return sharedPref.getString(CConst.LICENSE_CRYP, "");
-    }
-
-    public static void putLicenseCryp(Context ctx, String licenseCryp){
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences( ctx);
-        sharedPref.edit().putString(CConst.LICENSE_CRYP, licenseCryp).apply();
-    }
-
 }

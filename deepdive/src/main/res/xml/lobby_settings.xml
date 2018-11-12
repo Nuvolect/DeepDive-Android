@@ -10,18 +10,18 @@
     <EditTextPreference
         android:key="port_number"
         android:title="Port number"
-        android:summary="Change the default port number used by the embedded web server."
+        android:summary="Change the default port number used by the embedded web server"
         />
     <Preference
         android:key="ip_address"
         android:title="IP address"
-        android:summary="When enabled, the web app can be found at this IP address on your local area network."
+        android:summary="When enabled, the web app can be found at this IP address on your local area network"
         />
     <EditTextPreference
         android:key="thread_stack_size"
         android:title="Stack size"
         android:defaultValue="20"
-        android:summary="Stack size used by the decompiler in megabytes."
+        android:summary="Stack size used by the decompiler in megabytes"
         />
     <CheckBoxPreference
         android:key="show_tips"
