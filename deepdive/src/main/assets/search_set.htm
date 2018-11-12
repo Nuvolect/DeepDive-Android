@@ -368,7 +368,7 @@
                 // Set query set
                 var setNoHits = result.set;
                 for(var i=0; i < setNoHits.length; i++){
-                    setNoHits[i].num_hits = 0;
+                    setNoHits[i].num_hits = '-';
                     setNoHits[i].encodedQuery = encodeURIComponent( setNoHits[i].query );
                 }
                 $scope.search_set = setNoHits;

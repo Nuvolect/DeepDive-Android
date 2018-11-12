@@ -12,8 +12,8 @@
     "description":"Crashlytics"
   },
   {
-    "query": "\"localytics\"",
-    "description":"https://www.localytics.com/"
+    "query": "localytics",
+    "description":"www.localytics.com/"
   },
   {
     "query": "\"org.piwik.sdk\"",
@@ -21,14 +21,14 @@
   },
   {
     "query": "\"com.segment.analytics.Analytics\"",
-    "description": "Setment Analytics"
+    "description": "Segment Analytics"
   },
   {
     "query": "\"com.mparticle\"",
     "description":"mParticle"
   },
   {
-    "query": "\"react-native-google-analytics-bridge\"",
+    "query": "\"react.native.google.analytics.bridge\"",
     "description": "Google Analytics Bridge"
   },
   {
