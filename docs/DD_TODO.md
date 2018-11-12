@@ -2,19 +2,21 @@
 * Continue removing dead code, developer code, private information
 * Select appropriate license, document license on web and in code
 * Review goals for analytics and analytics collection
-* Decide to store the APK on nuvolect.com or in Github
+* Make Stop button kill/restart background service
 
 # Sprint- minimal Tasks for F-Droid release
 * Review written procedure and YouTube docs
 
 # Backlog
  
+* Move menu Setting/App upgrade to Settings, show current version & status, press to upgrade
 * Add a 'x' to Working Apps, delete working storage, search cache, all things for that app
-* apps.htm, show "No current working apps" when there are none
 * Test refactoring of file links and preview
 * Background thread creation of bitmaps
 * Document multi-browser decompilier conflicts
 * Is there a better way to organize processess to monitor progress and kill-all
+
+* apps.htm, show "No current working apps" when there are none
 
 * Integrate TinyMCE
 https://github.com/Studio-42/elFinder/wiki/Using-custom-editor-to-edit-files-within-elfinder

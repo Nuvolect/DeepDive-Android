@@ -122,8 +122,8 @@ public class ProbeRest {
                 }
                 case stop_thread:{
                     DecompileApk decompileApk = ProbeMgr.getProbe( ctx, package_name).getDecompiler();
-                    String action = params.get("action");
-                    JSONObject status = decompileApk.stopThread( action);
+                    String threadId = params.get("method");
+                    JSONObject status = decompileApk.stopThread( threadId);
                     wrapper.put("status", status.toString());
                     break;
                 }

@@ -712,7 +712,7 @@ public class DecompileApk {
                                     .skipDebug(!debugInfo)
                                     .optimizeSynchronized(optimizeSynchronized)
                                     .printIR(printIR);
-                                    //.verbose(verbose);
+                            //.verbose(verbose);
                             dex2jar.setExceptionHandler(dexExceptionHandlerMod);
                             dex2jar.to(jarFile.getStdFile());
                             success = true;
@@ -1105,19 +1105,17 @@ public class DecompileApk {
             case fern_flower:
                 myThread = m_fernThread;
                 break;
+            default:// do nothing
         }
 
         if( myThread != null){
-            if( myThread.isInterrupted())
-                myThread.currentThread().stop();
-            else {
-                myThread.currentThread().interrupt();
-            }
+//                myThread.currentThread().stop();// deprecated as of API 16 jellybean
+            myThread.currentThread().interrupt();
         }
 
         String category = Analytics.DECOMPILE;
         String action = "stop_thread";
-        String label = m_packageName;
+        String label = threadId;
         long value = 1;
 
         Analytics.send( m_ctx, category, action, label, value);

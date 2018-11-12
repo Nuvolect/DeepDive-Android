@@ -67,9 +67,6 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(R.layout.simple_frame_layout);
 
-        Intent serverIntent = new Intent(m_ctx, WebService.class);
-        m_ctx.startService(serverIntent);
-
         if (!Environment.MEDIA_MOUNTED
                 .equals(Environment.getExternalStorageState())) {
             Toast.makeText(this, "Cannot access external storage!", Toast.LENGTH_LONG).show();
@@ -122,6 +119,9 @@ public class MainActivity extends FragmentActivity {
             }
             case WHITELIST_USER:
             case PRO_USER: {
+
+                Intent serverIntent = new Intent(m_ctx, WebService.class);
+                m_ctx.startService(serverIntent);
 
                 startGui();
                 break;
