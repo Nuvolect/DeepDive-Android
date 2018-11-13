@@ -11,7 +11,7 @@ Android is the server. Access the details of reverse engineering from your handh
 
 ## Notes On Security
 Configure a user login from app Settings. All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address. You will see a security warning or error message. Also, the security certificate is posted on Github. For best security, create your own security certificate.
-More details: https://securesuite.org/securesuite_security.pdf
+More details on security: https://securesuite.org/securesuite_security.pdf
 
 ## Lucene — Ultra-fast search
 A decompiled app can have hundreds of thousands of files and millions of lines of code.
@@ -54,7 +54,6 @@ unserstanding user intent and how to improve the application.
 
 ## Licensing
 * This version is free, enjoy! Please provide feedback.
-* Coming soon: Linux version
 ## Contributing Bug Reports
 We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked.
 <https://github.com/teamnuvolect/securesuite/issues>
