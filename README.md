@@ -62,7 +62,7 @@ We use GitHub for bug tracking. Please search the existing issues for your bug a
 
 ## Support
 * For troubleshooting and support information, please visit the wiki. <https://github.com/teamnuvolect/DeepDive-Android/wiki>
-* <a href="https://nuvolect.com/donation.htm">Consider making a donation to help fund support and development efforts.</a>
+* <a href="https://nuvolect.com/donate">Consider making a donation to help fund support and development efforts.</a>
 
 For general questions and discussion about features, visit the forum.
 <a href="https://nuvolect.freeforums.net/board/4/discussion-deepdive">
