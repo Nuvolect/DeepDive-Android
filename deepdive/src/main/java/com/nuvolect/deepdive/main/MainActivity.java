@@ -41,7 +41,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends FragmentActivity {
 
-    Activity m_act;
+    static Activity m_act;
     Context m_ctx;
     private Bundle m_savedInstanceState;
     private final static boolean DEBUG = LogUtil.DEBUG;
@@ -410,4 +410,5 @@ public class MainActivity extends FragmentActivity {
         ft.commitAllowingStateLoss();
     }
 
+    public static Activity getAct() { return m_act;}
 }

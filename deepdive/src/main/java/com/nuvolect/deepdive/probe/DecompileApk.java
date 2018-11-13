@@ -1,6 +1,9 @@
 package com.nuvolect.deepdive.probe;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -1108,10 +1111,24 @@ public class DecompileApk {
             default:// do nothing
         }
 
-        if( myThread != null){
+//        if( myThread != null){
 //                myThread.currentThread().stop();// deprecated as of API 16 jellybean
-            myThread.currentThread().interrupt();
-        }
+//            myThread.currentThread().interrupt(); // not working, does not stop thread
+//        }
+
+        /**
+         * Not the best solution but attempts to selectively stop individual threads do not
+         * seem to work. We need need a more robust solution for long running process management.
+         */
+        Intent mStartActivity = new Intent(m_ctx, com.nuvolect.deepdive.main.MainActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(m_ctx,
+                mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager)m_ctx.getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
+
+        Runtime.getRuntime().exit(0);
 
         String category = Analytics.DECOMPILE;
         String action = "stop_thread";

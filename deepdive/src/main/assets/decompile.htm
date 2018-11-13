@@ -359,6 +359,12 @@
             $http.get("/probe/stop_thread/?method=" + myMethod + "&package_name=" + $scope.packageName)
                 .then(function (response) {
                 });
+
+                $timeout(function () {
+
+                    $scope.iterateGetStatus();
+
+                }, 2000);// start 2 seconds in the future
         };
         // Get status and if threads are still running, schedule future status event
         // Define the function here, kick if off below
