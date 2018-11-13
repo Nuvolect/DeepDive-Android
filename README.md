@@ -58,7 +58,7 @@ unserstanding user intent and how to improve the application.
 				use the software without the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPLv3</a> restrictions.
 ## Contributing Bug Reports
 We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked.
-<https://github.com/teamnuvolect/deepdive/issues>
+<https://github.com/teamnuvolect/deepdive-android/issues>
 
 ## Support
 * For troubleshooting and support information, please visit the wiki. <https://github.com/teamnuvolect/DeepDive-Android/wiki>
