@@ -53,7 +53,9 @@ Analytics provide anonymous eyes into use of the application that can help with
 unserstanding user intent and how to improve the application.
 
 ## Licensing
-* This version is free, enjoy! Please provide feedback.
+* SecureSuite is offered for free under conditions of the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPLv3</a> open source software license.
+* Contact <a href="https://nuvolect.com/contact.htm" >Nuvolect LLC</a> for a less restrictive commercial license if you would like to
+				use the software without the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPLv3</a> restrictions.
 ## Contributing Bug Reports
 We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked.
 <https://github.com/teamnuvolect/securesuite/issues>
