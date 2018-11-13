@@ -409,6 +409,4 @@ public class MainActivity extends FragmentActivity {
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
-
-    public static Activity getAct() { return m_act;}
 }
