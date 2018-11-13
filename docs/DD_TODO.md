@@ -1,8 +1,6 @@
 # Sprint- minimal Tasks for simple APK download release
 * Continue removing dead code, developer code, private information
 * Select appropriate license, document license on web and in code
-* Review goals for analytics and analytics collection
-* Make Stop button kill/restart background service
 
 # Sprint- minimal Tasks for F-Droid release
 * Review written procedure and YouTube docs
@@ -11,10 +9,13 @@
  
 * Move menu Setting/App upgrade to Settings, show current version & status, press to upgrade
 * Add a 'x' to Working Apps, delete working storage, search cache, all things for that app
+* Download and apply unique security certificate
+* Review goals for analytics and analytics collection
 * Test refactoring of file links and preview
 * Background thread creation of bitmaps
 * Document multi-browser decompilier conflicts
 * Is there a better way to organize processess to monitor progress and kill-all
+* Improve Stop button kill/restart background service
 
 * apps.htm, show "No current working apps" when there are none
 
