@@ -12,7 +12,7 @@ Android is the server. Access the details of reverse engineering from your handh
 <a href="https://nuvolect.com/deepdive/deepdive-release.apk">
 <img src="https://nuvolect.com/img/dd_download_icon.png" width="214" height="64"></a>
 <br>
-<a href="https://nuvolect.com/deepdive/install.htm">DeepDive Installation Instructions</a>
+<a href="https://nuvolect.com/deepdive/install.htm">Installation Instructions</a>
 
 ## Notes On Security
 Configure a user login from app Settings. All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address. You will see a security warning or error message.
