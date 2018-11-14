@@ -1,3 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="" />
+  <settings default="Nuvolect_GPLV3">
+    <module2copyright>
+      <element module="All" copyright="Nuvolect_GPLV3" />
+    </module2copyright>
+  </settings>
 </component>
