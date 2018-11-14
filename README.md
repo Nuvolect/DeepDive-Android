@@ -7,11 +7,15 @@ We initially experimented with reverse engineering to explore vulnerabilities of
 Android is the server. Access the details of reverse engineering from your handheld device or from the convenience of your large Mac or PC screen. How we use Deep Dive:
 1. Join the same WiFi on your Android phone or tablet as your Mac or PC.
 1. Install and start Deep Dive on your Android phone or tablet.
-1. Note the IP address on the home screen and go to that address from your Mac or PC. 
+1. Note the IP address on the home screen and go to that address from your Mac or PC.
+<br>
+<a href="https://nuvolect.com/deepdive/deepdive-release.apk">
+<img src="https://nuvolect.com/img/dd_download_icon.png" width="214" height="64"></a>
+<br>
+<a href="https://nuvolect.com/deepdive/install.htm">DeepDive Installation Instructions</a>
 
 ## Notes On Security
-Configure a user login from app Settings. All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address. You will see a security warning or error message. Also, the security certificate is posted on Github. For best security, create your own security certificate.
-More details on security: https://securesuite.org/securesuite_security.pdf
+Configure a user login from app Settings. All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address. You will see a security warning or error message.
 
 ## Lucene — Ultra-fast search
 A decompiled app can have hundreds of thousands of files and millions of lines of code.
