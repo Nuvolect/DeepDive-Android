@@ -10,31 +10,21 @@ package com.nuvolect.deepdive.webserver;//
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.webserver.connector.ServerInit;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.ByteOrder;
-import java.security.KeyStore;
 import java.util.concurrent.Semaphore;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManagerFactory;
 
 
 /**
@@ -46,11 +36,10 @@ public class WebService extends Service {
     private static Context m_ctx;
     private Handler mHandler;
     public static String HTTP_PROTOCOL = "https://";
-    public static String CERTIFICATE_DETAILS = "Issued to: CN=Nuvolect LLC,OU=Development,O=Nuvolect LLC,L=Orlando,ST=FL,C=US;";
+    public static String CERTIFICATE_DETAILS = "CN=Nuvolect LLC,OU=Development,O=Nuvolect LLC,L=Orlando,ST=FL,C=US;";
 
     private static SSLServerSocketFactory sslServerSocketFactory;
     private static SSLSocketFactory sslSocketFactory;
-    private static SSLContext sslContext;
     private static OkHttpClient okHttpClient = null;
 
     private static String keyFile = "/assets/keystore.bks";
@@ -82,7 +71,23 @@ public class WebService extends Service {
         try {
             okHttpClient = null;
 
-            configureSSL(keyFile, passPhrase);
+            // Copy the mac made certificate to private_0
+//            OmniUtil.copyAsset(m_ctx, "keystore.bks", new OmniFile( Omni.userVolumeId_0,"keystore.bks"));
+
+            String VazanFilename = "VazanKeystoreRsaPlus.bks";
+            byte[] cert = CertVazanPlus.makeCert();
+            OmniFile certFile = new OmniFile("u0", VazanFilename);
+            SSLUtil.storeCertInKeystore( cert, passPhrase, certFile);
+//
+//            CertificateAlpha.makeCertificate(new OmniFile("u0", "AlphaKeystore.bks").getAbsolutePath());
+
+//            SSLUtil.probeCert( VazanFilename, "".toCharArray());
+//            SSLUtil.probeCert( "keystore.bks", passPhrase);
+
+//            sslServerSocketFactory = SSLUtil.configureSSLPath( VazanFilename, passPhrase);
+
+            // This one loads a working certificate from assets
+            sslServerSocketFactory = SSLUtil.configureSSLAsset( keyFile, passPhrase);
 
             if( HTTP_PROTOCOL.startsWith("https"))
                 server.makeSecure( sslServerSocketFactory, null);
@@ -147,60 +152,6 @@ public class WebService extends Service {
     public void onRebind(Intent intent) {
         super.onRebind(intent);
         LogUtil.log(LogUtil.LogType.WEB_SERVICE, "onReBind()");
-    }
-
-    /**
-     * Return the IP in 4 number 3 dot format, or null if unable to get host address.
-     * @param context
-     * @return
-     */
-    protected String wifiIpAddress(Context context) {
-        WifiManager wifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);
-        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-
-        // Convert little-endian to big-endian if needed
-        if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
-            ipAddress = Integer.reverseBytes(ipAddress);
-        }
-
-        byte[] ipByteArray = BigInteger.valueOf(ipAddress).toByteArray();
-
-        String ipAddressString;
-        try {
-            ipAddressString = InetAddress.getByAddress(ipByteArray).getHostAddress();
-        } catch (UnknownHostException ex) {
-            Log.e("WIFIIP", "Unable to get host address.");
-            ipAddressString = null;
-        }
-
-        return ipAddressString;
-    }
-
-    /**
-     * Creates an SSLSocketFactory for HTTPS.
-     *
-     * Pass a KeyStore resource with your certificate and passphrase
-     */
-    public static void configureSSL(String keyAndTrustStoreClasspathPath, char[] passphrase) throws IOException {
-
-        try {
-            // Android does not have the default jks but uses bks
-            KeyStore keystore = KeyStore.getInstance("BKS");
-            InputStream keystoreStream = WebService.class.getResourceAsStream(keyAndTrustStoreClasspathPath);
-            keystore.load(keystoreStream, passphrase);
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            trustManagerFactory.init(keystore);
-
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-            keyManagerFactory.init(keystore, passphrase);
-            sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
-            sslServerSocketFactory = sslContext.getServerSocketFactory();
-            sslSocketFactory = sslContext.getSocketFactory();
-
-        } catch (Exception e) {
-            throw new IOException(e.getMessage());
-        }
     }
 
     public static OkHttpClient getOkHttpClient() {

@@ -354,14 +354,14 @@ public class OmniUtil {
      * Copy a file from assets to an omni destination folder.
      * @param ctx
      * @param assetFilePath
-     * @param destinationFolder
+     * @param destinationFile
      * @return number of bytes copied
      * @throws IOException
      */
-    public static int copyAsset(Context ctx, String assetFilePath, OmniFile destinationFolder) throws IOException {
+    public static int copyAsset(Context ctx, String assetFilePath, OmniFile destinationFile) throws IOException {
 
         InputStream inputStream = ctx.getAssets().open( assetFilePath);
-        OutputStream outputStream = destinationFolder.getOutputStream();
+        OutputStream outputStream = destinationFile.getOutputStream();
         int numBytes = IOUtils.copy( inputStream, outputStream);
         inputStream.close();
         outputStream.close();

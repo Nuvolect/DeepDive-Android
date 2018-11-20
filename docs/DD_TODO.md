@@ -15,9 +15,6 @@
 * Background thread creation of bitmaps
 * Document multi-browser decompilier conflicts
 * Is there a better way to organize processess to monitor progress and kill-all
-* Improve Stop button kill/restart background service
-
-* apps.htm, show "No current working apps" when there are none
 
 * Integrate TinyMCE
 https://github.com/Studio-42/elFinder/wiki/Using-custom-editor-to-edit-files-within-elfinder

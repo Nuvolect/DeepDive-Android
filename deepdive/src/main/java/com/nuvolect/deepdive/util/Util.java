@@ -312,6 +312,48 @@ public class Util {
         return bytesCopied;
     }
 
+    public static boolean write(byte[] serialized, String path) {
+
+        OutputStream outputStream = null;
+        File f = new File( path );
+
+        try {
+            outputStream = new FileOutputStream( f);
+
+            int bufSize = 0;
+            int remaining = serialized.length;
+            int offset = 0;
+            byte[] bytes = new byte[1024*8];
+
+            while ( remaining > 0){
+
+                bufSize = 1024*8;
+                if( bufSize >= remaining)
+                    bufSize = remaining;
+
+                outputStream.write( serialized, offset, bufSize);
+                offset += bufSize;
+                remaining -= bufSize;
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (outputStream != null) {
+                try {
+                    // outputStream.flush();
+                    outputStream.close();
+                    return true;
+                } catch (IOException e) {
+                    LogUtil.e("", e);
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Copy an input stream to a file closing up when done.
      * @param inputStream
