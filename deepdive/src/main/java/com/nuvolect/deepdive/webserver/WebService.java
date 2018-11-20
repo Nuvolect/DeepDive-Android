@@ -83,13 +83,13 @@ public class WebService extends Service {
 //
 //            CertificateAlpha.makeCertificate(new OmniFile("u0", "AlphaKeystore.bks").getAbsolutePath());
 
-//            SSLUtil.probeCert( VazanFilename, "".toCharArray());
-            SSLUtil.probeCert( "keystore.bks", passPhrase);
+//            SSLUtil.probeCert( VazanFilename, passPhrase);
+//            SSLUtil.probeCert( "keystore.bks", passPhrase);
 
-//            sslServerSocketFactory = SSLUtil.configureSSLPath( VazanFilename, passPhrase);
+            sslServerSocketFactory = SSLUtil.configureSSLPath( VazanFilename, passPhrase);
 
             // This one loads a working certificate from assets
-            sslServerSocketFactory = SSLUtil.configureSSLAsset( keyFile, passPhrase);
+//            sslServerSocketFactory = SSLUtil.configureSSLAsset( keyFile, passPhrase);
 
             if( HTTP_PROTOCOL.startsWith("https"))
                 server.makeSecure( sslServerSocketFactory, null);

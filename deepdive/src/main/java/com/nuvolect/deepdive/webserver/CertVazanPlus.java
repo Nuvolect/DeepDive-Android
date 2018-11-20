@@ -71,7 +71,7 @@ public class CertVazanPlus {
                     .addRDN(BCStyle.OU, "Development")
                     .addRDN(BCStyle.C, "US")
                     .addRDN(BCStyle.L, "Orlando")
-                    .addRDN(BCStyle.ST, "Florida")
+                    .addRDN(BCStyle.ST, "FL")
                     .build();
             byte[] id = new byte[20];
             random.nextBytes(id);
