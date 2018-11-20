@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.Provider;
+import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -141,6 +142,15 @@ public class SSLUtil {
                 if (alias.isEmpty())
                     alias = s;
             }
+            Certificate cert = keystore.getCertificate(alias);
+            PublicKey pubKey = cert.getPublicKey();
+            String alg = pubKey.getAlgorithm();
+            LogUtil.log("Public key algorithm: " + alg);
+            String certType = cert.getType();
+            LogUtil.log("Public key type: " + certType);
+            String certString = cert.toString();
+            LogUtil.log("Cert string: " + certString);
+
             Provider provider = keystore.getProvider();
             String providerName = provider.getName();
             LogUtil.log("Provider name: " + providerName);
@@ -152,10 +162,6 @@ public class SSLUtil {
 
             String keystoreType = keystore.getType();
             LogUtil.log("Keystore type: " + keystoreType);
-
-            Certificate cert = keystore.getCertificate(alias);
-            String certType = cert.getType();
-            LogUtil.log("Cert type: " + certType);
 
         } catch (Exception e) {
             throw new IOException(e.getMessage());
