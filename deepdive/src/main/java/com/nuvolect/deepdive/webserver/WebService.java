@@ -74,7 +74,7 @@ public class WebService extends Service {
             okHttpClient = null;
 
             // Copy the mac made certificate to private_0
-            OmniUtil.copyAsset(m_ctx, "keystore.bks", new OmniFile( Omni.userVolumeId_0,"keystore.bks"));
+//            OmniUtil.copyAsset(m_ctx, "keystore.bks", new OmniFile( Omni.userVolumeId_0,"keystore.bks"));
 
             String VazanFilename = "VazanKeystoreRsaPlus.bks";
             byte[] cert = CertVazanPlus.makeCert();
@@ -86,10 +86,11 @@ public class WebService extends Service {
 //            SSLUtil.probeCert( VazanFilename, passPhrase);
 //            SSLUtil.probeCert( "keystore.bks", passPhrase);
 
-            sslServerSocketFactory = SSLUtil.configureSSLPath( VazanFilename, passPhrase);
+//            sslServerSocketFactory = SSLUtil.configureSSLPath( VazanFilename, passPhrase);
 
             // This one loads a working certificate from assets
 //            sslServerSocketFactory = SSLUtil.configureSSLAsset( keyFile, passPhrase);
+            sslServerSocketFactory = SSLUtil.configureSSLPath( "keystore.bks", passPhrase);
 
             if( HTTP_PROTOCOL.startsWith("https"))
                 server.makeSecure( sslServerSocketFactory, null);

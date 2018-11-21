@@ -9,6 +9,7 @@ package com.nuvolect.deepdive.webserver;
 
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.util.OmniUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
@@ -20,11 +21,13 @@ import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -45,7 +48,8 @@ public class SSLUtil {
             // Android does not have the default jks but uses bks
             KeyStore keystore = KeyStore.getInstance("BKS");
 
-            InputStream keystoreStream = new OmniFile("u0", path).getFileInputStream();
+            OmniFile loadFile = new OmniFile("u0", path);
+            InputStream keystoreStream = loadFile.getFileInputStream();
             keystore.load(keystoreStream, passphrase);
 
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
@@ -56,6 +60,31 @@ public class SSLUtil {
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
             sslServerSocketFactory = sslContext.getServerSocketFactory();
+
+            String[] defaultCiphersuites = sslServerSocketFactory.getDefaultCipherSuites();
+            String[] supportedCipherSuites = sslServerSocketFactory.getSupportedCipherSuites();
+
+            if( LogUtil.DEBUG){
+
+                SSLEngine sslEngine = sslContext.createSSLEngine();
+                String[] enabledCipherSuites = sslEngine.getEnabledCipherSuites();
+                String[] enabledProtocols = sslEngine.getEnabledProtocols();
+
+                String log = path;
+                String algorithm = trustManagerFactory.getAlgorithm();
+                Provider provider = trustManagerFactory.getProvider();
+
+                log += "\n\nalgorithm: "+algorithm;
+                log += "\n\nprovider: "+provider;
+                log += "\n\ndefaultCipherSuites: \n"+Arrays.toString(defaultCiphersuites);
+                log += "\n\nsupportedCipherSuites: \n"+Arrays.toString(supportedCipherSuites);
+                log += "\n\nenabledCipherSuites: \n"+Arrays.toString(enabledCipherSuites);
+                log += "\n\nenabledProtocols: \n"+Arrays.toString(enabledProtocols);
+
+                OmniUtil.writeFile(new OmniFile("u0", "SSL_Factory_"+loadFile.getName()+"_log.txt"), log);
+
+                LogUtil.log("SSL configure successful");
+            }
 
         } catch (Exception e) {
             throw new IOException(e.getMessage());
