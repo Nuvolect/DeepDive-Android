@@ -98,7 +98,7 @@ public class SearchRest {
                 }
                 case index:{
                     boolean forceReindex = false;
-                    if( params.containsKey("force_index")) {//TODO understand boolean compatibility with Sprint MVC REST
+                    if( params.containsKey("force_index")) {
                         forceReindex = Boolean.valueOf(params.get("force_index"));
                     }
                     JSONObject result = Index.index( volumeId, search_path, forceReindex);

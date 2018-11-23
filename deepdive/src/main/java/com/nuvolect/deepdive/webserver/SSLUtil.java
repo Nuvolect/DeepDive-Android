@@ -15,14 +15,17 @@ import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Key;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.PublicKey;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Enumeration;
 
 import javax.net.ssl.KeyManagerFactory;
@@ -37,7 +40,7 @@ import javax.net.ssl.TrustManagerFactory;
 public class SSLUtil {
 
     /**
-     * Creates an SSLSocketFactory for HTTPS.
+     * Creates an SSLSocketFactory for HTTPS loading certificate from path.
      *
      * Pass a KeyStore resource with your certificate and passphrase
      */
@@ -93,7 +96,7 @@ public class SSLUtil {
         return sslServerSocketFactory;
     }
     /**
-     * Creates an SSLSocketFactory for HTTPS.
+     * Creates an SSLSocketFactory for HTTPS loading certificate from assets.
      *
      * Pass a KeyStore resource with your certificate and passphrase
      */
@@ -138,13 +141,13 @@ public class SSLUtil {
             X509Certificate certificate = (X509Certificate) cf.generateCertificate(certstream);
 
             KeyStore keyStore = KeyStore.getInstance("BKS");
-            keyStore.load( null, null);// Initialize it
+            keyStore.load( null, passcode);// Initialize it
             keyStore.setCertificateEntry("mycert", certificate);
             keyStore.store( fos, passcode);
             fos.close();
 
-            int numEntries = keyStore.size();
-            Long size = outFile.length();
+//            int numEntries = keyStore.size();
+//            Long size = outFile.length();
 
             return true;
 
@@ -154,46 +157,90 @@ public class SSLUtil {
         return false;
     }
 
-    public static void probeCert(String certPath, char[] passphrase) throws IOException {
+    public static void probeCert(String certPath, char[] password) throws IOException {
 
         try {
             // Android does not have the default jks but uses bks
             KeyStore keystore = KeyStore.getInstance("BKS");
-//            InputStream keystoreStream = WebService.class.getResourceAsStream(certPath);
-            InputStream keystoreStream = new OmniFile("u0", certPath).getFileInputStream();
-            keystore.load(keystoreStream, passphrase);
+            OmniFile certFile = new OmniFile("u0", certPath);
+            InputStream keystoreStream = certFile.getFileInputStream();
+            keystore.load(keystoreStream, password);
+
+            String log = "Certificate filename: "+ certFile.getName();
+            log += "\ncert path: "+ certPath;
+            log += "\ncert password: "+ password;
 
             String alias = "";
             Enumeration<String> aliases = keystore.aliases();
             for (; aliases.hasMoreElements(); ) {
                 String s = aliases.nextElement();
-                LogUtil.log("Alias: " + s);
+                log += "\nAlias: "+s;
                 if (alias.isEmpty())
                     alias = s;
             }
-            Certificate cert = keystore.getCertificate(alias);
-            PublicKey pubKey = cert.getPublicKey();
-            String alg = pubKey.getAlgorithm();
-            LogUtil.log("Public key algorithm: " + alg);
-            String certType = cert.getType();
-            LogUtil.log("Public key type: " + certType);
-            String certString = cert.toString();
-            LogUtil.log("Cert string: " + certString);
+            log += probeKeystore( keystore, alias, password);
+            log += probeCert( keystore.getCertificate(alias));
 
-            Provider provider = keystore.getProvider();
-            String providerName = provider.getName();
-            LogUtil.log("Provider name: " + providerName);
-            String providerInfo = provider.getInfo();
-            LogUtil.log("Provider info: " + providerInfo);
-
-            Date creationDate = keystore.getCreationDate(alias);
-            LogUtil.log("Creation date: " + creationDate.toString());
-
-            String keystoreType = keystore.getType();
-            LogUtil.log("Keystore type: " + keystoreType);
+            OmniUtil.writeFile( new OmniFile("u0", certFile.getName()+"_probe.txt"), log);
 
         } catch (Exception e) {
             throw new IOException(e.getMessage());
         }
+    }
+
+    private static String probeKeystore(KeyStore keystore, String alias, char[] password) {
+
+        String log = "\n";
+        try {
+            log += "\nCreation date: " + keystore.getCreationDate(alias).toString();
+            log += "\nKeystore type: " + keystore.getType();
+
+            Provider provider = keystore.getProvider();
+            log += "\nProvider name: " + provider.getName();
+            log += "\nProvider info: " + provider.getInfo();
+
+            Key key = keystore.getKey(alias, password);
+            if( key != null){
+                log += "\nKey algorithm: " + key.getAlgorithm();
+                log += "\nKey format: " + key.getFormat();
+                log += "\nKey toString: " + key.toString();
+            }else
+                log += "\nKey  is null";
+
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+            log += e.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            log += e.toString();
+        } catch (UnrecoverableKeyException e) {
+            e.printStackTrace();
+            log += e.toString();
+        }
+
+        return log;
+    }
+
+    private static String probeCert(Certificate cert) {
+
+        String log = "\n";
+
+        PublicKey pubKey = cert.getPublicKey();
+
+        try {
+            log += "\nPublic key algorithm: " + pubKey.getAlgorithm();
+            log += "\nPublic key format: " + pubKey.getFormat();
+            log += "\nPublic key hashcode: " + String.valueOf(pubKey.hashCode());
+            log += "\nPublic key toString: " + pubKey.toString();
+
+            log += "\ncert type: " + cert.getType();
+            log += "\ncert hashcode: " + String.valueOf(cert.hashCode());
+            log += "\ncert toString: " + cert.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            log += e.toString();
+        }
+
+        return log;
     }
 }

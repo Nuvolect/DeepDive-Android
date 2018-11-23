@@ -6,9 +6,6 @@
  */
 
 package com.nuvolect.deepdive.webserver;
-//
-//TODO create class description
-//
 
 import android.content.Context;
 
@@ -25,6 +22,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Map;
 
+/**
+ * Handle RESTful services relating to the device.
+ */
 public class DeviceRest {
 
     private enum CMD_ID {

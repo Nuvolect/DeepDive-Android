@@ -7,6 +7,8 @@
 
 package com.nuvolect.deepdive.webserver;
 
+import com.nuvolect.deepdive.util.OmniFile;
+
 import org.spongycastle.asn1.x500.X500Name;
 import org.spongycastle.asn1.x500.X500NameBuilder;
 import org.spongycastle.asn1.x500.style.BCStyle;
@@ -24,10 +26,13 @@ import org.spongycastle.operator.ContentSigner;
 import org.spongycastle.operator.OperatorCreationException;
 import org.spongycastle.operator.jcajce.JcaContentSignerBuilder;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.SecureRandom;
@@ -37,6 +42,9 @@ import java.security.cert.X509Certificate;
 import java.util.Date;
 
 /**
+ * Generate a self-signed certificate and store it in a keystore.
+ * The keystore password is secured in Android's keystore.
+ *
  * Here's a complete self-signed ECDSA certificate generator that creates certificates
  * usable in TLS connections on both client and server side.
  * It was tested with BouncyCastle 1.57. Similar code can be used to create RSA certificates.
@@ -44,9 +52,20 @@ import java.util.Date;
  * https://stackoverflow.com/questions/29852290/self-signed-x509-certificate-with-bouncy-castle-in-java
  * Robert Vazan, https://stackoverflow.com/users/1981276/robert-va%C5%BEan
  */
-public class CertVazanPlus {
+public class KeystoreVazen {
 
-    public static byte[] makeCert(){
+    //SPRINT refactor storePassword to use a random password in Android Keystore
+    //SPRINT allow keystore storage in private app storage or in OMNIFile path
+
+    public static boolean make(String keystoreFilepath, char[] storePassword, boolean recreate){
+
+        boolean success = true;
+        OmniFile keystoreFile = new OmniFile("u0", keystoreFilepath);
+
+        // If the keystore already exists and recreate not requested, nothing to do.
+        boolean skipOut = ! keystoreFile.exists();
+        if( skipOut && ! recreate)
+            return success;
 
         try {
             SecureRandom random = new SecureRandom();
@@ -54,15 +73,14 @@ public class CertVazanPlus {
             Security.addProvider(bcProvider);
 
             // create keypair
-//            KeyPairGenerator keypairGen = KeyPairGenerator.getInstance("EC");
             KeyPairGenerator keypairGen = KeyPairGenerator.getInstance("RSA");// RSA fails
             keypairGen.initialize(4096);
             KeyPair keypair = keypairGen.generateKeyPair();
 
             // yesterday
             Date validityBeginDate = new Date(System.currentTimeMillis() - 24L * 60 * 60 * 1000);
-            // in 20 years
-            Date validityEndDate = new Date(System.currentTimeMillis() + 10L * 365 * 24 * 60 * 60 * 1000);
+            // in 25 years
+            Date validityEndDate = new Date(System.currentTimeMillis() + 25L * 365 * 24 * 60 * 60 * 1000);
 
             // fill in certificate fields
             X500Name subject = new X500NameBuilder(BCStyle.INSTANCE)
@@ -93,10 +111,10 @@ public class CertVazanPlus {
                     constraints.getEncoded());
             KeyUsage usage = new KeyUsage(
                     KeyUsage.digitalSignature |
-                    KeyUsage.nonRepudiation |
-                    KeyUsage.keyCertSign |
-                    KeyUsage.keyEncipherment |
-                    KeyUsage.dataEncipherment
+                            KeyUsage.nonRepudiation |
+                            KeyUsage.keyCertSign |
+                            KeyUsage.keyEncipherment |
+                            KeyUsage.dataEncipherment
             );
             certificate.addExtension(Extension.keyUsage, false, usage.getEncoded());
             ExtendedKeyUsage usageEx = new ExtendedKeyUsage(new KeyPurposeId[] {
@@ -108,41 +126,47 @@ public class CertVazanPlus {
                     false,
                     usageEx.getEncoded());
 
-            X509Certificate[] chain = new X509Certificate[1];
-//            chain[0] = certificate.;
-
-//            KeyStore.PrivateKeyEntry privateKeyEntry = new KeyStore.PrivateKeyEntry(keypair.getPrivate(), chain);
-//            store.setEntry("CA-Key", privateKeyEntry, new KeyStore.PasswordProtection(sstorePassword.toCharArray()));
-
 
             // build BouncyCastle certificate
-//            ContentSigner signer = new JcaContentSignerBuilder("SHA256withECDSA")// Key is 440 bytes
-//            ContentSigner signer = new JcaContentSignerBuilder("SHA256/ECDSA")
-//            ContentSigner signer = new JcaContentSignerBuilder("SHA1withRSA")// Key is 440 bytes
-            ContentSigner signer = new JcaContentSignerBuilder("SHA256withRSA")// throws OperatorCreationException
+            ContentSigner signer = new JcaContentSignerBuilder("SHA256withRSA")
                     .build(keypair.getPrivate());
             X509CertificateHolder holder = certificate.build(signer);
 
             // convert to JRE certificate
             JcaX509CertificateConverter converter = new JcaX509CertificateConverter();
             converter.setProvider(new BouncyCastleProvider());
-            X509Certificate x509 = converter.getCertificate(holder);
+            X509Certificate x509Certificate = converter.getCertificate(holder);
 
-            // serialize in DER format
-            byte[] serialized = x509.getEncoded();
+            KeyStore keyStore = KeyStore.getInstance("BKS");
+            keyStore.load( null, storePassword);// Initialize it
+            keyStore.setCertificateEntry("deepdive_cert", x509Certificate);
 
-//            CertificateUtil.write( serialized, path);
-            return serialized;
-            
+            X509Certificate[] chain = new X509Certificate[1];
+            chain[0] = x509Certificate;
+            KeyStore.PrivateKeyEntry privateKeyEntry = new KeyStore.PrivateKeyEntry(keypair.getPrivate(), chain);
+            keyStore.setEntry("CA-Key", privateKeyEntry, new KeyStore.PasswordProtection(storePassword));
+
+            FileOutputStream fos = new FileOutputStream( keystoreFile.getStdFile());
+            keyStore.store( fos, storePassword);
+            fos.close();
+
         } catch (IOException e) {
             e.printStackTrace();
+            success = false;
         } catch (OperatorCreationException e) {
             e.printStackTrace();
+            success = false;
         } catch (CertificateException e) {
             e.printStackTrace();
+            success = false;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+            success = false;
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+            success = false;
         }
-        return new byte[0];
+        return success;
     }
 }
+

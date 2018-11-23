@@ -6,9 +6,6 @@
  */
 
 package com.nuvolect.deepdive.util;
-//
-//TODO create class description
-//
 
 import android.content.Context;
 import android.security.KeyPairGeneratorSpec;
@@ -44,6 +41,19 @@ import javax.crypto.CipherOutputStream;
 import javax.security.auth.x500.X500Principal;
 
 
+/**
+ * Methods and dispatch for using Android's keystore system.
+ *
+ * From the docs:
+ * The Android Keystore system lets you store cryptographic keys in a container to make it
+ * more difficult to extract from the device. Once keys are in the keystore, they can be used
+ * for cryptographic operations with the key material remaining non-exportable. Moreover,
+ * it offers facilities to restrict when and how keys can be used, such as requiring
+ * user authentication for key use or restricting keys to be used only in certain
+ * cryptographic modes.
+ *
+ * https://developer.android.com/training/articles/keystore
+ */
 public class KeystoreUtil {
 
     private static final String CIPHER_ALGORITHM = "RSA/ECB/PKCS1Padding";
@@ -125,6 +135,7 @@ public class KeystoreUtil {
     /**
      * Test if the Android system lockscreen is enabled by creating a keystore item.
      * Creating the item will fail if the lockscreen is not enabled.
+     *
      * @param ctx
      * @return
      */
@@ -204,6 +215,13 @@ public class KeystoreUtil {
         return result;
     }
 
+    /**
+     * Use a private key indexed by alias to encrypt plain text.
+     *
+     * @param key_alias
+     * @param plaintext
+     * @return
+     */
     public static JSONObject encrypt(String key_alias, String plaintext){
 
         String cipherTextB64 = "";
@@ -252,6 +270,13 @@ public class KeystoreUtil {
         return result;
     }
 
+    /**
+     * Use a private key indexed by an alias to decrypt text.
+     *
+     * @param key_alias
+     * @param cipherTextB64
+     * @return
+     */
     public static JSONObject decrypt(String key_alias, String cipherTextB64){
 
         String cleartext = "", privateKeyEntryString="";
@@ -309,6 +334,13 @@ public class KeystoreUtil {
         return result;
     }
 
+    /**
+     * Delete a specific key indexed by alias.
+     *
+     * @param ctx
+     * @param alias
+     * @return
+     */
     public static JSONObject deleteKey(Context ctx, String alias){
 
         JSONObject result = new JSONObject();
@@ -344,6 +376,7 @@ public class KeystoreUtil {
 
     /**
      * Get the names of all keys created by our app
+     *
      * @return
      */
     public static JSONArray getKeys() {
@@ -381,6 +414,7 @@ public class KeystoreUtil {
 
     /**
      * Create a public/private key if it does not already exist.
+     *
      * @param ctx
      * @param keyAlias
      * @return boolean: true if the key is created.

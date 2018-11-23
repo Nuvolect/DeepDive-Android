@@ -16,9 +16,6 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.Omni;
-import com.nuvolect.deepdive.util.OmniFile;
-import com.nuvolect.deepdive.util.OmniUtil;
 import com.nuvolect.deepdive.webserver.connector.ServerInit;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -45,12 +42,12 @@ public class WebService extends Service {
     private static OkHttpClient okHttpClient = null;
 
     private static String keyFile = "/assets/keystore.bks";
-    private static char[] passPhrase = "27@NDMQu0cLY".toCharArray();// TODO update passphrase
+    private static char[] passPhrase = "27@NDMQu0cLY".toCharArray();//SPRINT remove static passPhrase
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+//SPRINT cleanup test code, create a SecurityCertificates.md file with extensive notes
         m_ctx = getApplicationContext();
 
         /**
@@ -76,21 +73,20 @@ public class WebService extends Service {
             // Copy the mac made certificate to private_0
 //            OmniUtil.copyAsset(m_ctx, "keystore.bks", new OmniFile( Omni.userVolumeId_0,"keystore.bks"));
 
-            String VazanFilename = "VazanKeystoreRsaPlus.bks";
-            byte[] cert = CertVazanPlus.makeCert();
-            OmniFile certFile = new OmniFile("u0", VazanFilename);
-            SSLUtil.storeCertInKeystore( cert, passPhrase, certFile);
+            // Create a self signed certificate and put it in a BKS keystore
+            String VazanFilename = "VazanKeystore.bks";
+
+            KeystoreVazen.make( VazanFilename, passPhrase, true);
 //
-//            CertificateAlpha.makeCertificate(new OmniFile("u0", "AlphaKeystore.bks").getAbsolutePath());
+            SSLUtil.probeCert( VazanFilename, passPhrase);
+            SSLUtil.probeCert( "keystore.bks", passPhrase);
 
-//            SSLUtil.probeCert( VazanFilename, passPhrase);
-//            SSLUtil.probeCert( "keystore.bks", passPhrase);
-
-//            sslServerSocketFactory = SSLUtil.configureSSLPath( VazanFilename, passPhrase);
+            sslServerSocketFactory = SSLUtil.configureSSLPath( VazanFilename, passPhrase);
 
             // This one loads a working certificate from assets
 //            sslServerSocketFactory = SSLUtil.configureSSLAsset( keyFile, passPhrase);
-            sslServerSocketFactory = SSLUtil.configureSSLPath( "keystore.bks", passPhrase);
+            // This one loads a working certificate from path
+//            sslServerSocketFactory = SSLUtil.configureSSLPath( "keystore.bks", passPhrase);
 
             if( HTTP_PROTOCOL.startsWith("https"))
                 server.makeSecure( sslServerSocketFactory, null);
