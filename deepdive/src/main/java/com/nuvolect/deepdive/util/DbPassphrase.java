@@ -16,7 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.nuvolect.deepdive.util.Passphrase.HEX;
-import static com.nuvolect.deepdive.util.Passphrase.generateRandomString;
+import static com.nuvolect.deepdive.util.Passphrase.generateRandomPassword;
 
 /**
  * The passphrase is encrypted/decrypted with a public/private key
@@ -37,6 +37,8 @@ public class DbPassphrase {
      */
     public static String getDbPassphrase(Context ctx) {
 
+        //FIXME use a random password and store it in Android keystore
+
         String clearPassphrase = "";
         boolean success = false;
         String cryptPassphrase = Persist.getEncryptedPassphrase(ctx);
@@ -44,7 +46,8 @@ public class DbPassphrase {
         if( cryptPassphrase.equals(CConst.NO_PASSPHRASE)){
 
             // First time, create a random passcode, encrypt and save it
-            clearPassphrase = generateRandomString( 32, HEX);
+            //FIXME use char[] for password, zero it when complete
+            clearPassphrase = generateRandomPassword( 32, HEX).toString();
             success = setDbPassphrase(ctx, clearPassphrase);
 
             assert success;
@@ -57,7 +60,7 @@ public class DbPassphrase {
              * If that fails attempt AES symmetric decryption.
              */
             try {
-                JSONObject jsonObject = KeystoreUtil.decrypt(KEY_ALIAS, cryptPassphrase);
+                JSONObject jsonObject = KeystoreUtil.decrypt(KEY_ALIAS, cryptPassphrase, true);
                 if( jsonObject.getString("success").contentEquals("true")){
 
                     clearPassphrase = jsonObject.getString( CLEARTEXT );
@@ -96,7 +99,7 @@ public class DbPassphrase {
         String cryptPassphrase="";
         try {
 
-            JSONObject jsonObject = KeystoreUtil.encrypt(KEY_ALIAS, clearPassphrase );
+            JSONObject jsonObject = KeystoreUtil.encrypt(KEY_ALIAS, clearPassphrase.getBytes("UTF-8"), true);
             if( jsonObject.getString("success").contentEquals("true")){
 
                 cryptPassphrase = jsonObject.getString(CIPHERTEXT);

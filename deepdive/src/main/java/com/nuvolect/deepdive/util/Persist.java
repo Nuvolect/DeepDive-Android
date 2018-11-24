@@ -15,6 +15,17 @@ import com.nuvolect.deepdive.main.CConst;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
+
+import javax.crypto.NoSuchPaddingException;
+
 public class Persist {
 
     private static final String PERSIST_NAME           = "dd_persist";
@@ -112,6 +123,55 @@ public class Persist {
         }
 
         return true;
+    }
+
+    /**
+     * Encrypt clear char[] data with an app wide private key, then persist the encrypted results.
+     *
+     * @param ctx
+     * @param persistKey
+     * @param clearChar
+     * @throws CertificateException
+     * @throws InvalidKeyException
+     * @throws NoSuchAlgorithmException
+     * @throws KeyStoreException
+     * @throws NoSuchPaddingException
+     * @throws UnrecoverableEntryException
+     * @throws IOException
+     */
+    public static void putEncrypt(Context ctx, String persistKey, char[] clearChar)
+            throws CertificateException, InvalidKeyException, NoSuchAlgorithmException,
+            KeyStoreException, NoSuchPaddingException, UnrecoverableEntryException, IOException,
+            NoSuchProviderException, InvalidAlgorithmParameterException {
+
+        byte[] bytes = KeystoreUtil.encrypt( ctx, CConst.APP_KEY_ALIAS, Passphrase.toBytes( clearChar));
+        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
+        pref.edit().putString(persistKey, new String( bytes, "UTF-8")).commit();
+    }
+
+
+    //FIXME make sure terminology is correct on "private key"
+    /**
+     * Read encrypted data, decrypt it with an app wide private key and return clear results.
+     *
+     * @param ctx
+     * @return
+     * @throws CertificateException
+     * @throws InvalidKeyException
+     * @throws NoSuchAlgorithmException
+     * @throws KeyStoreException
+     * @throws NoSuchPaddingException
+     * @throws UnrecoverableEntryException
+     * @throws IOException
+     */
+    public static char[] getDecrypt(Context ctx, String persistKey)
+            throws CertificateException, InvalidKeyException, NoSuchAlgorithmException,
+            KeyStoreException, NoSuchPaddingException, UnrecoverableEntryException, IOException {
+
+        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
+        byte[] encryptBytes = pref.getString( persistKey, CConst.NO_PASSPHRASE).getBytes();
+        byte[] clearBytes = KeystoreUtil.decrypt( CConst.APP_KEY_ALIAS, encryptBytes);
+        return Passphrase.toChars( clearBytes);
     }
 
     public static void setEncryptedPassphrase(Context ctx, String passphrase){

@@ -13,6 +13,12 @@ import com.nuvolect.deepdive.license.LicenseUtil;
 import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.survey.DeviceSurvey;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+
 public class Passphrase {
 
     public static int ALPHA_UPPER = 1;
@@ -28,9 +34,10 @@ public class Passphrase {
     public static final String PASSWORD_GEN_MODE    = "password_gen_mode";
 
 
-    public static String generateRandomString(int length, int mode) {
+    public static char[] generateRandomPassword(int length, int mode) {
 
-        StringBuffer buffer = new StringBuffer();
+        //FIXME revisit requirements to include at least 1 of each char type
+
         String characters = "";
 
         if( (mode & ALPHA_UPPER) > 0)
@@ -49,11 +56,13 @@ public class Passphrase {
 
         int charactersLength = characters.length();
 
+        char[] ranChars = new char[ length];
+
         for (int i = 0; i < length; i++) {
             double index = Math.random() * charactersLength;
-            buffer.append(characters.charAt((int) index));
+            ranChars[i] = characters.charAt((int) index);
         }
-        return buffer.toString();
+        return ranChars;
     }
 
     /** Decrypt the passphrase and return it as a string */
@@ -65,7 +74,8 @@ public class Passphrase {
         if( cryptPassphrase.equals(CConst.DEFAULT_PASSPHRASE)){
 
             // First time, create a random passcode, encrypt and save it
-            clearPassphrase = generateRandomString( 32, HEX);
+            //FIXME use char[], zero it when complete
+            clearPassphrase = generateRandomPassword( 32, HEX).toString();
             boolean success = putDbPassphrase(ctx, clearPassphrase);
 
             assert success;
@@ -104,5 +114,25 @@ public class Passphrase {
         }
 
         return success;
+    }
+
+    public static byte[] toBytes(char[] chars) {
+        CharBuffer charBuffer = CharBuffer.wrap(chars);
+        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
+        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
+                byteBuffer.position(), byteBuffer.limit());
+        Arrays.fill(byteBuffer.array(), (byte) 0); // clear sensitive data
+        return bytes;
+    }
+
+    public static char[] toChars(byte[] bytes){
+
+        char chars[] = new char[0];
+        try {
+            chars = new String( bytes, "UTF-8").toCharArray();
+        } catch (UnsupportedEncodingException e) {
+            LogUtil.log(" Exception in toChars");
+        }
+        return chars;
     }
 }

@@ -548,8 +548,9 @@ public class CrypServer extends NanoHTTPD{
      */
     private static void initSecTok(Context ctx) {
 
+        //FIXME use char[] and zero when complete
         setSecTok(m_ctx, CrypUtil.get(ctx,
-                CConst.SEC_TOK, Passphrase.generateRandomString(32, Passphrase.SYSTEM_MODE)));
+                CConst.SEC_TOK, Passphrase.generateRandomPassword(32, Passphrase.SYSTEM_MODE).toString()));
     }
 
     /**

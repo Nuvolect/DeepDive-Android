@@ -13,6 +13,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import java.io.UnsupportedEncodingException;
+
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -24,7 +26,15 @@ import static org.hamcrest.core.IsNot.not;
 public class KeystoreUtilTest {
 
     private String testKeyAlias = "testKeyAlias";
-    private String clearTextToEncrypt = "clear text to encrypt";
+    private byte[] clearTextToEncrypt;
+
+    {
+        try {
+            clearTextToEncrypt = "clear text to encrypt".getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void createKey() throws Exception {
@@ -33,7 +43,7 @@ public class KeystoreUtilTest {
         boolean keyCreated = KeystoreUtil.createKeyNotExists( ctx, this.testKeyAlias);
         assertThat( keyCreated, is( true ));
 
-        KeystoreUtil.deleteKey( ctx, this.testKeyAlias);
+        KeystoreUtil.deleteKey( ctx, this.testKeyAlias, true);
     }
 
     @Test
@@ -41,19 +51,19 @@ public class KeystoreUtilTest {
 
         KeystoreUtil.createKeyNotExists( getTargetContext(), this.testKeyAlias);
 
-        JSONObject cipherObj = KeystoreUtil.encrypt( this.testKeyAlias, this.clearTextToEncrypt);
+        JSONObject cipherObj = KeystoreUtil.encrypt( this.testKeyAlias, this.clearTextToEncrypt, true);
         assertThat( cipherObj.getString("error"), is(""));
         assertThat( cipherObj.getString("success"), is("true"));
         assertThat( cipherObj.getString("ciphertext"), not(""));
-        assertThat( cipherObj.getString("ciphertext"), not(this.clearTextToEncrypt));
+        assertThat( cipherObj.getString("ciphertext"), not(this.clearTextToEncrypt.toString()));
         assertThat( cipherObj.getString("ciphertext"), not(this.testKeyAlias));
 
-        JSONObject clearTextObj = KeystoreUtil.decrypt( this.testKeyAlias, cipherObj.getString("ciphertext"));
+        JSONObject clearTextObj = KeystoreUtil.decrypt( this.testKeyAlias, cipherObj.getString("ciphertext"), true);
         assertThat( clearTextObj.getString("error"), is(""));
         assertThat( clearTextObj.getString("success"), is("true"));
-        assertThat( clearTextObj.getString("cleartext"), is( this.clearTextToEncrypt));
+        assertThat( clearTextObj.getString("cleartext"), is( this.clearTextToEncrypt.toString()));
 
-        KeystoreUtil.deleteKey( getTargetContext(), this.testKeyAlias);
+        KeystoreUtil.deleteKey( getTargetContext(), this.testKeyAlias, true);
     }
 
     @Test
@@ -63,12 +73,12 @@ public class KeystoreUtilTest {
         boolean keyCreated = KeystoreUtil.createKeyNotExists( ctx, this.testKeyAlias);
         assertThat( keyCreated, is( true ));
 
-        JSONObject obj = KeystoreUtil.deleteKey( getTargetContext(), this.testKeyAlias);
+        JSONObject obj = KeystoreUtil.deleteKey( getTargetContext(), this.testKeyAlias, true);
         assertThat( obj.getString("error"), is(""));
 
 
         // Try to delete it a second time, should be gone
-        obj = KeystoreUtil.deleteKey( getTargetContext(), this.testKeyAlias);
+        obj = KeystoreUtil.deleteKey( getTargetContext(), this.testKeyAlias, true);
         assertThat( obj.getString("error"), not(""));
 
         boolean notFound = obj.getString("error").contains("not found");
@@ -109,9 +119,9 @@ public class KeystoreUtilTest {
         assertThat( indexKey1, not( indexKey3));
         assertThat( indexKey2, not( indexKey3));
 
-        KeystoreUtil.deleteKey( getTargetContext(), "jibberishKey1");
-        KeystoreUtil.deleteKey( getTargetContext(), "jibberishKey2");
-        KeystoreUtil.deleteKey( getTargetContext(), "jibberishKey3");
+        KeystoreUtil.deleteKey( getTargetContext(), "jibberishKey1", true);
+        KeystoreUtil.deleteKey( getTargetContext(), "jibberishKey2", true);
+        KeystoreUtil.deleteKey( getTargetContext(), "jibberishKey3", true);
 
         indexKey1 = -1; indexKey2 = -1; indexKey3 = -1;
         keys = KeystoreUtil.getKeys();

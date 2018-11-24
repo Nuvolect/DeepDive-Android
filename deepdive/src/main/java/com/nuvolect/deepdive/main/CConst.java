@@ -11,6 +11,7 @@ import com.nuvolect.deepdive.R;
 
 public class CConst {
 
+    public static final String APP_KEY_ALIAS        = "app_key_alias";
     public static final String APP_SIGNATURE        = "com.nuvolect.deepdive";
     public static final String APPS_PAGE            = "/apps.htm";
     public static final String ASSET_DATA_FOLDER    = "data/";
@@ -33,6 +34,7 @@ public class CConst {
     public static final String NAME                 = "name";
     public static final String NO_PASSPHRASE        = "no-passphrase";
     public static final String OK                   = "ok";
+    public static final String PASSWORD_KEY_ALIAS   = "password_key_alias";
     public static final String PORT                 = "port";
     public static final String PORT_NUMBER          = "port_number";
     public static final String RANDOM_EDGE          = "h0!U9#Wfnx";// Validates security certificate
@@ -40,6 +42,7 @@ public class CConst {
     public static final String ROOT                 = "/";
     public static final String SEARCH_MANAGER_PAGE  = "/search_manager.htm";
     public static final String SEC_TOK              = "sec_tok";
+    public static final String SELFSIGNED_KS_KEY    = "selfsigned_ks_key";
     public static final String SHOW_TIPS            = "show_tips";
     public static final String SLASH                = "/";
     public static final String STRING32             = "01234567890123456789012345678901";

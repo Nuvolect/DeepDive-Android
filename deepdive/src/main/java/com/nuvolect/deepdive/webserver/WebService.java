@@ -76,16 +76,16 @@ public class WebService extends Service {
             // Create a self signed certificate and put it in a BKS keystore
             String VazanFilename = "VazanKeystore.bks";
 
-            KeystoreVazen.make( VazanFilename, passPhrase, false);
+            KeystoreVazen.makeKeystore( m_ctx, VazanFilename, true);
 //
-            if( LogUtil.DEBUG){
+//            if( LogUtil.DEBUG){
+//
+//                //SPRINT why do SSL comms fail with release Build Variant
+//                SSLUtil.probeCert( VazanFilename, passPhrase);
+//                SSLUtil.probeCert( "keystore.bks", passPhrase);
+//            }
 
-                //TODO why do SSL comms fail with release Build Variant
-                SSLUtil.probeCert( VazanFilename, passPhrase);
-                SSLUtil.probeCert( "keystore.bks", passPhrase);
-            }
-
-            sslServerSocketFactory = SSLUtil.configureSSLPath( VazanFilename, passPhrase);
+            sslServerSocketFactory = SSLUtil.configureSSLPath( m_ctx, VazanFilename);
 
             // This one loads a working certificate from assets
 //            sslServerSocketFactory = SSLUtil.configureSSLAsset( keyFile, passPhrase);

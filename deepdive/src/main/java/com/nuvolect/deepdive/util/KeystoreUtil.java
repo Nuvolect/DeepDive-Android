@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -38,6 +39,7 @@ import java.util.Map;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
+import javax.crypto.NoSuchPaddingException;
 import javax.security.auth.x500.X500Principal;
 
 
@@ -61,9 +63,6 @@ public class KeystoreUtil {
     private static final int BASE64 = Base64.URL_SAFE;
     private static SecureRandom random = new SecureRandom();
 
-    private static String error = "";
-    private static JSONObject result;
-
     private enum TEST_ID {
         NIL,
         create_key,
@@ -75,6 +74,8 @@ public class KeystoreUtil {
     }
     public static JSONObject dispatch(Context ctx, Map<String, String> params) {
 
+        String error = "";
+        JSONObject result;
         TEST_ID test_id = null;
         try {
             test_id = TEST_ID.valueOf(params.get("test_id"));
@@ -89,26 +90,26 @@ public class KeystoreUtil {
 
                 case create_key:{
 
-                    result = KeystoreUtil.createKey( ctx, params.get("key_alias"));
+                    result = KeystoreUtil.createKey( ctx, params.get("key_alias"), true);
                     break;
                 }
                 case delete_key:{
 
-                    result = KeystoreUtil.deleteKey( ctx, params.get("key_alias"));
+                    result = KeystoreUtil.deleteKey( ctx, params.get("key_alias"), true);
                     break;
                 }
                 case encrypt:{
 
                     String key_alias = params.get("key_alias");
                     String clear_text = params.get("cleartext");
-                    result = KeystoreUtil.encrypt( key_alias, clear_text);
+                    result = KeystoreUtil.encrypt( key_alias, clear_text.getBytes("UTF-8"), true);
                     break;
                 }
                 case decrypt:{
 
                     String key_alias = params.get("key_alias");
                     String cipher_text_b64 = params.get("ciphertext");
-                    result = KeystoreUtil.decrypt( key_alias, cipher_text_b64);
+                    result = KeystoreUtil.decrypt( key_alias, cipher_text_b64, true);
                     break;
                 }
                 case get_keys:{
@@ -144,7 +145,7 @@ public class KeystoreUtil {
         String LOCKSCREEN_TEST = "lockscreen_test";
         String lockscreenEnabled  = "disabled";
 
-        JSONObject result = createKey(ctx, LOCKSCREEN_TEST);
+        JSONObject result = createKey(ctx, LOCKSCREEN_TEST, true);
         try {
 
             if( result.getString("error").contains("Secure lock screen must be enabled")){
@@ -161,54 +162,94 @@ public class KeystoreUtil {
         }
         return result;
     }
+
+    /**
+     * Create a public/private key in the Andoid keystore. If an existing key exists, overwrite it.
+     *
+     * @param ctx
+     * @param key_alias
+     * @throws NoSuchProviderException
+     * @throws NoSuchAlgorithmException
+     * @throws KeyStoreException
+     * @throws CertificateException
+     * @throws IOException
+     * @throws UnrecoverableEntryException
+     * @throws InvalidAlgorithmParameterException
+     */
+    public static void createKey(Context ctx, String key_alias ) throws NoSuchProviderException,
+            NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException,
+            UnrecoverableEntryException, InvalidAlgorithmParameterException {
+
+        deleteKey( key_alias);// Delete existing key, if any
+
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        end.add(Calendar.YEAR, 100);
+
+        KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(ctx)
+                .setAlias(key_alias)
+                .setSubject(new X500Principal("CN=DeepDive, O=Nuvolect"))
+                .setSerialNumber(BigInteger.ONE)
+                .setStartDate(start.getTime())
+                .setEndDate(end.getTime())
+                .build();
+
+        KeyPairGenerator generator = KeyPairGenerator.getInstance( "RSA","AndroidKeyStore");
+        generator.initialize(spec);
+        KeyPair keyPair = generator.generateKeyPair();
+    }
+
     /**
      * Creates a public and private key and stores it using the Android Key Store, so that only
      * this application will be able to access the keys.
      */
-    public static JSONObject createKey(Context ctx, String key_alias) {
+    public static JSONObject createKey(Context ctx, String key_alias, boolean verbose) {
 
         String public_key = "", privateKeyEntryString = "";
         String error = "";
         JSONObject result = new JSONObject();
 
-            try {
-                Calendar start = Calendar.getInstance();
-                Calendar end = Calendar.getInstance();
-                end.add(Calendar.YEAR, 100);
+        try {
+            Calendar start = Calendar.getInstance();
+            Calendar end = Calendar.getInstance();
+            end.add(Calendar.YEAR, 100);
 
-                KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(ctx)
-                        .setAlias(key_alias)
-                        .setSubject(new X500Principal("CN=DeepDive, O=Nuvolect"))
-                        .setSerialNumber(BigInteger.ONE)
-                        .setStartDate(start.getTime())
-                        .setEndDate(end.getTime())
-                        .build();
+            KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(ctx)
+                    .setAlias(key_alias)
+                    .setSubject(new X500Principal("CN=DeepDive, O=Nuvolect"))
+                    .setSerialNumber(BigInteger.ONE)
+                    .setStartDate(start.getTime())
+                    .setEndDate(end.getTime())
+                    .build();
 
-                KeyPairGenerator generator = KeyPairGenerator.getInstance( "RSA","AndroidKeyStore");
-                generator.initialize(spec);
+            KeyPairGenerator generator = KeyPairGenerator.getInstance( "RSA","AndroidKeyStore");
+            generator.initialize(spec);
 
-                KeyPair keyPair = generator.generateKeyPair();
-                public_key = keyPair.getPublic().toString();
+            KeyPair keyPair = generator.generateKeyPair();
+            public_key = keyPair.getPublic().toString();
 
-                // Return details of the private key
-                KeyStore ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
-                ks.load(null);
-                KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
-                privateKeyEntryString = privateKeyEntry.toString();
+            // Return details of the private key
+            KeyStore ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
+            ks.load(null);
+            KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
+            privateKeyEntryString = privateKeyEntry.toString();
 
-            } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException |
-                    UnrecoverableEntryException | KeyStoreException | CertificateException |
-                    IOException | NoSuchProviderException  e) {
+        } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException |
+                UnrecoverableEntryException | KeyStoreException | CertificateException |
+                IOException | NoSuchProviderException  e) {
 
-                error = e.getMessage();
-                LogUtil.logException( KeystoreUtil.class, e);
-            }
+            error = e.getMessage();
+            LogUtil.logException( KeystoreUtil.class, e);
+        }
 
         try {
-            result.put("public_key", public_key);
-            result.put("private_key_entry", privateKeyEntryString);
-            result.put("error", error);
+            if( verbose){
+                result.put("public_key", public_key);
+                result.put("private_key_entry", privateKeyEntryString);
+                result.put("error", error);
+            }
             result.put("success", error.length()==0?"true":"false");
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -219,10 +260,24 @@ public class KeystoreUtil {
      * Use a private key indexed by alias to encrypt plain text.
      *
      * @param key_alias
-     * @param plaintext
+     * @param clearChars, clear text char[]
+     * @param verbose
+     */
+    public static JSONObject encrypt(String key_alias, char[] clearChars, boolean verbose) {
+
+        byte[] clearBytes = Passphrase.toBytes(clearChars);
+        return encrypt( key_alias, clearBytes, verbose);
+    }
+
+    /**
+     * Use a private key indexed by alias to encrypt plain text.
+     * Convert String to byte[] using .getBytes("UTF-8")
+     *
+     * @param key_alias
+     * @param clearBytes clear text byte[]
      * @return
      */
-    public static JSONObject encrypt(String key_alias, String plaintext){
+    public static JSONObject encrypt(String key_alias, byte[] clearBytes, boolean verbose){
 
         String cipherTextB64 = "";
         JSONObject result = new JSONObject();
@@ -242,7 +297,7 @@ public class KeystoreUtil {
 
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 CipherOutputStream cipherOutputStream = new CipherOutputStream( outputStream, rsaCipher);
-                cipherOutputStream.write(plaintext.getBytes("UTF-8"));
+                cipherOutputStream.write(clearBytes);
                 cipherOutputStream.close();
 
                 byte [] cipherBytes = outputStream.toByteArray();
@@ -259,9 +314,12 @@ public class KeystoreUtil {
         }
 
         try {
-            result.put("ciphertext", cipherTextB64);
+            if( verbose){
+
+                result.put("ciphertext", cipherTextB64);
+                result.put("error", error);
+            }
             result.put("success", error.length()==0?"true":"false");
-            result.put("error", error);
 
         } catch (JSONException e) {
             LogUtil.logException( KeystoreUtil.class, e);
@@ -271,13 +329,103 @@ public class KeystoreUtil {
     }
 
     /**
+     * Using the given Android keystore key, encrypt clear bytes and return encrypted bytes.
+     *
+     * @param key_alias
+     * @param clearBytes
+     * @return
+     * @throws KeyStoreException
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     * @throws UnrecoverableEntryException
+     * @throws NoSuchPaddingException
+     * @throws InvalidKeyException
+     */
+    public static byte[] encrypt(Context ctx, String key_alias, byte[] clearBytes)
+            throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException,
+            UnrecoverableEntryException, NoSuchPaddingException, InvalidKeyException,
+            NoSuchProviderException, InvalidAlgorithmParameterException {
+
+        byte[] cipherBytes = new byte[0];
+
+        // If a specific keystore key has not been created, create it
+        KeyStore ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
+        ks.load(null);
+
+        Enumeration<String> aliases = ks.aliases();
+
+        if( ! ks.containsAlias( key_alias)) {
+
+            createKey( ctx, key_alias);
+        }
+
+        KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
+        RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
+
+        Cipher rsaCipher = Cipher.getInstance( CIPHER_ALGORITHM );
+        rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        CipherOutputStream cipherOutputStream = new CipherOutputStream( outputStream, rsaCipher);
+        cipherOutputStream.write(clearBytes);
+        cipherOutputStream.close();
+
+        cipherBytes = outputStream.toByteArray();
+
+        return cipherBytes;
+    }
+
+    /**
+     *
+     * @param key_alias
+     * @param encryptedBytes
+     * @return
+     * @throws KeyStoreException
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     * @throws UnrecoverableEntryException
+     * @throws NoSuchPaddingException
+     * @throws InvalidKeyException
+     */
+    public static byte[] decrypt(String key_alias, byte[] encryptedBytes)
+            throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException,
+            UnrecoverableEntryException, NoSuchPaddingException, InvalidKeyException {
+
+        byte[] decryptedBytes = new byte[0];
+
+        KeyStore ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
+        ks.load(null);
+
+        if( ks.containsAlias( key_alias)){
+
+            KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
+
+            Cipher output = Cipher.getInstance( CIPHER_ALGORITHM);
+            output.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
+
+            CipherInputStream cipherInputStream = new CipherInputStream(
+                    new ByteArrayInputStream(encryptedBytes), output);
+
+            cipherInputStream.read(decryptedBytes);
+
+        }
+        else{
+            throw new IllegalArgumentException("key not found");
+        }
+
+        return decryptedBytes;
+    }
+
+    /**
      * Use a private key indexed by an alias to decrypt text.
      *
      * @param key_alias
      * @param cipherTextB64
      * @return
      */
-    public static JSONObject decrypt(String key_alias, String cipherTextB64){
+    public static JSONObject decrypt(String key_alias, String cipherTextB64, boolean verbose){
 
         String cleartext = "", privateKeyEntryString="";
         JSONObject result = new JSONObject();
@@ -322,10 +470,13 @@ public class KeystoreUtil {
         }
 
         try {
-            result.put("cleartext", cleartext);
-            result.put("private_key_entry", privateKeyEntryString);
+            if( verbose ){
+
+                result.put("cleartext", cleartext);
+                result.put("private_key_entry", privateKeyEntryString);
+                result.put("error", error);
+            }
             result.put("success", error.length()==0?"true":"false");
-            result.put("error", error);
 
         } catch (JSONException e) {
             LogUtil.logException( KeystoreUtil.class, e);
@@ -335,13 +486,38 @@ public class KeystoreUtil {
     }
 
     /**
+     * Delete an Android keystore key. If the key does not exist do nothing.
+     *
+     * @param alias
+     * @throws KeyStoreException
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     */
+    public static void deleteKey( String alias)
+            throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
+
+        KeyStore ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
+        ks.load(null);
+
+        Enumeration<String> aliases = ks.aliases();
+
+        ks.load(null);
+
+        if( ks.containsAlias( alias)){
+
+            ks.deleteEntry( alias);
+        }
+    }
+
+    /**
      * Delete a specific key indexed by alias.
      *
      * @param ctx
      * @param alias
      * @return
      */
-    public static JSONObject deleteKey(Context ctx, String alias){
+    public static JSONObject deleteKey(Context ctx, String alias, boolean verbose){
 
         JSONObject result = new JSONObject();
         String error = "";
@@ -366,7 +542,12 @@ public class KeystoreUtil {
         }
 
         try {
-            result.put("error", error);
+            if( verbose ){
+
+                result.put("error", error);
+            }
+            result.put("success", error.length()==0?"true":"false");
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -434,7 +615,7 @@ public class KeystoreUtil {
              * Key does not exist.
              * Create the key.
              */
-            JSONObject jsonObject = createKey( ctx, keyAlias);
+            JSONObject jsonObject = createKey( ctx, keyAlias, true);
             keyCreated = jsonObject.getString( "success").contentEquals( "true");
 
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException |

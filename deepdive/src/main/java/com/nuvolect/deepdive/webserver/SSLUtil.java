@@ -7,9 +7,13 @@
 
 package com.nuvolect.deepdive.webserver;
 
+import android.content.Context;
+
+import com.nuvolect.deepdive.main.CConst;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniUtil;
+import com.nuvolect.deepdive.util.Persist;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
@@ -42,14 +46,19 @@ public class SSLUtil {
     /**
      * Creates an SSLSocketFactory for HTTPS loading certificate from path.
      *
-     * Pass a KeyStore resource with your certificate and passphrase
+     * @param ctx
+     * @param path
+     * @return
+     * @throws IOException
      */
-    public static SSLServerSocketFactory configureSSLPath(String path, char[] passphrase) throws IOException {
+    public static SSLServerSocketFactory configureSSLPath(Context ctx, String path) throws IOException {
 
         SSLServerSocketFactory sslServerSocketFactory = null;
         try {
             // Android does not have the default jks but uses bks
             KeyStore keystore = KeyStore.getInstance("BKS");
+
+            char[] passphrase = Persist.getDecrypt( ctx, CConst.SELFSIGNED_KS_KEY);
 
             OmniFile loadFile = new OmniFile("u0", path);
             InputStream keystoreStream = loadFile.getFileInputStream();
