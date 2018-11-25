@@ -9,6 +9,8 @@ package com.nuvolect.deepdive.util;
 
 import android.content.Context;
 
+import com.nuvolect.deepdive.main.CConst;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -140,5 +142,18 @@ public class KeystoreUtilTest {
         assertThat( indexKey1, is(-1));
         assertThat( indexKey2, is(-1));
         assertThat( indexKey3, is(-1));
+    }
+
+    @Test
+    public void scenario1() throws Exception{
+
+        Context ctx = getTargetContext();
+        String s = "the quick brown fox jumped over the lazy dog";
+
+        byte[] cipherBytes = KeystoreUtil.encrypt(ctx, CConst.APP_KEY_ALIAS, s.getBytes());
+        byte[] clearBytes = KeystoreUtil.decrypt(CConst.APP_KEY_ALIAS, cipherBytes);
+        String result = new String( clearBytes);
+        assertThat( "encryption end to end", result.contentEquals( s));
+        assertThat( result, is(s));
     }
 }

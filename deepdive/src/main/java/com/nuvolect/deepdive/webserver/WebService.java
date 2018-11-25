@@ -77,36 +77,12 @@ public class WebService extends Service {
             String VazanFilename = "VazanKeystore.bks";
 
             KeystoreVazen.makeKeystore( m_ctx, VazanFilename, false);
-//
+
 //            if( LogUtil.DEBUG){
 //
 //                //SPRINT why do SSL comms fail with release Build Variant
 //                SSLUtil.probeCert( VazanFilename, passPhrase);
 //                SSLUtil.probeCert( "keystore.bks", passPhrase);
-//            }
-
-//            String s = "the quick brown fox jumped over the lazy dog";
-//            try {
-//                byte[] cipherBytes = KeystoreUtil.encrypt(m_ctx, CConst.APP_KEY_ALIAS, s.getBytes());
-//                byte[] clearBytes = KeystoreUtil.decrypt(CConst.APP_KEY_ALIAS, cipherBytes);
-//                String result = new String( clearBytes);
-//                LogUtil.log("done");
-//            } catch (KeyStoreException e) {
-//                e.printStackTrace();
-//            } catch (CertificateException e) {
-//                e.printStackTrace();
-//            } catch (NoSuchAlgorithmException e) {
-//                e.printStackTrace();
-//            } catch (UnrecoverableEntryException e) {
-//                e.printStackTrace();
-//            } catch (NoSuchPaddingException e) {
-//                e.printStackTrace();
-//            } catch (InvalidKeyException e) {
-//                e.printStackTrace();
-//            } catch (NoSuchProviderException e) {
-//                e.printStackTrace();
-//            } catch (InvalidAlgorithmParameterException e) {
-//                e.printStackTrace();
 //            }
 
 //            char[] chars = Passphrase.generateRandomPassword( 10000, Passphrase.SYSTEM_MODE);

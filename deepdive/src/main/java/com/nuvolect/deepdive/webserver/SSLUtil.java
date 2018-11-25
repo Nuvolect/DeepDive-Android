@@ -78,30 +78,31 @@ public class SSLUtil {
             sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
             sslServerSocketFactory = sslContext.getServerSocketFactory();
 
-            String[] defaultCiphersuites = sslServerSocketFactory.getDefaultCipherSuites();
-            String[] supportedCipherSuites = sslServerSocketFactory.getSupportedCipherSuites();
-
-            if( LogUtil.DEBUG){
-
-                SSLEngine sslEngine = sslContext.createSSLEngine();
-                String[] enabledCipherSuites = sslEngine.getEnabledCipherSuites();
-                String[] enabledProtocols = sslEngine.getEnabledProtocols();
-
-                String log = path;
-                String algorithm = trustManagerFactory.getAlgorithm();
-                Provider provider = trustManagerFactory.getProvider();
-
-                log += "\n\nalgorithm: "+algorithm;
-                log += "\n\nprovider: "+provider;
-                log += "\n\ndefaultCipherSuites: \n"+Arrays.toString(defaultCiphersuites);
-                log += "\n\nsupportedCipherSuites: \n"+Arrays.toString(supportedCipherSuites);
-                log += "\n\nenabledCipherSuites: \n"+Arrays.toString(enabledCipherSuites);
-                log += "\n\nenabledProtocols: \n"+Arrays.toString(enabledProtocols);
-
-                OmniUtil.writeFile(new OmniFile("u0", "SSL_Factory_"+loadFile.getName()+"_log.txt"), log);
-
-                LogUtil.log("SSL configure successful");
-            }
+            //SPRINT consider saving diag code for certificate inspector
+//            String[] defaultCiphersuites = sslServerSocketFactory.getDefaultCipherSuites();
+//            String[] supportedCipherSuites = sslServerSocketFactory.getSupportedCipherSuites();
+//
+//            if( LogUtil.DEBUG){
+//
+//                SSLEngine sslEngine = sslContext.createSSLEngine();
+//                String[] enabledCipherSuites = sslEngine.getEnabledCipherSuites();
+//                String[] enabledProtocols = sslEngine.getEnabledProtocols();
+//
+//                String log = path;
+//                String algorithm = trustManagerFactory.getAlgorithm();
+//                Provider provider = trustManagerFactory.getProvider();
+//
+//                log += "\n\nalgorithm: "+algorithm;
+//                log += "\n\nprovider: "+provider;
+//                log += "\n\ndefaultCipherSuites: \n"+Arrays.toString(defaultCiphersuites);
+//                log += "\n\nsupportedCipherSuites: \n"+Arrays.toString(supportedCipherSuites);
+//                log += "\n\nenabledCipherSuites: \n"+Arrays.toString(enabledCipherSuites);
+//                log += "\n\nenabledProtocols: \n"+Arrays.toString(enabledProtocols);
+//
+//                OmniUtil.writeFile(new OmniFile("u0", "SSL_Factory_"+loadFile.getName()+"_log.txt"), log);
+//
+//                LogUtil.log("SSL configure successful");
+//            }
 
         } catch (UnrecoverableEntryException e) {
             e.printStackTrace();
