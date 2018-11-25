@@ -16,9 +16,11 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.webserver.connector.ServerInit;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
@@ -74,53 +76,24 @@ public class WebService extends Service {
 //            OmniUtil.copyAsset(m_ctx, "keystore.bks", new OmniFile( Omni.userVolumeId_0,"keystore.bks"));
 
             // Create a self signed certificate and put it in a BKS keystore
-            String VazanFilename = "VazanKeystore.bks";
+            String keystoreFilename = "VazanKeystore.bks";
 
-            KeystoreVazen.makeKeystore( m_ctx, VazanFilename, false);
+//            OmniFile keystoreFile = new OmniFile("u0", keystoreFilename);
+//            String absolutePath = keystoreFile.getAbsolutePath();
+
+            File file = new File( m_ctx.getFilesDir(), keystoreFilename);
+            String absolutePath = file.getAbsolutePath();
+
+            KeystoreVazen.makeKeystore( m_ctx, absolutePath, false);
 
 //            if( LogUtil.DEBUG){
 //
 //                //SPRINT why do SSL comms fail with release Build Variant
-//                SSLUtil.probeCert( VazanFilename, passPhrase);
+//                SSLUtil.probeCert( keystoreFilename, passPhrase);
 //                SSLUtil.probeCert( "keystore.bks", passPhrase);
 //            }
 
-//            char[] chars = Passphrase.generateRandomPassword( 10000, Passphrase.SYSTEM_MODE);
-//            int lenChars = chars.length;
-//            byte[] bytes = Passphrase.toBytes( chars );
-//            int lenBytes = bytes.length;
-//            char[] backToChars = Passphrase.toChars( bytes);
-//            int lenChars2 = backToChars.length;
-//            String str2 = new String( backToChars);
-//            int lenStr2 = str2.length();
-//            boolean sameStr = str2.contentEquals( new String(chars));
-
-//            try {
-//                char[] chars = Passphrase.generateRandomPassword( 32, Passphrase.SYSTEM_MODE);
-//                String s = new String( chars);
-//                Persist.putEncrypt(m_ctx, "testkey", s.toCharArray());
-//                char[] clearResult = Persist.getDecrypt( m_ctx, "testkey");
-//                String result = new String( clearResult);
-//                boolean strMatch = result.contentEquals( s );
-//                LogUtil.log("done");
-//            } catch (CertificateException e) {
-//                e.printStackTrace();
-//            } catch (InvalidKeyException e) {
-//                e.printStackTrace();
-//            } catch (NoSuchAlgorithmException e) {
-//                e.printStackTrace();
-//            } catch (KeyStoreException e) {
-//                e.printStackTrace();
-//            } catch (NoSuchPaddingException e) {
-//                e.printStackTrace();
-//            } catch (UnrecoverableEntryException e) {
-//                e.printStackTrace();
-//            } catch (NoSuchProviderException e) {
-//                e.printStackTrace();
-//            } catch (InvalidAlgorithmParameterException e) {
-//                e.printStackTrace();
-//            }
-            sslServerSocketFactory = SSLUtil.configureSSLPath( m_ctx, VazanFilename);
+            sslServerSocketFactory = SSLUtil.configureSSLPath( m_ctx, absolutePath);
 
             // This one loads a working certificate from assets
 //            sslServerSocketFactory = SSLUtil.configureSSLAsset( keyFile, passPhrase);

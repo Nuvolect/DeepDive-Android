@@ -31,6 +31,7 @@ import org.spongycastle.operator.ContentSigner;
 import org.spongycastle.operator.OperatorCreationException;
 import org.spongycastle.operator.jcajce.JcaContentSignerBuilder;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -71,7 +72,7 @@ public class KeystoreVazen {
     public static boolean makeKeystore(Context ctx, String keystoreFilepath, boolean recreate){
 
         boolean success = true;
-        OmniFile keystoreFile = new OmniFile("u0", keystoreFilepath);
+        File keystoreFile = new File( keystoreFilepath );
 
         // If the keystore already exists and recreate not requested, nothing to do.
         boolean skipOut = keystoreFile.exists();
@@ -162,7 +163,7 @@ public class KeystoreVazen {
             KeyStore.PrivateKeyEntry privateKeyEntry = new KeyStore.PrivateKeyEntry(keypair.getPrivate(), chain);
             keyStore.setEntry("CA-Key", privateKeyEntry, new KeyStore.PasswordProtection(storePassword));
 
-            FileOutputStream fos = new FileOutputStream( keystoreFile.getStdFile());
+            FileOutputStream fos = new FileOutputStream( keystoreFile);
             keyStore.store( fos, storePassword);
             fos.close();
 

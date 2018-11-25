@@ -16,6 +16,7 @@ import com.nuvolect.deepdive.util.OmniUtil;
 import com.nuvolect.deepdive.util.Persist;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,14 +50,14 @@ import javax.net.ssl.TrustManagerFactory;
 public class SSLUtil {
 
     /**
-     * Creates an SSLSocketFactory for HTTPS loading certificate from path.
+     * Creates an SSLSocketFactory for HTTPS loading certificate from absolutePath.
      *
      * @param ctx
-     * @param path
+     * @param absolutePath
      * @return
      * @throws IOException
      */
-    public static SSLServerSocketFactory configureSSLPath(Context ctx, String path) throws IOException {
+    public static SSLServerSocketFactory configureSSLPath(Context ctx, String absolutePath) throws IOException {
 
         SSLServerSocketFactory sslServerSocketFactory = null;
         try {
@@ -65,8 +66,8 @@ public class SSLUtil {
 
             char[] passphrase = Persist.getDecrypt( ctx, CConst.SELFSIGNED_KS_KEY);
 
-            OmniFile loadFile = new OmniFile("u0", path);
-            InputStream keystoreStream = loadFile.getFileInputStream();
+            File loadFile = new File(absolutePath);
+            InputStream keystoreStream = new java.io.FileInputStream( loadFile );
             keystore.load(keystoreStream, passphrase);
 
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
@@ -88,7 +89,7 @@ public class SSLUtil {
 //                String[] enabledCipherSuites = sslEngine.getEnabledCipherSuites();
 //                String[] enabledProtocols = sslEngine.getEnabledProtocols();
 //
-//                String log = path;
+//                String log = absolutePath;
 //                String algorithm = trustManagerFactory.getAlgorithm();
 //                Provider provider = trustManagerFactory.getProvider();
 //
