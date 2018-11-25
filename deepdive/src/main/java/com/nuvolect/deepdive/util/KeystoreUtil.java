@@ -379,7 +379,7 @@ public class KeystoreUtil {
     /**
      *
      * @param key_alias
-     * @param encryptedBytes
+     * @param cipherBytes
      * @return
      * @throws KeyStoreException
      * @throws CertificateException
@@ -389,11 +389,12 @@ public class KeystoreUtil {
      * @throws NoSuchPaddingException
      * @throws InvalidKeyException
      */
-    public static byte[] decrypt(String key_alias, byte[] encryptedBytes)
+    public static byte[] decrypt(String key_alias, byte[] cipherBytes)
             throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException,
             UnrecoverableEntryException, NoSuchPaddingException, InvalidKeyException {
 
-        byte[] decryptedBytes = new byte[2048];
+        byte[] decryptBuffer = new byte[2048];
+        byte[] decryptedResult = new byte[0];
 
         KeyStore ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
         ks.load(null);
@@ -402,21 +403,28 @@ public class KeystoreUtil {
 
             KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
 
-            Cipher output = Cipher.getInstance( CIPHER_ALGORITHM);
-            output.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
+            Cipher cipher = Cipher.getInstance( CIPHER_ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
 
             CipherInputStream cipherInputStream = new CipherInputStream(
-                    new ByteArrayInputStream(encryptedBytes), output);
+                    new ByteArrayInputStream(cipherBytes), cipher);
 
-            //SPRINT throws exception on buffer, invistigate
-            cipherInputStream.read(decryptedBytes);//throws exception
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            int bytesRead;
+            while ((bytesRead = cipherInputStream.read(decryptBuffer, 0, 2048)) == 2048){
 
+                outputStream.write(decryptBuffer);
+            }
+            // Reached the end, write remaining bytes to the stream
+            if( bytesRead != -1)
+                outputStream.write(decryptBuffer, 0, bytesRead);
+            decryptedResult = outputStream.toByteArray();
         }
         else{
             throw new IllegalArgumentException("key not found");
         }
 
-        return decryptedBytes;
+        return decryptedResult;
     }
 
     /**
@@ -440,11 +448,13 @@ public class KeystoreUtil {
                 KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
                 privateKeyEntryString = privateKeyEntry.toString();
 
-                Cipher output = Cipher.getInstance( CIPHER_ALGORITHM);
-                output.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
+                Cipher cipher = Cipher.getInstance( CIPHER_ALGORITHM);
+                cipher.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
 
                 CipherInputStream cipherInputStream = new CipherInputStream(
-                        new ByteArrayInputStream(Base64.decode( cipherTextB64, BASE64)), output);
+                        new ByteArrayInputStream(Base64.decode( cipherTextB64, BASE64)), cipher);
+
+                //FIXME this works but is terribly inefficient, find a better way
                 ArrayList<Byte> values = new ArrayList<>();
                 int nextByte;
                 while ((nextByte = cipherInputStream.read()) != -1) {

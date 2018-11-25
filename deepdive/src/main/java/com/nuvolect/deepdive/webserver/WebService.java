@@ -76,7 +76,7 @@ public class WebService extends Service {
             // Create a self signed certificate and put it in a BKS keystore
             String VazanFilename = "VazanKeystore.bks";
 
-            KeystoreVazen.makeKeystore( m_ctx, VazanFilename, true);
+            KeystoreVazen.makeKeystore( m_ctx, VazanFilename, false);
 //
 //            if( LogUtil.DEBUG){
 //
@@ -85,6 +85,65 @@ public class WebService extends Service {
 //                SSLUtil.probeCert( "keystore.bks", passPhrase);
 //            }
 
+//            String s = "the quick brown fox jumped over the lazy dog";
+//            try {
+//                byte[] cipherBytes = KeystoreUtil.encrypt(m_ctx, CConst.APP_KEY_ALIAS, s.getBytes());
+//                byte[] clearBytes = KeystoreUtil.decrypt(CConst.APP_KEY_ALIAS, cipherBytes);
+//                String result = new String( clearBytes);
+//                LogUtil.log("done");
+//            } catch (KeyStoreException e) {
+//                e.printStackTrace();
+//            } catch (CertificateException e) {
+//                e.printStackTrace();
+//            } catch (NoSuchAlgorithmException e) {
+//                e.printStackTrace();
+//            } catch (UnrecoverableEntryException e) {
+//                e.printStackTrace();
+//            } catch (NoSuchPaddingException e) {
+//                e.printStackTrace();
+//            } catch (InvalidKeyException e) {
+//                e.printStackTrace();
+//            } catch (NoSuchProviderException e) {
+//                e.printStackTrace();
+//            } catch (InvalidAlgorithmParameterException e) {
+//                e.printStackTrace();
+//            }
+
+//            char[] chars = Passphrase.generateRandomPassword( 10000, Passphrase.SYSTEM_MODE);
+//            int lenChars = chars.length;
+//            byte[] bytes = Passphrase.toBytes( chars );
+//            int lenBytes = bytes.length;
+//            char[] backToChars = Passphrase.toChars( bytes);
+//            int lenChars2 = backToChars.length;
+//            String str2 = new String( backToChars);
+//            int lenStr2 = str2.length();
+//            boolean sameStr = str2.contentEquals( new String(chars));
+
+//            try {
+//                char[] chars = Passphrase.generateRandomPassword( 32, Passphrase.SYSTEM_MODE);
+//                String s = new String( chars);
+//                Persist.putEncrypt(m_ctx, "testkey", s.toCharArray());
+//                char[] clearResult = Persist.getDecrypt( m_ctx, "testkey");
+//                String result = new String( clearResult);
+//                boolean strMatch = result.contentEquals( s );
+//                LogUtil.log("done");
+//            } catch (CertificateException e) {
+//                e.printStackTrace();
+//            } catch (InvalidKeyException e) {
+//                e.printStackTrace();
+//            } catch (NoSuchAlgorithmException e) {
+//                e.printStackTrace();
+//            } catch (KeyStoreException e) {
+//                e.printStackTrace();
+//            } catch (NoSuchPaddingException e) {
+//                e.printStackTrace();
+//            } catch (UnrecoverableEntryException e) {
+//                e.printStackTrace();
+//            } catch (NoSuchProviderException e) {
+//                e.printStackTrace();
+//            } catch (InvalidAlgorithmParameterException e) {
+//                e.printStackTrace();
+//            }
             sslServerSocketFactory = SSLUtil.configureSSLPath( m_ctx, VazanFilename);
 
             // This one loads a working certificate from assets

@@ -128,6 +128,7 @@ public class Passphrase {
     public static char[] toChars(byte[] bytes){
 
         char chars[] = new char[0];
+
         try {
             chars = new String( bytes, "UTF-8").toCharArray();
         } catch (UnsupportedEncodingException e) {

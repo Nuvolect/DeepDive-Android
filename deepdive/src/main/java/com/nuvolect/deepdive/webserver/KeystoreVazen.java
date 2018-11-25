@@ -74,7 +74,7 @@ public class KeystoreVazen {
         OmniFile keystoreFile = new OmniFile("u0", keystoreFilepath);
 
         // If the keystore already exists and recreate not requested, nothing to do.
-        boolean skipOut = ! keystoreFile.exists();
+        boolean skipOut = keystoreFile.exists();
         if( skipOut && ! recreate)
             return success;
 

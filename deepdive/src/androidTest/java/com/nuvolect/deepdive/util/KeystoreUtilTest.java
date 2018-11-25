@@ -61,7 +61,7 @@ public class KeystoreUtilTest {
         JSONObject clearTextObj = KeystoreUtil.decrypt( this.testKeyAlias, cipherObj.getString("ciphertext"), true);
         assertThat( clearTextObj.getString("error"), is(""));
         assertThat( clearTextObj.getString("success"), is("true"));
-        assertThat( clearTextObj.getString("cleartext"), is( this.clearTextToEncrypt.toString()));
+        assertThat( clearTextObj.getString("cleartext"), is( new String(this.clearTextToEncrypt)));
 
         KeystoreUtil.deleteKey( getTargetContext(), this.testKeyAlias, true);
     }

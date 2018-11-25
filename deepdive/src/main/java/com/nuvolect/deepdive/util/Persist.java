@@ -9,6 +9,7 @@ package com.nuvolect.deepdive.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
 
 import com.nuvolect.deepdive.main.CConst;
 
@@ -144,13 +145,15 @@ public class Persist {
             KeyStoreException, NoSuchPaddingException, UnrecoverableEntryException, IOException,
             NoSuchProviderException, InvalidAlgorithmParameterException {
 
-        byte[] bytes = KeystoreUtil.encrypt( ctx, CConst.APP_KEY_ALIAS, Passphrase.toBytes( clearChar));
+        byte[] clearBytes = Passphrase.toBytes( clearChar);
+        byte[] cryptBytes = KeystoreUtil.encrypt( ctx, CConst.APP_KEY_ALIAS, clearBytes);
+        String cryptString = Base64.encodeToString( cryptBytes, Base64.NO_WRAP);
+
         final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
-        pref.edit().putString(persistKey, new String( bytes, "UTF-8")).commit();
+        pref.edit().putString( persistKey, cryptString).commit();
     }
 
 
-    //FIXME make sure terminology is correct on "private key"
     /**
      * Read encrypted data, decrypt it with an app wide private key and return clear results.
      *
@@ -169,9 +172,14 @@ public class Persist {
             KeyStoreException, NoSuchPaddingException, UnrecoverableEntryException, IOException {
 
         final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
-        byte[] encryptBytes = pref.getString( persistKey, CConst.NO_PASSPHRASE).getBytes();
+
+        String encryptString = pref.getString( persistKey, CConst.NO_PASSPHRASE);
+        byte[] encryptBytes = Base64.decode( encryptString, Base64.DEFAULT);
+//        byte[] encryptBytes = encryptString.getBytes();
         byte[] clearBytes = KeystoreUtil.decrypt( CConst.APP_KEY_ALIAS, encryptBytes);
-        return Passphrase.toChars( clearBytes);
+        char[] clearChars = Passphrase.toChars( clearBytes);
+
+        return clearChars;
     }
 
     public static void setEncryptedPassphrase(Context ctx, String passphrase){
