@@ -393,7 +393,7 @@ public class KeystoreUtil {
             throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException,
             UnrecoverableEntryException, NoSuchPaddingException, InvalidKeyException {
 
-        byte[] decryptedBytes = new byte[0];
+        byte[] decryptedBytes = new byte[2048];
 
         KeyStore ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
         ks.load(null);
@@ -408,7 +408,8 @@ public class KeystoreUtil {
             CipherInputStream cipherInputStream = new CipherInputStream(
                     new ByteArrayInputStream(encryptedBytes), output);
 
-            cipherInputStream.read(decryptedBytes);
+            //SPRINT throws exception on buffer, invistigate
+            cipherInputStream.read(decryptedBytes);//throws exception
 
         }
         else{
