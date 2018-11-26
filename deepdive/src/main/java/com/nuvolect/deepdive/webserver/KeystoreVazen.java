@@ -66,9 +66,6 @@ import javax.crypto.NoSuchPaddingException;
  */
 public class KeystoreVazen {
 
-    //SPRINT refactor storePassword to use a random password in Android Keystore
-    //SPRINT allow keystore storage in private app storage or in OMNIFile path
-
     public static boolean makeKeystore(Context ctx, String keystoreFilepath, boolean recreate){
 
         boolean success = true;
