@@ -16,7 +16,6 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.nuvolect.deepdive.util.LogUtil;
-import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.webserver.connector.ServerInit;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -72,33 +71,15 @@ public class WebService extends Service {
         try {
             okHttpClient = null;
 
-            // Copy the mac made certificate to private_0
-//            OmniUtil.copyAsset(m_ctx, "keystore.bks", new OmniFile( Omni.userVolumeId_0,"keystore.bks"));
-
             // Create a self signed certificate and put it in a BKS keystore
             String keystoreFilename = "VazanKeystore.bks";
-
-//            OmniFile keystoreFile = new OmniFile("u0", keystoreFilename);
-//            String absolutePath = keystoreFile.getAbsolutePath();
 
             File file = new File( m_ctx.getFilesDir(), keystoreFilename);
             String absolutePath = file.getAbsolutePath();
 
             KeystoreVazen.makeKeystore( m_ctx, absolutePath, false);
 
-//            if( LogUtil.DEBUG){
-//
-//                //SPRINT why do SSL comms fail with release Build Variant
-//                SSLUtil.probeCert( keystoreFilename, passPhrase);
-//                SSLUtil.probeCert( "keystore.bks", passPhrase);
-//            }
-
             sslServerSocketFactory = SSLUtil.configureSSLPath( m_ctx, absolutePath);
-
-            // This one loads a working certificate from assets
-//            sslServerSocketFactory = SSLUtil.configureSSLAsset( keyFile, passPhrase);
-            // This one loads a working certificate from path
-//            sslServerSocketFactory = SSLUtil.configureSSLPath( "keystore.bks", passPhrase);
 
             if( HTTP_PROTOCOL.startsWith("https"))
                 server.makeSecure( sslServerSocketFactory, null);

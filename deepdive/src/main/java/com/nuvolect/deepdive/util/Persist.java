@@ -175,7 +175,6 @@ public class Persist {
 
         String encryptString = pref.getString( persistKey, CConst.NO_PASSPHRASE);
         byte[] encryptBytes = Base64.decode( encryptString, Base64.DEFAULT);
-//        byte[] encryptBytes = encryptString.getBytes();
         byte[] clearBytes = KeystoreUtil.decrypt( CConst.APP_KEY_ALIAS, encryptBytes);
         char[] clearChars = Passphrase.toChars( clearBytes);
 
