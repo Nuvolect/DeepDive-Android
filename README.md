@@ -3,10 +3,12 @@ An educational tool for the reverse engineering and security assessment of Andro
 
 We initially experimented with reverse engineering to explore vulnerabilities of our own apps. We learned how hackers find security gaps in our apps. Looking other apps on our phone, we also learned how seemingly legitimate apps invade our privacy.
 
+This is an early release, DeepDive is still in BETA. We need <a href="https://nuvolect.com/donate">your donations</a> to help support research, development and testing.
+
 ## Finally, an easy workflow you can live with
-Android is the server. Access the details of reverse engineering from your handheld device or from the convenience of your large Mac or PC screen. How we use Deep Dive:
+Android is the server. Access the details of reverse engineering from your handheld device or from the convenience of your large Mac or PC screen. How we use DeepDive:
 1. Join the same WiFi on your Android phone or tablet as your Mac or PC.
-1. Install and start Deep Dive on your Android phone or tablet.
+1. Install and start DeepDive on your Android phone or tablet.
 1. Note the IP address on the home screen and go to that address from your Mac or PC.
 <br>
 <a href="https://nuvolect.com/deepdive/deepdive-release.apk">
@@ -15,7 +17,7 @@ Android is the server. Access the details of reverse engineering from your handh
 <a href="https://nuvolect.com/deepdive/install.htm">Installation Instructions</a>
 
 ## Notes On Security
-Configure a user login from app Settings. All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address. You will see a security warning or error message.
+Configure a user login from app Settings. All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address,  consequently you will see a security warning or error message.
 
 ## Lucene — Ultra-fast search
 A decompiled app can have hundreds of thousands of files and millions of lines of code.
@@ -28,12 +30,13 @@ Search Sets are collections of Lucene Searches. Search for up to a 100 keywords 
 ## Features
 * The source code is at your fingertips using the elFinder "Mac-like" file manager.
 * Your code is secure on your hardware, not on an unknown server in the Cloud.
-* Additional tools include Keystore, Shell, and Logcat.
+* Device details, app details and permissions
 * APK extraction and unpacking
 * DEX optimization
 * Convert Android DEX to Jar
 * Decompile most Android apps
 * Private and crypto file storage
+* File manager and finder
 * Instant search and search sets
 * Shell, Logcat & Keystore utilities
 * Android API 19+ (KitKat+)
@@ -58,8 +61,9 @@ unserstanding user intent and how to improve the application.
 
 ## Licensing
 * DeepDive is offered for free under conditions of the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPLv3</a> open source software license.
-* Contact <a href="https://nuvolect.com/contact.htm" >Nuvolect LLC</a> for a less restrictive commercial license if you would like to
-				use the software without the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPLv3</a> restrictions.
+* Contact <a href="https://nuvolect.com/contact.htm" >Nuvolect LLC</a> for a less restrictive commercial license if you would like to 
+use the software without the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPLv3</a> restrictions.
+
 ## Contributing Bug Reports
 We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked.
 <https://github.com/Nuvolect/DeepDive-Android/issues>
