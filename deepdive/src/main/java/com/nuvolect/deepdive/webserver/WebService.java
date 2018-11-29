@@ -21,8 +21,16 @@ import com.squareup.okhttp.OkHttpClient;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
 import java.util.concurrent.Semaphore;
 
+import javax.crypto.NoSuchPaddingException;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -42,19 +50,26 @@ public class WebService extends Service {
     private static SSLSocketFactory sslSocketFactory;
     private static OkHttpClient okHttpClient = null;
 
-    private static String keyFile = "/assets/keystore.bks";
-    private static char[] passPhrase = "27@NDMQu0cLY".toCharArray();//SPRINT remove static passPhrase
-
     @Override
     public void onCreate() {
         super.onCreate();
-//SPRINT cleanup test code, create a SecurityCertificates.md file with extensive notes
+
         m_ctx = getApplicationContext();
 
         /**
          * Initialize web service command data
          */
-        ServerInit.init( m_ctx);
+        try {
+            ServerInit.init( m_ctx);
+
+        } catch (IOException | CertificateException  | NoSuchAlgorithmException  |
+        InvalidKeyException  | UnrecoverableEntryException  | InvalidAlgorithmParameterException  |
+        NoSuchPaddingException  | NoSuchProviderException  | KeyStoreException e){
+
+            LogUtil.log(LogUtil.LogType.WEB_SERVICE,
+                    "Server initialization exception, prepare for trouble!");
+            LogUtil.logException(m_ctx, LogUtil.LogType.WEB_SERVICE, e);
+        }
 
         WebServiceThread looper = new WebServiceThread();
         looper.start();

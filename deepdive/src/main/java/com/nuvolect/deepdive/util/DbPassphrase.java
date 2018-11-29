@@ -9,120 +9,46 @@ package com.nuvolect.deepdive.util;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.license.LicenseUtil;
 import com.nuvolect.deepdive.main.CConst;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
 
-import static com.nuvolect.deepdive.util.Passphrase.HEX;
+import javax.crypto.NoSuchPaddingException;
+
 import static com.nuvolect.deepdive.util.Passphrase.generateRandomPassword;
 
 /**
- * The passphrase is encrypted/decrypted with a public/private key
- * from the android keystore. AES symmetric encryption is used as a fallback
- * if the device Keystore is not capable.
+ * The passphrase is encrypted/decrypted with a public/private key * from the android keystore.
+ * Assumes that to use Android keystore API is 19 or greater.
  */
 public class DbPassphrase {
 
-    private static String KEY_ALIAS = "db_key_alias";
-    private static String CIPHERTEXT = "ciphertext";
-    private static String CLEARTEXT = "cleartext";
-
     /**
-     * Decrypt the passphrase and return it as a string.
+     * Decrypt the passphrase and return it as a character array.
      *
      * @param ctx
      * @return
      */
-    public static String getDbPassphrase(Context ctx) {
+    public static char[] getDbPassphrase(Context ctx) throws IOException, CertificateException,
+            NoSuchAlgorithmException, InvalidKeyException, UnrecoverableEntryException,
+            InvalidAlgorithmParameterException, NoSuchPaddingException, NoSuchProviderException,
+            KeyStoreException {
 
-        //FIXME use a random password and store it in Android keystore
+        if( ! Persist.keyExists(ctx, CConst.DB_PASSWORD)){
 
-        String clearPassphrase = "";
-        boolean success = false;
-        String cryptPassphrase = Persist.getEncryptedPassphrase(ctx);
-
-        if( cryptPassphrase.equals(CConst.NO_PASSPHRASE)){
-
-            // First time, create a random passcode, encrypt and save it
-            //FIXME use char[] for password, zero it when complete
-            clearPassphrase = generateRandomPassword( 32, HEX).toString();
-            success = setDbPassphrase(ctx, clearPassphrase);
-
-            assert success;
-
-            return clearPassphrase;
-        }
-        try {
-            /**
-             * First try to decrypt with the Keystore private key.
-             * If that fails attempt AES symmetric decryption.
-             */
-            try {
-                JSONObject jsonObject = KeystoreUtil.decrypt(KEY_ALIAS, cryptPassphrase, true);
-                if( jsonObject.getString("success").contentEquals("true")){
-
-                    clearPassphrase = jsonObject.getString( CLEARTEXT );
-                    success = true;
-                }
-            } catch (JSONException e) {
-                success = false;
-            }
-
-            if( ! success ){
-
-                /**
-                 * Keystore failed. Fallback and use symmetric encryption.
-                 * Use a static 32 hex char static key.
-                 */
-                String md5Key = LicenseUtil.md5( CConst.RANDOM_EDGE);
-                clearPassphrase = SymmetricCrypto.decrypt( md5Key, cryptPassphrase);
-            }
-
-        } catch (Exception e) {
-            LogUtil.logException(ctx, LogUtil.LogType.CRYPT, e);
-        }
-        return clearPassphrase;
-    }
-
-    /**
-     * Encrypt the passphrase and save it to persisted storage.
-     *
-     * @param ctx
-     * @param clearPassphrase
-     * @return
-     */
-    public static boolean setDbPassphrase(Context ctx, String clearPassphrase){
-
-        boolean success = true;
-        String cryptPassphrase="";
-        try {
-
-            JSONObject jsonObject = KeystoreUtil.encrypt(KEY_ALIAS, clearPassphrase.getBytes("UTF-8"), true);
-            if( jsonObject.getString("success").contentEquals("true")){
-
-                cryptPassphrase = jsonObject.getString(CIPHERTEXT);
-            }
-
-            /**
-             * If Keystore fails, use symmetric encryption with an embedded
-             * passphrase.
-             */
-            if( cryptPassphrase.isEmpty()){
-
-                String md5Key = LicenseUtil.md5( CConst.RANDOM_EDGE);
-                cryptPassphrase = SymmetricCrypto.encrypt( md5Key, clearPassphrase);
-            }
-
-            Persist.setEncryptedPassphrase(ctx, cryptPassphrase);
-
-        } catch (Exception e) {
-            LogUtil.logException(ctx, LogUtil.LogType.CRYPT, e);
-            success = false;
+           char[] clearPassphrase = generateRandomPassword( 32, Passphrase.SYSTEM_MODE);
+           Persist.putEncrypt(ctx, CConst.DB_PASSWORD, clearPassphrase);
+           clearPassphrase = Passphrase.cleanArray( clearPassphrase);
         }
 
-        return success;
+        return Persist.getDecrypt( ctx, CConst.DB_PASSWORD);
     }
 
     /**
@@ -130,6 +56,6 @@ public class DbPassphrase {
      */
     public static void createDbKeystore( Context ctx) {
 
-        KeystoreUtil.createKeyNotExists( ctx, KEY_ALIAS);
+        KeystoreUtil.createKeyNotExists( ctx, CConst.APP_KEY_ALIAS);
     }
 }

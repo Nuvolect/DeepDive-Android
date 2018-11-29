@@ -29,10 +29,12 @@ import javax.crypto.NoSuchPaddingException;
 
 public class Persist {
 
+    /**
+     * Persist data to Android app private storage.
+     */
     private static final String PERSIST_NAME           = "dd_persist";
 
-    // Persist keys
-    private static final String PASSPHRASE 			   = "passphrase";
+    // Persist keys, some calling methods pass their own keys
     private static final String PEST_TIME              = "pest_time";
     private static final String SHOW_TIP_CURRENT       = "show_tip_current";
 
@@ -127,6 +129,18 @@ public class Persist {
     }
 
     /**
+     * Check if a specific key is persisted.
+     * @param ctx
+     * @param persistKey
+     * @return
+     */
+    public static boolean keyExists(Context ctx, String persistKey) {
+
+        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
+        return pref.contains( persistKey);
+    }
+
+    /**
      * Encrypt clear char[] data with an app wide private key, then persist the encrypted results.
      *
      * @param ctx
@@ -156,6 +170,7 @@ public class Persist {
 
     /**
      * Read encrypted data, decrypt it with an app wide private key and return clear results.
+     * If the persisted key does not exist it returns CConst.NO_SUCH_KEY.
      *
      * @param ctx
      * @return
@@ -173,21 +188,17 @@ public class Persist {
 
         final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
 
-        String encryptString = pref.getString( persistKey, CConst.NO_PASSPHRASE);
-        byte[] encryptBytes = Base64.decode( encryptString, Base64.DEFAULT);
-        byte[] clearBytes = KeystoreUtil.decrypt( CConst.APP_KEY_ALIAS, encryptBytes);
-        char[] clearChars = Passphrase.toChars( clearBytes);
+        if( pref.contains( persistKey)){
 
-        return clearChars;
-    }
+            String encryptString = pref.getString( persistKey, CConst.NO_SUCH_KEY);
+            byte[] encryptBytes = Base64.decode( encryptString, Base64.DEFAULT);
+            byte[] clearBytes = KeystoreUtil.decrypt( CConst.APP_KEY_ALIAS, encryptBytes);
+            char[] clearChars = Passphrase.toChars( clearBytes);
 
-    public static void setEncryptedPassphrase(Context ctx, String passphrase){
-        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
-        pref.edit().putString(PASSPHRASE, passphrase).commit();
-    }
-    public static String getEncryptedPassphrase(Context ctx){
-        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
-        return pref.getString(PASSPHRASE, CConst.NO_PASSPHRASE);
+            return clearChars;
+        }
+        else
+            return CConst.NO_SUCH_KEY.toCharArray();
     }
 
     public static void setCurrentTip(Context ctx, int tipIndex){

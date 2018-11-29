@@ -11,12 +11,26 @@ import android.content.Context;
 
 import com.nuvolect.deepdive.util.Omni;
 
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
+
+import javax.crypto.NoSuchPaddingException;
+
 /**
  * Initialization related to the web server.
  */
 public class ServerInit {
 
-    public static void init(Context ctx){
+    public static void init(Context ctx) throws IOException, CertificateException,
+            NoSuchAlgorithmException, InvalidKeyException, UnrecoverableEntryException,
+            InvalidAlgorithmParameterException, NoSuchPaddingException, NoSuchProviderException,
+            KeyStoreException {
 
         /**
          * Initialize application file system support

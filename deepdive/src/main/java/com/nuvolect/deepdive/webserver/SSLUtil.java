@@ -10,7 +10,6 @@ package com.nuvolect.deepdive.webserver;
 import android.content.Context;
 
 import com.nuvolect.deepdive.main.CConst;
-import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniUtil;
 import com.nuvolect.deepdive.util.Persist;
@@ -34,13 +33,11 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 import java.util.Enumeration;
 
 import javax.crypto.NoSuchPaddingException;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -79,31 +76,8 @@ public class SSLUtil {
             sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
             sslServerSocketFactory = sslContext.getServerSocketFactory();
 
-            //SPRINT consider saving diag code for certificate inspector
-//            String[] defaultCiphersuites = sslServerSocketFactory.getDefaultCipherSuites();
-//            String[] supportedCipherSuites = sslServerSocketFactory.getSupportedCipherSuites();
-//
-//            if( LogUtil.DEBUG){
-//
-//                SSLEngine sslEngine = sslContext.createSSLEngine();
-//                String[] enabledCipherSuites = sslEngine.getEnabledCipherSuites();
-//                String[] enabledProtocols = sslEngine.getEnabledProtocols();
-//
-//                String log = absolutePath;
-//                String algorithm = trustManagerFactory.getAlgorithm();
-//                Provider provider = trustManagerFactory.getProvider();
-//
-//                log += "\n\nalgorithm: "+algorithm;
-//                log += "\n\nprovider: "+provider;
-//                log += "\n\ndefaultCipherSuites: \n"+Arrays.toString(defaultCiphersuites);
-//                log += "\n\nsupportedCipherSuites: \n"+Arrays.toString(supportedCipherSuites);
-//                log += "\n\nenabledCipherSuites: \n"+Arrays.toString(enabledCipherSuites);
-//                log += "\n\nenabledProtocols: \n"+Arrays.toString(enabledProtocols);
-//
-//                OmniUtil.writeFile(new OmniFile("u0", "SSL_Factory_"+loadFile.getName()+"_log.txt"), log);
-//
-//                LogUtil.log("SSL configure successful");
-//            }
+            //TODO add requirements to imspect SSL certificates
+//            InspectCert.inspectSocketFactory( sslContext, sslServerSocketFactory, absolutePath, trustManagerFactory, loadFile);
 
         } catch (UnrecoverableEntryException e) {
             e.printStackTrace();

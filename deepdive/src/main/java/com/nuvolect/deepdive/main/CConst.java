@@ -18,6 +18,7 @@ public class CConst {
     public static final String AUTHENTICATED        = "authenticated";
     public static final String CHUNK                = "/chunk/";
     public static final String COMPANION_IP_PORT    = "companion_ip_port";//Match settings.xml
+    public static final String DB_PASSWORD          = "db_password";
     public static final String DEFAULT_IP_PORT      = "0.0.0.0:0000";
     public static final String DEFAULT_PASSPHRASE   = "WhenAllElseFails";
     public static final String DEVICE_PAGE          = "/device.htm";
@@ -32,12 +33,10 @@ public class CConst {
     public static final String FILE_PATH            = "file_path";
     public static final String LICENSE_CRYP         = "license_cryp";
     public static final String NAME                 = "name";
-    public static final String NO_PASSPHRASE        = "no-passphrase";
+    public static final String NO_SUCH_KEY          = "no_such_key";
     public static final String OK                   = "ok";
-    public static final String PASSWORD_KEY_ALIAS   = "password_key_alias";
     public static final String PORT                 = "port";
     public static final String PORT_NUMBER          = "port_number";
-    public static final String RANDOM_EDGE          = "h0!U9#Wfnx";// Validates security certificate
     public static final String RESPONSE_CODE        = "response_code";
     public static final String ROOT                 = "/";
     public static final String SEARCH_MANAGER_PAGE  = "/search_manager.htm";

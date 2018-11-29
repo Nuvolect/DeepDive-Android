@@ -7,12 +7,6 @@
 
 package com.nuvolect.deepdive.util;
 
-import android.content.Context;
-
-import com.nuvolect.deepdive.license.LicenseUtil;
-import com.nuvolect.deepdive.main.CConst;
-import com.nuvolect.deepdive.survey.DeviceSurvey;
-
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -28,10 +22,6 @@ public class Passphrase {
     public static int HEX         = 16;
     public static int SYSTEM_MODE = ALPHA_UPPER | ALPHA_LOWER | NUMERIC;
 
-    public static final String PASSWORD_GEN_HISTORY = "password_gen_history";
-    public static final String PASSWORD_TARGET      = "password_target";
-    public static final String PASSWORD_LENGTH      = "password_length";
-    public static final String PASSWORD_GEN_MODE    = "password_gen_mode";
 
 
     public static char[] generateRandomPassword(int length, int mode) {
@@ -65,57 +55,11 @@ public class Passphrase {
         return ranChars;
     }
 
-    /** Decrypt the passphrase and return it as a string */
-    public static String getDbPassphrase(Context ctx) {
-
-        String clearPassphrase = "";
-        String cryptPassphrase = Persist.getEncryptedPassphrase(ctx);
-
-        if( cryptPassphrase.equals(CConst.DEFAULT_PASSPHRASE)){
-
-            // First time, create a random passcode, encrypt and save it
-            //FIXME use char[], zero it when complete
-            clearPassphrase = generateRandomPassword( 32, HEX).toString();
-            boolean success = putDbPassphrase(ctx, clearPassphrase);
-
-            assert success;
-
-            return clearPassphrase;
-        }
-        try {
-
-            /**
-             * Create a 32 hex char key
-             */
-            String uniqueInstallId = DeviceSurvey.getUniqueInstallId(ctx);
-            String md5Key = LicenseUtil.md5(CConst.RANDOM_EDGE + uniqueInstallId);
-            clearPassphrase = SymmetricCrypto.decrypt( md5Key, cryptPassphrase);
-
-        } catch (Exception e) {
-            LogUtil.logException(ctx, LogUtil.LogType.CRYPT, e);
-        }
-        return clearPassphrase;
-    }
-
-    /** Encrypt the passphrase and save it to persist */
-    public static boolean putDbPassphrase(Context ctx, String passphrase){
-
-        boolean success = true;
-        try {
-
-            String uniqueInstallId = DeviceSurvey.getUniqueInstallId(ctx);
-            String md5Key = LicenseUtil.md5( CConst.RANDOM_EDGE + uniqueInstallId);
-            String cryptPassphrase = SymmetricCrypto.encrypt( md5Key, passphrase);
-            Persist.setEncryptedPassphrase(ctx, cryptPassphrase);
-
-        } catch (Exception e) {
-            LogUtil.logException(ctx, LogUtil.LogType.CRYPT, e);
-            success = false;
-        }
-
-        return success;
-    }
-
+    /**
+     * Convert a char array to a byte array.
+     * @param chars
+     * @return
+     */
     public static byte[] toBytes(char[] chars) {
         CharBuffer charBuffer = CharBuffer.wrap(chars);
         ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
@@ -125,6 +69,11 @@ public class Passphrase {
         return bytes;
     }
 
+    /**
+     * Convert a byte array to a char array.
+     * @param bytes
+     * @return
+     */
     public static char[] toChars(byte[] bytes){
 
         char chars[] = new char[0];
@@ -135,5 +84,40 @@ public class Passphrase {
             LogUtil.log(" Exception in toChars");
         }
         return chars;
+    }
+
+    /**
+     * Clear an array changing the contents to zero then changing the
+     * array size to zero.
+     *
+     * @param dirtyArray
+     */
+    public static char[] cleanArray(char[] dirtyArray) {
+
+        for(int i = 0; i< dirtyArray.length; i++){
+
+            dirtyArray[i] = 0;//Clear contents.
+        }
+        dirtyArray = new char[0];//Don't save the size
+
+        return dirtyArray;
+    }
+
+    /**
+     * Clear an array changing the contents to zero then changing the
+     * array size to zero.
+     *
+     * @param dirtyArray
+     * @return
+     */
+    public static byte[] cleanArray(byte[] dirtyArray) {
+
+        for(int i = 0; i< dirtyArray.length; i++){
+
+            dirtyArray[i] = 0;//Clear contents.
+        }
+        dirtyArray = new byte[0];//Don't save the size
+
+        return dirtyArray;
     }
 }

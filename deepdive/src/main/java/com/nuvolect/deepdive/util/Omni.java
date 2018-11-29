@@ -18,9 +18,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.NoSuchPaddingException;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -86,7 +96,10 @@ public class Omni {
      * Probe the device to get current volumes.
      * @param ctx
      */
-    public static boolean init(Context ctx) {
+    public static boolean init(Context ctx) throws IOException, CertificateException,
+            NoSuchAlgorithmException, InvalidKeyException, UnrecoverableEntryException,
+            InvalidAlgorithmParameterException, NoSuchPaddingException, KeyStoreException,
+            NoSuchProviderException {
 
         activeVolumeIds = new ArrayList<String>();
         activeVolumeIds.add( cryptoVolumeId);
@@ -106,28 +119,30 @@ public class Omni {
          */
         String FILESYSTEM_NAME = "/cryp_filesystem";
         DbPassphrase.createDbKeystore( ctx);
-        String password32 = DbPassphrase.getDbPassphrase( ctx);//TODO consider returning byte[32]
+        byte[] password32 = Passphrase.toBytes( DbPassphrase.getDbPassphrase( ctx));
         boolean failure = false;
 
         String path = ctx.getDir("vfs", Context.MODE_PRIVATE).getAbsolutePath() + FILESYSTEM_NAME;
         try {
-            StorageManager.mountStorage( ctx, path, password32.getBytes());
+            StorageManager.mountStorage( ctx, path, password32);
         } catch (Exception e) {
             failure = true;
         }
         /**
-         * Failure can be a beta database or failed keystore encryption.
+         * Failure can be caused by a beta database error or failed keystore encryption.
          */
         if( failure ){
 
             try {
-                password32 = CConst.STRING32;
-                StorageManager.mountStorage( ctx, path, password32.getBytes());
+                password32 = Passphrase.toBytes( CConst.STRING32.toCharArray());
+                StorageManager.mountStorage( ctx, path, password32);
             } catch (Exception e) {
                 Toast.makeText( ctx, "Unable to mount Crypto volume",Toast.LENGTH_LONG).show();
                 LogUtil.logException( Omni.class, e);
             }
         }
+        // Zero the bytes and set size to zero
+        password32 = Passphrase.cleanArray( password32);
         /**
          * Each root starts and ends with SLASH
          */
