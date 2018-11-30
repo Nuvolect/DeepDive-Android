@@ -165,6 +165,8 @@ public class Persist {
 
         final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
         pref.edit().putString( persistKey, cryptString).commit();
+
+        Passphrase.cleanArray( clearBytes);
     }
 
 
@@ -194,6 +196,8 @@ public class Persist {
             byte[] encryptBytes = Base64.decode( encryptString, Base64.DEFAULT);
             byte[] clearBytes = KeystoreUtil.decrypt( CConst.APP_KEY_ALIAS, encryptBytes);
             char[] clearChars = Passphrase.toChars( clearBytes);
+
+            Passphrase.cleanArray( clearBytes);
 
             return clearChars;
         }

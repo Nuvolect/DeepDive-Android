@@ -23,35 +23,41 @@ public class Passphrase {
     public static int SYSTEM_MODE = ALPHA_UPPER | ALPHA_LOWER | NUMERIC;
 
 
-
+    /**
+     * Generate a random password of the specific length using a variety of character types.
+     * Does not guarantee each variety of character types is used.
+     * @param length
+     * @param mode
+     * @return
+     */
     public static char[] generateRandomPassword(int length, int mode) {
 
-        //FIXME revisit requirements to include at least 1 of each char type
-
-        String characters = "";
+        StringBuffer sourceBuffer = new StringBuffer( 0 );
 
         if( (mode & ALPHA_UPPER) > 0)
-            characters += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            sourceBuffer.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         if( (mode & ALPHA_LOWER) > 0)
-            characters += "abcdefghijklmnopqrstuvwxyz";
+            sourceBuffer.append("abcdefghijklmnopqrstuvwxyz");
         if( (mode & NUMERIC) > 0)
-            characters += "0123456789";
+            sourceBuffer.append("0123456789");
         if( (mode & SPECIAL) > 0)
-            characters += "!$%@#";
+            sourceBuffer.append("!$%@#");
         if( (mode & HEX) > 0)
-            characters += "0123456789abcdef";
+            sourceBuffer.append("0123456789abcdef");
 
-        if( characters.isEmpty())
-            characters = "0123456789";
+        if( sourceBuffer.length() == 0)
+            sourceBuffer.append("0123456789");
 
-        int charactersLength = characters.length();
+        int sourceLength = sourceBuffer.length();
 
         char[] ranChars = new char[ length];
 
         for (int i = 0; i < length; i++) {
-            double index = Math.random() * charactersLength;
-            ranChars[i] = characters.charAt((int) index);
+            double index = Math.random() * sourceLength;
+            ranChars[i] = sourceBuffer.charAt((int) index);
         }
+        sourceBuffer.delete( 0, sourceLength);
+
         return ranChars;
     }
 

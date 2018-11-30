@@ -65,7 +65,7 @@ public class CrypServer extends NanoHTTPD{
     /**
      * System wide security token.
      */
-    private static String m_sec_tok = "";
+    private static String m_sec_tok = "";//FIXME change to char[]
     private static IHTTPSession m_session = null;
 
     private static boolean mAuthenticated = false;
