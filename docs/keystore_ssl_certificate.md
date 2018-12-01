@@ -1,8 +1,7 @@
 # Keystore and Security Certificate
 
-DeepDive uses a self-generated and self-signed certificate. The typical and insecure method that 
-was previously used deployed a static certificate in application Assets. This approach typically 
-used for an Internet server assumes that the host computer is secure. 
+DeepDive uses a self-generated and self-signed certificate. It does not have a domain name or
+a static IP address, consequently it is impossible to avoid security certificate warnings. 
 
 ## The Security Certificate
 On Android, the host computer is the smartphone, and the application APK containing the 

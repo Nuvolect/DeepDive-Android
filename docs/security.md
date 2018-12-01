@@ -12,10 +12,7 @@ Data in Place
 -------------  
 
 1. The Crypto volume 32 character password is randomly generated using Math.random()
-2. It is encrypted and stored in the Apps private data area
-3. The encryption key is generated from a static application key and the device ID
-
-4. The user can replace the 32 character password
+2. It is encrypted with the Android keystore and stored in the Apps private data area
 
 
 Data in Motion  
@@ -30,14 +27,12 @@ Vulnerabilities
 
 1. Math.random() can be predicted, it is used to create the initial database password
 2. The static encryption key can be derived if the device ID is captured
-3. The static encryption key can be seen when reverse engineering the application
-4. Certain memory locations hold sensitive information
+3. Certain memory locations hold sensitive information that may be exposed in virtual memory
 
 
 Security Improvements  
 ---------------------  
 
-1. Obscure the static enceryption key making reverse engineering more difficult
-2. Clear memory holding sensitive information after use
+1. Clear memory holding sensitive information after use
 
 
