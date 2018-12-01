@@ -1,25 +1,10 @@
 # Keystore and Security Certificate
 
-DeepDive uses a self-generated and self-signed certificate. It does not have a domain name or
-a static IP address, consequently it is impossible to avoid security certificate warnings. 
-
-## The Security Certificate
-On Android, the host computer is the smartphone, and the application APK containing the 
-certificate is easily reverse engineered, revealing their content. Any file stored in an apps 
-Assets can be extracted verbatim. The security certificate can be loaded into a network protocol 
-analyzer such as Wireshark with an ability to expose the encrypted communications. 
-
-## The Keystore and Certificate Password
-The next problem is securing the password to be used with the security certificate. The typical 
-server approach is to store the password in the apps code and or data. It can be obscured through 
-various methods, but when the code is right there that the app uses to exercise the certificate, 
-it is generally easy to reverse engineer the method and resulting password. 
-
-## The Security Certificate and Password Solution
-DeepDive solves this problem by self-generating a self-signed certificate and assigning a password 
-to it that is locally encrypted by the Android Keystore. Only the DeepDive Android app can decrypt 
-the password and only the decrypted password can activate the self-signed certificate. 
-The encrypted password can be stored anywhere and the self-signed certificate is password protected. 
+DeepDive self-generates a self-signed certificate using a password that is locally encrypted 
+by the Android Keystore. Only the DeepDive Android app can decrypt the password and only the 
+decrypted password can activate the self-signed certificate. The encrypted password is stored
+in the app private data area (it can be stored anywhere ) and the self-signed certificate 
+is password protected. 
 
 Given the app now has a secure security certificate, https communications can be used to download 
 any additional certificates, passwords, etc., from a server, if necessary but generally, 
@@ -33,7 +18,7 @@ It does this by matching the embedded domain name and/or static IP address. Sinc
 hosted on Android, it does not have a domain name and it uses a dynamic IP address assigned by the 
 associated WiFi router.
 
-## Implementation and Testing Details
+## Diagnostic code removed from WebService.java
 
 For testing, a keystore.bks file can be loaded into Assets. This code will copy the file from 
 Assets to the root that can be access from Finder.

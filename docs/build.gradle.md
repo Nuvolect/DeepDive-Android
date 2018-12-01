@@ -1,3 +1,32 @@
+# Deepdive build script
+
+To make the app without having to modify the deepdive build script, 
+create the file "/.gradle/keystore.properties". In this file add the
+following four lines:
+
+```
+DD_keyAlias=deepdive
+DD_storeFile=/Users/... path to your app keystore
+DD_storePassword= ... your keystore password
+DD_keyPassword= --- your app key password
+```
+
+The advantage to this approach is that your private app details are not managed
+by git and will not be exposed. If you choose to use another approach that is fine
+just do not publish your private app passwords to git.
+
+
+## Detailed build script
+Previously the app had a detailed build script. It was simplified by using
+a single command to load and compile all of the jar files under /libs. 
+The historical build script is captured here.
+
+```
+implementation fileTree(include: ['*.jar'], dir: 'libs')
+```
+
+## Historical build script
+```
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -131,18 +160,61 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     // DEX2JAR
-    implementation 'com.google.guava:guava:20.0'//Upgrade breaks build
+    implementation 'com.google.guava:guava:20.0'
 
+    //    implementation 'com.google.guava:guava:24.1-jre'// Version has 10 errors, will not compile
     implementation 'asm:asm-all:3.3.1'
     implementation 'org.antlr:antlr:3.5.2'
 
+    //    compile files('libs/dex-ir-1.12.jar')
+    //    compile files('libs/dex-reader-1.15.jar')
+    //    compile files('libs/dex-tools-0.0.9.15.jar')
+    //    compile files('libs/dex-translator-0.0.9.15.jar')
+    //    compile files('libs/jsr305-1.3.9.jar')
+
+    // CLASS FILE READER - JAVA DECOMPILER
+    //    compile files('libs/cfr_0_120.jar')
+
+    // JaDX
+    //    compile files('libs/dx-1.10.jar')
+    //    compile files('libs/android-5.1-clst-core.jar')
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'uk.com.robust-it:cloning:1.9.2'
     implementation 'com.intellij:annotations:12.0@jar'
 
+    // APK PARSER AND BINARY XML DECODER
+    //        compile 'net.dongliu:apk-parser:2.1.7'
     api 'com.jaredrummler:apk-parser:1.0.2'
 
+    // Fernflower
+    //    compile files('libs/fernflower.jar')
+    // CRASHLYTICS BUG REPORTING SDK
+    // https://www.fabric.io/kits/android/crashlytics/install
+    //    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+    //        transitive = true;
+    //    }
+
+    // APACHE LUCENE file search
+
+    //    compile group: 'org.apache.lucene', name: 'lucene-core', version: '4.2.1'
+    //    compile files('libs/lucene-core-5.3.0-mobile-2.jar')
+    //    compile files('libs/lucene-join-5.3.0-mobile-2.jar')
+    //    compile files('libs/lucene-queryparser-5.3.0-mobile-2.jar')
+    //    compile files('libs/lucene-memory-5.3.0-mobile-2.jar')
+    //    compile files('libs/lucene-suggest-5.3.0-mobile-2.jar')
+    //    compile files('libs/lucene-analyzers-common-5.3.0-mobile-2.jar')
+    //    compile files('libs/lucene-queries-5.3.0-mobile-2.jar')
+    //    compile files('libs/lucene-misc-5.3.0-mobile-2.jar')
+    //    compile files('libs/lucene-sandbox-5.3.0-mobile-2.jar')
+    //    compile files('libs/lucene-highlighter-5.3.0-mobile-2.jar')
+
+    // For headsupdev license manager
+    // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+    //    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.6'
+    // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+    //    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0-b170201.1204'
     implementation 'commons-codec:commons-codec:1.10'
+
     implementation 'com.madgag.spongycastle:bcpkix-jdk15on:1.58.0.0'
     implementation 'com.madgag.spongycastle:bcpg-jdk15on:1.58.0.0'
 }
@@ -153,3 +225,5 @@ idea {
         downloadSources = true
     }
 }
+
+```
