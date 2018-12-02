@@ -30,14 +30,14 @@ public class User {
 
         m_currentUserLogin = "user";
 
-        LogUtil.log( "Current userName: "+m_currentUserLogin);
+        LogUtil.log( LogUtil.LogType.USER, "Current userName: "+m_currentUserLogin);
 
         assert ! m_currentUserLogin.contains(" ");
 
-        LogUtil.log( "user.home: "+ System.getProperty("user.home"));
-        LogUtil.log( "user.name: "+ System.getProperty("user.name"));
-        LogUtil.log( "user.dir: "+ System.getProperty("user.dir"));
-        LogUtil.log( "App name: "+ AppSpecific.APP_NAME);
+        LogUtil.log( LogUtil.LogType.USER, "user.home: "+ System.getProperty("user.home"));
+        LogUtil.log( LogUtil.LogType.USER, "user.name: "+ System.getProperty("user.name"));
+        LogUtil.log( LogUtil.LogType.USER, "user.dir: "+ System.getProperty("user.dir"));
+        LogUtil.log( LogUtil.LogType.USER, "App name: "+ AppSpecific.APP_NAME);
         m_separator = System.getProperty("file.separator");
         m_userName = System.getProperty("user.name");
 

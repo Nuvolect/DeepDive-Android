@@ -15,6 +15,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -48,8 +50,8 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends FragmentActivity {
 
-    static Activity m_act;
-    Context m_ctx;
+    private static Activity m_act;
+    private static Context m_ctx;
     private Bundle m_savedInstanceState;
     private final static boolean DEBUG = LogUtil.DEBUG;
 
@@ -114,7 +116,7 @@ public class MainActivity extends FragmentActivity {
         @Override
         public void licenseResult(LicenseManager.LicenseResult license) {
 
-        if(DEBUG) LogUtil.log("License result: "+license.toString());
+        if(DEBUG) LogUtil.log(LogUtil.LogType.MAIN_ACTIVITY, "License result: "+license.toString());
         LicensePersist.setLicenseResult(m_ctx, license);
 
         switch ( license) {
@@ -148,7 +150,7 @@ public class MainActivity extends FragmentActivity {
 
         if(appUpgraded) {
 
-            Toast.makeText(getApplicationContext(), "Application upgraded", Toast.LENGTH_LONG).show();
+            Toast.makeText( m_act, "Application upgraded", Toast.LENGTH_LONG).show();
 
             // Execute upgrade methods
         }
@@ -193,12 +195,30 @@ public class MainActivity extends FragmentActivity {
 
     private void quitApp(){
 
-        Toast.makeText(getApplicationContext(), "Terminating server", Toast.LENGTH_LONG).show();
         Intent serverIntent = new Intent(m_ctx, WebService.class);
-        m_ctx.stopService( serverIntent);
+        boolean serverStopped = m_ctx.stopService( serverIntent);
+        LogUtil.log( LogUtil.LogType.MAIN_ACTIVITY, "Embedded webserver stopped: "+serverStopped);
         m_act.finish();
-        System.exit(0);
+        delayShutdownForToast.dispatchMessage(new Message());
     }
+
+    private Handler delayShutdownForToast = new Handler() {
+        @Override
+        public void handleMessage(Message message) {
+            Toast.makeText( m_act, "Webserver shutting down", Toast.LENGTH_LONG).show();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(3000);
+                    }
+                    catch (Exception e) { }
+                    LogUtil.log( LogUtil.LogType.MAIN_ACTIVITY, "Calling system.exit: ");
+                    System.exit(0);
+                }
+            }).start();
+        }
+    };
 
     private boolean haveNecessaryPermissions() {
         return( hasPermission(WRITE_EXTERNAL_STORAGE));
@@ -212,12 +232,12 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        LogUtil.log("MainActivity.onActivityResult()");
+        LogUtil.log( LogUtil.LogType.MAIN_ACTIVITY, "MainActivity.onActivityResult()");
 
         switch( requestCode ){
 
             default:
-                if(DEBUG) LogUtil.log("ERROR, MainActivity invalid requestCode: "+requestCode);
+                if(DEBUG) LogUtil.log( LogUtil.LogType.MAIN_ACTIVITY, "ERROR, MainActivity invalid requestCode: "+requestCode);
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -282,7 +302,7 @@ public class MainActivity extends FragmentActivity {
                 break;
             }
             default:{
-                LogUtil.log(LogUtil.LogType.MAIN, "uncaught onOptionsItemSelected: "+item.getItemId());
+                LogUtil.log( LogUtil.LogType.MAIN_ACTIVITY, "uncaught onOptionsItemSelected: "+item.getItemId());
             }
         }
         return super.onOptionsItemSelected(item);
@@ -313,7 +333,7 @@ public class MainActivity extends FragmentActivity {
                 break;
             }
             default:
-                LogUtil.log(LogUtil.LogType.MAIN, "uncaught onClickAction: "+view.getId());
+                LogUtil.log(LogUtil.LogType.MAIN_ACTIVITY, "uncaught onClickAction: "+view.getId());
         }
     }
 

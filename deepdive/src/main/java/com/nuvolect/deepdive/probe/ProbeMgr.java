@@ -37,7 +37,7 @@ public class ProbeMgr {
         if( m_probeById.containsKey( key))
             return m_probeById.get( key);
 
-        LogUtil.log( ProbeMgr.class, "New probe, key: "+key);
+        LogUtil.log( LogUtil.LogType.PROBE_MGR, "New probe, key: "+key);
 
         Probe probe = new Probe( ctx, packageName);
         m_probeById.put( key, probe);

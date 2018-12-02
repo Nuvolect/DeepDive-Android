@@ -110,7 +110,7 @@ public class Omni {
         }else{
             String s = "Access to local storage denied";
             Toast.makeText(ctx, s, Toast.LENGTH_SHORT).show();
-            LogUtil.log( Omni.class, s);
+            LogUtil.log( LogUtil.LogType.OMNI, s);
         }
         activeVolumeIds.add( userVolumeId_0);
 
@@ -138,7 +138,7 @@ public class Omni {
                 StorageManager.mountStorage( ctx, path, password32);
             } catch (Exception e) {
                 Toast.makeText( ctx, "Unable to mount Crypto volume",Toast.LENGTH_LONG).show();
-                LogUtil.logException( Omni.class, e);
+                LogUtil.logException( LogUtil.LogType.OMNI, e);
             }
         }
         // Zero the bytes and set size to zero
@@ -192,9 +192,9 @@ public class Omni {
 
             boolean folderCreated = f.mkdirs();
             if( folderCreated)
-                LogUtil.log( Omni.class, "Thumbnail folder created: "+volumeId + f.getPath());
+                LogUtil.log( LogUtil.LogType.OMNI, "Thumbnail folder created: "+volumeId + f.getPath());
             else
-                LogUtil.log( Omni.class, "Thumbnail folder exists: " +volumeId+ f.getPath());
+                LogUtil.log( LogUtil.LogType.OMNI, "Thumbnail folder exists: " +volumeId+ f.getPath());
 
             if( ! f.exists()){
                 success = false;
