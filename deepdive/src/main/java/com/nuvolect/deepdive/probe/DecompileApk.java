@@ -114,9 +114,6 @@ public class DecompileApk {
     private String m_appApkPath;
     private String m_appFolderPath;
     private String m_appFolderUrl;
-    private String m_dexPath;
-    private String m_jarPath;
-    private String m_optimizedDexPath;
     private String m_srcCfrFolderPath;
     private String m_srcFernFolderPath;
     private String m_srcJadxFolderPath;
@@ -434,6 +431,8 @@ public class DecompileApk {
                                 m_progressStream.putStream( "Translated: "+path);
                             }
                         }
+                        paths = null; // Release memory
+
                         // Write over manifest with unencoded version
                         String manifestXml = apkParser.getManifestXml();
                         OmniFile manifestFile = new OmniFile( m_volumeId, m_appFolderPath+"AndroidManifest.xml");
@@ -831,24 +830,6 @@ public class DecompileApk {
                             final DCCommonState dcCommonState = new DCCommonState(options, classFileSource);
                             DumperFactoryImpl dumperFactory = new DumperFactoryImpl(options);
                             org.benf.cfr.reader.Main.doJar( dcCommonState, jarFile.getAbsolutePath(), dumperFactory);
-
-//                            GetOptParser getOptParser = new GetOptParser();
-//
-//                            org.benf.cfr.reader.util.getopt.Options options =
-//                                    getOptParser.parse(args, OptionsImpl.getFactory());
-//
-//                            if (!options.optionIsSet(OptionsImpl.HELP) && options.getOption(OptionsImpl.FILENAME) != null) {
-//
-//                                m_progressStream.putStream("CFR starting from DEX: "+fileName);
-//
-//                                ClassFileSourceImpl classFileSource = new ClassFileSourceImpl(options);
-//                                final DCCommonState dcCommonState = new DCCommonState(options, classFileSource);
-//                                final String path = options.getOption(OptionsImpl.FILENAME);
-//                                DumperFactoryImpl dumperFactory = new DumperFactoryImpl(options);
-//                                org.benf.cfr.reader.Main.doJar( dcCommonState, path, dumperFactory);
-//                                m_progressStream.putStream("See srcCfr/summary.txt");
-//                                m_progressStream.putStream("CFR from DEX complete: "+fileName);
-//                            }
                         }
                     }
 
