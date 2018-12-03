@@ -119,7 +119,7 @@ dependencies {
     implementation 'com.github.clans:fab:1.6.4'
 
     //    compile 'info.guardianproject.iocipher:IOCipherStandalone:0.4'
-    implementation 'net.zetetic:android-database-sqlcipher:3.5.4'
+    implementation 'net.zetetic:android-database-sqlcipher:3.5.9'
     implementation 'info.guardianproject.iocipher:IOCipher:0.4'
 
     // APACHE COMMONS LIBRARIES

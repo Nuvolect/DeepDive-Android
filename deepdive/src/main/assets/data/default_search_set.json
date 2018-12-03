@@ -44,10 +44,6 @@
     "description":"Java crypto"
   },
   {
-    "query": "http:\\",
-    "description":"Clear text http"
-  },
-  {
     "query": "crypto",
     "description":"Common search for crypto"
   }
