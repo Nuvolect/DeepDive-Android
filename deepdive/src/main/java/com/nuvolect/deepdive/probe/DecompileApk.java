@@ -44,7 +44,9 @@ import org.benf.cfr.reader.util.output.DumperFactoryImpl;
 import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler;
 import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger;
 import org.jf.dexlib2.DexFileFactory;
+import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.immutable.ImmutableDexFile;
 import org.jf.dexlib2.writer.pool.DexPool;
 import org.json.JSONArray;
@@ -579,7 +581,7 @@ public class DecompileApk {
                         m_progressStream.putStream("Processing: "+fileName+".dex");
                         org.jf.dexlib2.iface.DexFile memoryDexFile = null;
                         try {
-                            memoryDexFile = DexFileFactory.loadDexFile( dexFile.getStdFile(), 19);
+                            memoryDexFile = DexFileFactory.loadDexFile( dexFile.getStdFile(), Opcodes.forApi(19));
                         } catch (Exception e) {
                             m_progressStream.putStream("The app DEX file cannot be decompiled.");
                             LogUtil.logException(LogUtil.LogType.DECOMPILE, e);
@@ -610,15 +612,18 @@ public class DecompileApk {
 
                         if( classes.size() > 0){
 
-                            org.jf.dexlib2.iface.DexFile optimizedDexFileDexLib2 = null;
-                            optimizedDexFileDexLib2 = new ImmutableDexFile(classes);
+                            DexFile optDexFile = new ImmutableDexFile( Opcodes.forApi(19), classes);
                             classes = null; // Release memory
 
                             try {
-                                dexFile.delete();
-//                                DexFileFactory.writeDexFile( dexFile.getStdFile().getAbsolutePath(), optimizedDexFileDexLib2);//SPRINT upgrade
-                                DexPool.writeTo( dexFile.getStdFile().getAbsolutePath(), optimizedDexFileDexLib2);
-                            String size = NumberFormat.getNumberInstance(Locale.US).format(dexFile.length());
+                                if( dexFile.delete())
+                                    m_progressStream.putStream("Fat DEX file delete success: "+dexFile.getName());
+                                else
+                                    m_progressStream.putStream("Fat DEX file delete FAILED: "+dexFile.getName());
+
+                                DexPool.writeTo( dexFile.getStdFile().getAbsolutePath(), optDexFile);
+                                String size = NumberFormat.getNumberInstance(Locale.US).format(dexFile.length());
+
                                 m_progressStream.putStream("Optimized DEX file created: "
                                         +dexFile.getName()+", size: "+size);
                             } catch (IOException e) {
@@ -628,7 +633,7 @@ public class DecompileApk {
                                 m_progressStream.putStream("DEX Exception, write error: "+dexFile.getName());
                                 LogUtil.logException( LogUtil.LogType.DECOMPILE, e);
                             }
-                            optimizedDexFileDexLib2 = null; // release memory
+                            optDexFile = null; // release memory
                         }
                         else{
 
