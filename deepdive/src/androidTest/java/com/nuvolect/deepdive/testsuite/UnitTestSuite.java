@@ -14,7 +14,6 @@ import com.nuvolect.deepdive.util.JsonReaderTest;
 import com.nuvolect.deepdive.util.KeystoreUtilTest;
 import com.nuvolect.deepdive.util.OmniTest;
 
-import org.headsupdev.license.LicenseTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -28,7 +27,6 @@ import org.junit.runners.Suite;
         OmniTest.class,
         CmdMkfileTest.class,
         CmdRmFileTest.class,
-        LicenseTest.class,
         JsonReaderTest.class,
     }
 )

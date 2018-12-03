@@ -46,6 +46,7 @@ import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger;
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.immutable.ImmutableDexFile;
+import org.jf.dexlib2.writer.pool.DexPool;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -118,7 +119,6 @@ public class DecompileApk {
     private String m_srcFernFolderPath;
     private String m_srcJadxFolderPath;
 
-    //    IGNORE_LIBS = prefs.getBoolean("ignore_libraries", true);
     private int STACK_SIZE = 20 * 1024 * 1024;
 
     private String DEEPDIVE_THREAD_GROUP = "DeepDive Thread Group";
@@ -286,7 +286,7 @@ public class DecompileApk {
         try {
             action_id = THREAD_ID.valueOf( action);
         } catch (IllegalArgumentException e) {
-            LogUtil.log( DecompileApk.class, "Error, invalid command: "+action);
+            LogUtil.log( LogUtil.LogType.DECOMPILE, "Error, invalid command: "+action);
         }
 
         switch( action_id){
@@ -375,8 +375,6 @@ public class DecompileApk {
 
             Analytics.send( m_ctx, category, action, label, value);
 
-//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
-
             wrapper.put("extract_apk_status", 1); // Change to success if we get here
             wrapper.put("extract_apk_url", m_appFolderUrl);
 
@@ -395,7 +393,7 @@ public class DecompileApk {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
 
-                LogUtil.log( DecompileApk.class, "Uncaught exception: "+e.toString());
+                LogUtil.log( LogUtil.LogType.DECOMPILE, "Uncaught exception: "+e.toString());
                 m_progressStream.putStream("Uncaught exception: "+t.getName());
                 m_progressStream.putStream("Uncaught exception: "+e.toString());
             }
@@ -540,7 +538,7 @@ public class DecompileApk {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
 
-                LogUtil.log( DecompileApk.class, "Uncaught exception: "+e.toString());
+                LogUtil.log( LogUtil.LogType.DECOMPILE, "Uncaught exception: "+e.toString());
                 m_progressStream.putStream("Uncaught exception: "+t.getName());
                 m_progressStream.putStream("Uncaught exception: "+e.toString());
             }
@@ -566,7 +564,7 @@ public class DecompileApk {
                         m_progressStream.putStream("Exclude class: "+excludeClass);
                     }
                 } catch (Exception e) {
-                    LogUtil.logException(DecompileApk.class, e);
+                    LogUtil.logException(LogUtil.LogType.DECOMPILE, e);
                 }
                 if( s != null)
                     s.close();
@@ -584,12 +582,13 @@ public class DecompileApk {
                             memoryDexFile = DexFileFactory.loadDexFile( dexFile.getStdFile(), 19);
                         } catch (Exception e) {
                             m_progressStream.putStream("The app DEX file cannot be decompiled.");
-                            LogUtil.logException(DecompileApk.class, e);
+                            LogUtil.logException(LogUtil.LogType.DECOMPILE, e);
                             continue;
                         }
 
                         int excludedClassCount = 0;
                         Set<? extends ClassDef> origClassSet = memoryDexFile.getClasses();
+                        memoryDexFile = null; // Release memory
 
                         for (org.jf.dexlib2.iface.ClassDef classDef : origClassSet) {
 
@@ -603,6 +602,7 @@ public class DecompileApk {
                                 classes.add(classDef);
                             }
                         }
+                        origClassSet = null; // Release memory
 
                         m_progressStream.putStream("Excluded classes #" + excludedClassCount);
                         m_progressStream.putStream("Included classes #" + classes.size());
@@ -612,16 +612,23 @@ public class DecompileApk {
 
                             org.jf.dexlib2.iface.DexFile optimizedDexFileDexLib2 = null;
                             optimizedDexFileDexLib2 = new ImmutableDexFile(classes);
+                            classes = null; // Release memory
 
                             try {
                                 dexFile.delete();
-                                DexFileFactory.writeDexFile( dexFile.getStdFile().getAbsolutePath(), optimizedDexFileDexLib2);
-                                String size = NumberFormat.getNumberInstance(Locale.US).format(dexFile.length());
+//                                DexFileFactory.writeDexFile( dexFile.getStdFile().getAbsolutePath(), optimizedDexFileDexLib2);//SPRINT upgrade
+                                DexPool.writeTo( dexFile.getStdFile().getAbsolutePath(), optimizedDexFileDexLib2);
+                            String size = NumberFormat.getNumberInstance(Locale.US).format(dexFile.length());
                                 m_progressStream.putStream("Optimized DEX file created: "
                                         +dexFile.getName()+", size: "+size);
+                            } catch (IOException e) {
+                                m_progressStream.putStream("DEX IOException, write error: "+dexFile.getName());
+                                LogUtil.logException( LogUtil.LogType.DECOMPILE, e);
                             } catch (Exception e) {
-                                m_progressStream.putStream("DEX write error: "+dexFile.getName());
+                                m_progressStream.putStream("DEX Exception, write error: "+dexFile.getName());
+                                LogUtil.logException( LogUtil.LogType.DECOMPILE, e);
                             }
+                            optimizedDexFileDexLib2 = null; // release memory
                         }
                         else{
 
@@ -642,7 +649,7 @@ public class DecompileApk {
 
                 Analytics.send( m_ctx, category, action, label, value);
 
-//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+//                LogUtil.log(LogUtil.LogType.DECOMPILE, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
                 m_optimize_dex_time = 0;
 
             }
@@ -681,7 +688,7 @@ public class DecompileApk {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
 
-                LogUtil.log( DecompileApk.class, "Uncaught exception: "+e.toString());
+                LogUtil.log( LogUtil.LogType.DECOMPILE, "Uncaught exception: "+e.toString());
                 m_progressStream.putStream("Uncaught exception: "+t.getName());
                 m_progressStream.putStream("Uncaught exception: "+e.toString());
             }
@@ -755,7 +762,7 @@ public class DecompileApk {
 
                 Analytics.send( m_ctx, category, action, label, value);
 
-//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+//                LogUtil.log(LogUtil.LogType.DECOMPILE, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
                 m_dex2jar_time = 0;
             }
 
@@ -784,7 +791,7 @@ public class DecompileApk {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
 
-                LogUtil.log( DecompileApk.class, "Uncaught exception: "+e.toString());
+                LogUtil.log( LogUtil.LogType.DECOMPILE, "Uncaught exception: "+e.toString());
                 m_progressStream.putStream("Uncaught exception: "+t.getName());
                 m_progressStream.putStream("Uncaught exception: "+e.toString());
             }
@@ -877,7 +884,7 @@ public class DecompileApk {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
 
-                LogUtil.log( DecompileApk.class, "Uncaught exception: "+e.toString());
+                LogUtil.log( LogUtil.LogType.DECOMPILE, "Uncaught exception: "+e.toString());
                 m_progressStream.putStream("Uncaught exception: "+t.getName());
                 m_progressStream.putStream("Uncaught exception: "+e.toString());
             }
@@ -940,7 +947,7 @@ public class DecompileApk {
 
                 Analytics.send( m_ctx, category, action, label, value);
 
-//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+//                LogUtil.log(LogUtil.LogType.DECOMPILE, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
 
                 m_jadx_time = 0;
             }
@@ -970,7 +977,7 @@ public class DecompileApk {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
 
-                LogUtil.log( DecompileApk.class, "Uncaught exception: "+e.toString());
+                LogUtil.log( LogUtil.LogType.DECOMPILE, "Uncaught exception: "+e.toString());
                 m_progressStream.putStream("Uncaught exception: "+t.getName());
                 m_progressStream.putStream("Uncaught exception: "+e.toString());
             }
@@ -1055,7 +1062,7 @@ public class DecompileApk {
 
                 Analytics.send( m_ctx, category, action, label, value);
 
-//                LogUtil.log(DecompileApk.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
+//                LogUtil.log(LogUtil.LogType.DECOMPILE, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
 
                 m_fern_time = 0;
             }
