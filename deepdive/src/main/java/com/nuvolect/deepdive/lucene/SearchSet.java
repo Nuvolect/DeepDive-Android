@@ -38,7 +38,6 @@ public class SearchSet {//NEXTSPRINT expand wiki search set docs to include basi
 
     static String[] m_search_sets = new String[]{
             "analytics.json",
-            "certificates.json",
             "default_search_set.json",
             "HummingWhale.json",
             "jakhar.aseem.diva.json",
