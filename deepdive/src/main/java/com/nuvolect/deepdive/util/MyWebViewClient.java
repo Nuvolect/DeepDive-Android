@@ -13,11 +13,11 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.nuvolect.deepdive.webserver.WebService;
 import com.nuvolect.deepdive.webserver.WebUtil;
 
-//TODO create class description
-//
+/**
+ * Provide a class to receive SSL errors.
+ */
 public class MyWebViewClient extends WebViewClient {
 
     private final Activity m_act;
@@ -29,7 +29,6 @@ public class MyWebViewClient extends WebViewClient {
 
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-//        super.onReceivedSslError(view, handler, error);
 
         /**
          * Only allow the certificate to function if the request originates from
@@ -46,8 +45,6 @@ public class MyWebViewClient extends WebViewClient {
 
             String certificate = error.getCertificate().toString();
             LogUtil.log(LogUtil.LogType.MY_WEB_VIEW_CLIENT, "SSL certificate : "+certificate);
-            LogUtil.log(LogUtil.LogType.MY_WEB_VIEW_CLIENT, "My Certificate  : "+WebService.CERTIFICATE_DETAILS);
-
             LogUtil.log(LogUtil.LogType.MY_WEB_VIEW_CLIENT, "Url: "+url);
         }
 

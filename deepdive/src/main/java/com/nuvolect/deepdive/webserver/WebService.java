@@ -44,7 +44,6 @@ public class WebService extends Service {
     private static Context m_ctx;
     private Handler mHandler;
     public static String HTTP_PROTOCOL = "https://";
-    public static String CERTIFICATE_DETAILS = "CN=Nuvolect LLC,OU=Development,O=Nuvolect LLC,L=Orlando,ST=FL,C=US;";
 
     private static SSLServerSocketFactory sslServerSocketFactory;
     private static SSLSocketFactory sslSocketFactory;
