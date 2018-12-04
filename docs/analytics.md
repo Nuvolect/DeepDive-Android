@@ -3,7 +3,8 @@
 ## Rationale
 The purpose is for engineering and user experience. 
 Analytics provide anonymous eyes into use of the application that can help with 
-unserstanding user intent and how to improve the application.
+understanding user intent and how to improve the application. The difficult challenge
+is not figuring out what to put into an app, but what can be removed.
 
 ## Rest Interfaces
 * The obvious cmds are logged. 
