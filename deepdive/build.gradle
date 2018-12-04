@@ -115,7 +115,7 @@ dependencies {
     implementation 'com.squareup.okhttp:okhttp-urlconnection:2.6.0'
     implementation 'com.github.clans:fab:1.6.4'
     //    compile 'info.guardianproject.iocipher:IOCipherStandalone:0.4'
-    implementation 'net.zetetic:android-database-sqlcipher:3.5.9'
+    implementation 'net.zetetic:android-database-sqlcipher:3.5.4'
     implementation 'info.guardianproject.iocipher:IOCipher:0.4'
     // APACHE COMMONS LIBRARIES
     implementation 'commons-cli:commons-cli:1.3.1'
