@@ -39,7 +39,7 @@ Search Sets are collections of Lucene Searches. Search for up to a 100 keywords 
 * File manager and finder
 * Instant search and search sets
 * Shell, Logcat & Keystore utilities
-* Android API 19+ (KitKat+)
+* Android API 24+ (Nougat+)
 * Root not required
 
 ## Tools included
