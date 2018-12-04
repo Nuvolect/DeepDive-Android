@@ -42,7 +42,8 @@ import java.util.regex.Pattern;
 /**
  * Methods to search the Omni file structures
  */
-public class Search {
+public class Search {//FIXME add warning: Cannot parse '*': '*' or '?' not allowed as first character in WildcardQuery
+    //FIXME confirm doc indexed is correct when indexing filenames. Indexing the set {certificate.bk, bouncy.bks, stuff_inside.txt} says 1 doc
 
     private static Analyzer m_analyzer;
     private static Directory m_directory = null;

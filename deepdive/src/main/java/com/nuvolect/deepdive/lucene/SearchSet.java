@@ -5,7 +5,7 @@
  * without the GPLv3 restrictions.
  */
 
-package com.nuvolect.deepdive.lucene;//
+package com.nuvolect.deepdive.lucene;
 
 import android.content.Context;
 
@@ -24,9 +24,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Manage search sets
+ * Manage search sets. Default sets are copied from Assets to the user
+ * folder and can be edited or deleted. New sets can be added. The
+ * system keeps track of the most recent set used.
  */
-public class SearchSet {
+public class SearchSet {//NEXTSPRINT expand wiki search set docs to include basic sets
+    //NEXTSPRINT edit certificates to find files with specific file extensions.
 
     static String SEARCH_SET_FOLDER_PATH = "/.search_set/";
     static String DEFAULT_SEARCH_SET_FILENAME = "default_search_set.json";
@@ -35,12 +38,16 @@ public class SearchSet {
 
     static String[] m_search_sets = new String[]{
             "analytics.json",
+            "certificates.json",
             "default_search_set.json",
             "HummingWhale.json",
             "jakhar.aseem.diva.json",
     };
 
     /**
+     * Get the current set of sets and if called for the first time, create a folder in the
+     * user area and copy the default sets into it.
+     *
      * Return the current set of sets in the following form:
      * wrapper
      *   setss:[
@@ -62,18 +69,22 @@ public class SearchSet {
 
         OmniFile searchSetFolder = new OmniFile(volumeId, SEARCH_SET_FOLDER_PATH);
         try {
-            boolean created = OmniUtil.forceMkdir(searchSetFolder);
+            OmniUtil.forceMkdir(searchSetFolder);
 
-            if( created){
-                for( String fileName : m_search_sets){
+            // Cycle through the default search sets and if they do not exists, copy each to user area
+            for( String fileName : m_search_sets){
 
-                    String assetFilePath = CConst.ASSET_DATA_FOLDER+fileName;
-                    OmniFile destinationFolder = new OmniFile( volumeId, SEARCH_SET_FOLDER_PATH+fileName);
-                    OmniUtil.copyAsset( ctx, assetFilePath, destinationFolder);
+                String assetFilePath = CConst.ASSET_DATA_FOLDER+fileName;
+                OmniFile destinationFile = new OmniFile( volumeId, SEARCH_SET_FOLDER_PATH+fileName);
+                if( ! destinationFile.exists()){
+
+                    OmniUtil.copyAsset( ctx, assetFilePath, destinationFile);
+                    LogUtil.log(LogUtil.LogType.SEARCH_SET,"" +
+                            "Default search set added: "+destinationFile.getName());
                 }
             }
         } catch (IOException e) {
-            LogUtil.logException(SearchSet.class, e);
+            LogUtil.logException(LogUtil.LogType.SEARCH_SET, e);
         }
 
         JSONArray sets = new JSONArray();
@@ -132,12 +143,12 @@ public class SearchSet {
             LogUtil.logException(SearchSet.class, e);
             success = false;
         }
-            String category = Analytics.SEARCH_SET;
-            String action = fileName;
-            String label = set.toString();
-            long value = set.length();
+        String category = Analytics.SEARCH_SET;
+        String action = fileName;
+        String label = set.toString();
+        long value = set.length();
 
-            Analytics.send( ctx, category, action, label, value);
+        Analytics.send( ctx, category, action, label, value);
 
 //            LogUtil.log(Search.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
 

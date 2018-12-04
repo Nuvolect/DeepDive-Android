@@ -61,7 +61,7 @@ public class Index {
 
         if( m_interrupt[0]){
 
-            LogUtil.log(Index.class, "Index canceled post interrupt");
+            LogUtil.log(LogUtil.LogType.INDEX, "Index canceled post interrupt");
 
             m_interrupt[0] = false;
             return responseInterruptIndexing();
@@ -130,7 +130,7 @@ public class Index {
                             iwriter.deleteAll();
                             iwriter.commit();
                         } catch (IOException e) {
-                            LogUtil.logException( Index.class, e);
+                            LogUtil.logException( LogUtil.LogType.INDEX, e);
                             m_error[0] = "IndexWriter constructor exception";
                         }
 
@@ -152,13 +152,13 @@ public class Index {
                             for (OmniFile file : files) {
 
                                 if ( m_interrupt[0]) {
-                                    LogUtil.log(Index.class, "Iterator loop canceled");
+                                    LogUtil.log(LogUtil.LogType.INDEX, "Iterator loop canceled");
                                     break;
                                 }
 
                                 String path = file.getPath();
 
-                                LogUtil.log(Index.class, "indexing: " + path);
+//                                LogUtil.log(LogUtil.LogType.INDEX, "indexing: " + path);// this is a bit excessive
                                 iwriter.addDocument(makeDoc( volumeId, path));
                                 synchronized (m_lock) {
                                     ++m_indexedDocs[0];
@@ -173,7 +173,7 @@ public class Index {
                             }
 
                         } catch (Exception e) {
-                            LogUtil.logException( Index.class, e);
+                            LogUtil.logException( LogUtil.LogType.INDEX, e);
                             m_error[0] = "IndexWriter addDocument exception";
                         }
                     }
@@ -197,7 +197,7 @@ public class Index {
                 ireader.close();
                 directory.close();
             } catch (IOException e) {
-                LogUtil.logException( Index.class, e);
+                LogUtil.logException( LogUtil.LogType.INDEX, e);
             }
         }
 
@@ -223,7 +223,7 @@ public class Index {
         synchronized (m_lock) {
             m_interrupt[0] = true;
         }
-        LogUtil.log( Index.class, "interrupting---------------================================================");
+        LogUtil.log( LogUtil.LogType.INDEX, "interrupting---------------================================================");
         return responseInterruptIndexing();
     }
 
