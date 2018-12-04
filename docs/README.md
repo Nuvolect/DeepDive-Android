@@ -1,25 +1,33 @@
 # DeepDive-Android
 An educational tool for the reverse engineering and security assessment of Android apps
 
-We initially experimented with reverse engineering to explore vulnerabilities of our own apps. We learned how hackers find security gaps in our apps. Looking other apps on our phone, we also learned how seemingly legitimate apps invade our privacy.
+We initially experimented with reverse engineering to explore vulnerabilities of our own apps. 
+We learned how hackers find security gaps in our apps. Looking other apps on our phone, 
+we also learned how seemingly legitimate apps invade our privacy.
 
 ## Finally, an easy workflow you can live with
-Android is the server. Access the details of reverse engineering from your handheld device or from the convenience of your large Mac or PC screen. How we use Deep Dive:
+Android is the server. Access the details of reverse engineering from your handheld device 
+or from the convenience of your large Mac or PC screen. How we use Deep Dive:
 1. Join the same WiFi on your Android phone or tablet as your Mac or PC.
 1. Install and start Deep Dive on your Android phone or tablet.
-1. Note the IP address on the home screen and go to that address from your Mac or PC. See Notes On Security.
+1. Note the IP address on the home screen, go to that address from your Mac or PC. 
+1. See Notes On Security.
 
 ## Notes On Security
-All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address. You will see a security warning or error message. Also, the security certificate is posted on Github. For best security, create your own security certificate.
-More details: https://securesuite.org/securesuite_security.pdf
+All communications are encrypted with a self signed security certificate. 
+All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to 
+associate the certificate with a domain name or static IP address. 
+You will see a security warning or error message. 
 
 ## Lucene — Ultra-fast search
 A decompiled app can have hundreds of thousands of files and millions of lines of code.
-That's why DeepDive has Lucene, a near-instant search capability, the search engine behind Amazon, AOL, LinkedIn, and Twitter.
-You can index the source code from a single app or index the entire virtual filesystem and search across hundreds of apps.
+That's why DeepDive has Lucene, a near-instant search capability, the search engine behind Amazon, 
+AOL, LinkedIn, and Twitter. You can index the source code from a single app or index the entire 
+virtual filesystem and search across hundreds of apps.
 
 #### Search for hundreds of keywords at a time
-Search Sets are collections of Lucene Searches. Search for up to a 100 keywords at a time. The app comes with default Search Sets and you can create your own.
+Search Sets are collections of Lucene Searches. Search for up to a 100 keywords at a time. 
+The app comes with default Search Sets and you can create your own.
 
 ## Features
 * The source code is at your fingertips using the elFinder "Mac-like" file manager.
@@ -32,7 +40,7 @@ Search Sets are collections of Lucene Searches. Search for up to a 100 keywords 
 * Private and crypto file storage
 * Instant search and search sets
 * Shell, Logcat & Keystore utilities
-* Android API 19+ (KitKat+)
+* Android API 24+, Nougat
 * Root not required
 
 ## Tools included
@@ -53,11 +61,10 @@ Analytics provide anonymous eyes into use of the application that can help with
 unserstanding user intent and how to improve the application.
 
 ## Licensing
-* This version is free, enjoy! Please provide feedback.
-* Coming soon: Linux version
+* This version is free via GPLv3, enjoy! Please provide feedback.
 ## Contributing Bug Reports
-We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked.
-<https://github.com/teamnuvolect/securesuite/issues>
+We use GitHub for bug tracking. Please search the existing issues for your bug and create 
+a new one if the issue is not yet tracked.
 
 ## Support
 For troubleshooting and support information, please visit the wiki.
@@ -65,7 +72,6 @@ For troubleshooting and support information, please visit the wiki.
 
 For general questions and discussion about features, visit the forum.
 <a href="https://nuvolect.freeforums.net/board/4/discussion-deepdive">
-<img src="https://securesuite.org/img/forum_join_chat.png"  height="50" width="134"></a>
 
 Copyright Nuvolect LLC
 
