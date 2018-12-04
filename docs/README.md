@@ -58,7 +58,7 @@ The app comes with default Search Sets and you can create your own.
 # We Use Analytics
 The purpose is for engineering and user experience. 
 Analytics provide anonymous eyes into use of the application that can help with 
-unserstanding user intent and how to improve the application.
+understanding user intent and how to improve the application.
 
 ## Licensing
 * This version is free via GPLv3, enjoy! Please provide feedback.
