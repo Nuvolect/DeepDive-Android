@@ -205,7 +205,7 @@ public class MainActivity extends FragmentActivity {
     private Handler delayShutdownForToast = new Handler() {
         @Override
         public void handleMessage(Message message) {
-            Toast.makeText( m_act, "Webserver shutting down", Toast.LENGTH_LONG).show();
+            Toast.makeText( m_act, "Webserver shutting down", Toast.LENGTH_SHORT).show();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
