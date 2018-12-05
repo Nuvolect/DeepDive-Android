@@ -5,7 +5,7 @@ We initially experimented with reverse engineering to explore vulnerabilities of
 
 This is an early release, DeepDive is still in BETA. We need <a href="https://nuvolect.com/donate">your donations</a> to help support research, development and testing.
 
-## Finally, an easy workflow you can live with
+## Finally, a workflow you can live with
 Android is the server. Access the details of reverse engineering from your handheld device or from the convenience of your large Mac or PC screen. How we use DeepDive:
 1. Join the same WiFi on your Android phone or tablet as your Mac or PC.
 1. Install and start DeepDive on your Android phone or tablet.
@@ -64,9 +64,10 @@ unserstanding user intent and how to improve the application.
 * Contact <a href="https://nuvolect.com/contact.htm" >Nuvolect LLC</a> for a less restrictive commercial license if you would like to 
 use the software without the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPLv3</a> restrictions.
 
-## Contributing Bug Reports
-We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked.
+## Contributing, Bug Reports
+* We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked.
 <https://github.com/Nuvolect/DeepDive-Android/issues>
+* Want to contribute? By all means, dive in! See CONGRIBUTING.md. The UI could use some help with Angular and other web skills. The Lucene search engine is great but we are not using all it can do. Are you into Android security? Help us expose vulnerabilities and exploitations. 
 
 ## Support
 * For troubleshooting and support information, please visit the wiki. <https://github.com/teamnuvolect/DeepDive-Android/wiki>
