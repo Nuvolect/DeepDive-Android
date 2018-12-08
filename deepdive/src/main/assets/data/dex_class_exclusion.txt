@@ -1,6 +1,8 @@
 Landroid/
+Landroidx/
 Lcom/android/
 Lcom/androidx/
+Lcom/beust/jcommander
 Lcom/fasterxml/
 Lcom/github/
 Lcom/google/
@@ -36,6 +38,7 @@ Lorg/lukhnos/
 Lorg/objectweb/
 Lorg/objenesis/
 Lorg/slf4j/
+Lorg/spongycastle
 Lorg/stringtemplate/
 Lorg/tartarus/
 Lorg/xmlpull/
