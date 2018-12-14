@@ -27,10 +27,7 @@ import javax.crypto.NoSuchPaddingException;
  */
 public class ServerInit {
 
-    public static void init(Context ctx) throws IOException, CertificateException,
-            NoSuchAlgorithmException, InvalidKeyException, UnrecoverableEntryException,
-            InvalidAlgorithmParameterException, NoSuchPaddingException, NoSuchProviderException,
-            KeyStoreException {
+    public static void init(Context ctx) {
 
         /**
          * Initialize application file system support

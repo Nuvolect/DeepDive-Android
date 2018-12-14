@@ -58,17 +58,7 @@ public class WebService extends Service {
         /**
          * Initialize web service command data
          */
-        try {
-            ServerInit.init( m_ctx);
-
-        } catch (IOException | CertificateException  | NoSuchAlgorithmException  |
-        InvalidKeyException  | UnrecoverableEntryException  | InvalidAlgorithmParameterException  |
-        NoSuchPaddingException  | NoSuchProviderException  | KeyStoreException e){
-
-            LogUtil.log(LogUtil.LogType.WEB_SERVICE,
-                    "Server initialization exception, prepare for trouble!");
-            LogUtil.logException(m_ctx, LogUtil.LogType.WEB_SERVICE, e);
-        }
+        ServerInit.init( m_ctx);
 
         WebServiceThread looper = new WebServiceThread();
         looper.start();

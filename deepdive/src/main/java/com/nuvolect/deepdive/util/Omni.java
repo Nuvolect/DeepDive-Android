@@ -18,19 +18,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.crypto.NoSuchPaddingException;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -96,10 +86,10 @@ public class Omni {
      * Probe the device to get current volumes.
      * @param ctx
      */
-    public static boolean init(Context ctx) throws IOException, CertificateException,
-            NoSuchAlgorithmException, InvalidKeyException, UnrecoverableEntryException,
-            InvalidAlgorithmParameterException, NoSuchPaddingException, KeyStoreException,
-            NoSuchProviderException {
+    public static boolean init(Context ctx) {
+
+        // Create if necessary the main application encryption key.
+        KeystoreUtil.createKeyNotExists( ctx, CConst.APP_KEY_ALIAS);
 
         activeVolumeIds = new ArrayList<String>();
         activeVolumeIds.add( cryptoVolumeId);
@@ -109,7 +99,8 @@ public class Omni {
             activeVolumeIds.add( localVolumeId);
         }else{
             String s = "Access to local storage denied";
-            Toast.makeText(ctx, s, Toast.LENGTH_SHORT).show();
+            if( ! LogUtil.DEBUG)
+                Toast.makeText(ctx, s, Toast.LENGTH_SHORT).show();
             LogUtil.log( LogUtil.LogType.OMNI, s);
         }
         activeVolumeIds.add( userVolumeId_0);
@@ -117,32 +108,14 @@ public class Omni {
         /**
          * Create the virtual file system and keep a reference too it.
          */
-        String FILESYSTEM_NAME = "/cryp_filesystem";
-        DbPassphrase.createDbKeystore( ctx);
-        byte[] password32 = Passphrase.toBytes( DbPassphrase.getDbPassphrase( ctx));
-        boolean failure = false;
+        boolean cryptoMounted = false;
 
-        String path = ctx.getDir("vfs", Context.MODE_PRIVATE).getAbsolutePath() + FILESYSTEM_NAME;
         try {
-            StorageManager.mountStorage( ctx, path, password32);
+            CryptoVolume.mountStorage( ctx);
+            cryptoMounted = true;
         } catch (Exception e) {
-            failure = true;
+            LogUtil.logException( LogUtil.LogType.OMNI, e);
         }
-        /**
-         * Failure can be caused by a beta database error or failed keystore encryption.
-         */
-        if( failure ){
-
-            try {
-                password32 = Passphrase.toBytes( CConst.STRING32.toCharArray());
-                StorageManager.mountStorage( ctx, path, password32);
-            } catch (Exception e) {
-                Toast.makeText( ctx, "Unable to mount Crypto volume",Toast.LENGTH_LONG).show();
-                LogUtil.logException( LogUtil.LogType.OMNI, e);
-            }
-        }
-        // Zero the bytes and set size to zero
-        password32 = Passphrase.cleanArray( password32);
         /**
          * Each root starts and ends with SLASH
          */
@@ -158,15 +131,19 @@ public class Omni {
         try {
             volRoot.put( localVolumeId,  localRoot);
             volRoot.put( userVolumeId_0, userRoot_0);
-            volRoot.put( cryptoVolumeId, crypRoot);
 
             volName.put( localVolumeId,  "sdcard");
             volName.put( userVolumeId_0, "private_0");
-            volName.put( cryptoVolumeId, "crypto");
 
             volHash.put( localVolumeId  + "_" + OmniHash.encode( CConst.ROOT), localVolumeId);
             volHash.put( userVolumeId_0 + "_" + OmniHash.encode( CConst.ROOT), userVolumeId_0);
-            volHash.put( cryptoVolumeId + "_" + OmniHash.encode( CConst.ROOT), cryptoVolumeId);
+
+            if( cryptoMounted){
+
+                volRoot.put( cryptoVolumeId, crypRoot);
+                volName.put( cryptoVolumeId, "crypto");
+                volHash.put( cryptoVolumeId + "_" + OmniHash.encode( CConst.ROOT), cryptoVolumeId);
+            }
 
             JSONArray privateStorage = StoragePrivate.getStoragePrivate(ctx);
             if( privateStorage.length() > 1){//FIXME looks odd, only works with 2 or more?

@@ -13,29 +13,32 @@ import android.util.Base64;
 
 import com.nuvolect.deepdive.main.CConst;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
-
-import javax.crypto.NoSuchPaddingException;
+import java.util.Map;
 
 public class Persist {
 
     /**
      * Persist data to Android app private storage.
+     *
+     * DESIGN PATTERN TO PERSIST ENCRYPTED STRING DATA:
+     * 1. Convert string data to a byte[], no encoding required
+     * 2. Encrypt the byte[], creating a new byte[]
+     * 3. Create a string for storage by encoding the byte[] with Base64
+     * 4. Persist the string
+     * 5. Clean up any clear text data
+     *
+     * RETRIEVE AND RESTORE PERSISTED AND ENCRYPTED STRING DATA:
+     * 1. Read persisted data into a string
+     * 2. Decode the string back into a byte[] using Base64 decode
+     * 3. Decrypt the byte[], creating a new byte[]
+     * 4. Decode the byte[] into a string with UTF-8.
+     * 5. Clean up any clear text data
      */
     private static final String PERSIST_NAME           = "dd_persist";
 
     // Persist keys, some calling methods pass their own keys
     private static final String PEST_TIME              = "pest_time";
+    private static final String PORT_NUMBER            = "port_number";
     private static final String SHOW_TIP_CURRENT       = "show_tip_current";
 
     /**
@@ -44,6 +47,45 @@ public class Persist {
     public static void clearAll(Context ctx) {
         final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
         pref.edit().clear().commit();
+    }
+
+    /**
+     * Check if a specific key is persisted.
+     * @param ctx
+     * @param persistKey
+     * @return
+     */
+    public static boolean keyExists(Context ctx, String persistKey) {
+
+        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
+        return pref.contains( persistKey);
+    }
+
+    public static boolean dumpKeysToLog(Context ctx) {
+
+        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
+        Map<String, ?> map = pref.getAll();
+        LogUtil.log(LogUtil.LogType.PERSIST, "key count: "+map.keySet().size());
+
+        for( String key : map.keySet()){
+
+            LogUtil.log(LogUtil.LogType.PERSIST, "key: "+key);
+            LogUtil.log(LogUtil.LogType.PERSIST, "value: "+get(ctx, key));
+        }
+
+        return map.keySet().size() > 0;
+    }
+
+    /**
+     * Delete a specific key.
+     * @param ctx
+     * @param keyToDelete
+     * @return
+     */
+    public static boolean deleteKey(Context ctx, String keyToDelete){
+
+        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
+        return pref.edit().remove( keyToDelete).commit();
     }
 
     /**
@@ -82,135 +124,224 @@ public class Persist {
         return pref.edit().putString(key, value).commit();
     }
 
-    /**
-     * Return true when current time is within a sincePeriod
-     * @param ctx
-     * @param key key to find last time
-     * @param sincePeriod  How long the period is in ms
-     * @return
-     */
-    public static boolean getPestCheck(Context ctx, String key, long sincePeriod) {
-
-        long currentTime = System.currentTimeMillis();
-
-        final SharedPreferences pref = ctx.getSharedPreferences( PERSIST_NAME, Context.MODE_PRIVATE);
-        try {
-            JSONObject object = new JSONObject( pref.getString( PEST_TIME, "{}"));
-            if( object.has( key )){
-
-                long lastPestTime = object.getLong( key);
-                /**
-                 * May be pestering, check if we are within the pester period
-                 */
-                if( lastPestTime + sincePeriod > currentTime){
-
-                    return true; // Within the pester period
-                }else{
-                    /**
-                     * Not within the pester period, save the time and return false
-                     */
-                    object.put(key, currentTime);
-                    pref.edit().putString(PEST_TIME, object.toString()).commit();
-                    return false;
-                }
-            }else{
-                /**
-                 * Not pestering, this is the first call so save the time and return false
-                 */
-                object.put(key, currentTime);
-                pref.edit().putString(PEST_TIME, object.toString()).commit();
-                return false;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
-
-    /**
-     * Check if a specific key is persisted.
-     * @param ctx
-     * @param persistKey
-     * @return
-     */
-    public static boolean keyExists(Context ctx, String persistKey) {
-
-        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
-        return pref.contains( persistKey);
-    }
-
-    /**
-     * Encrypt clear char[] data with an app wide private key, then persist the encrypted results.
-     *
-     * @param ctx
-     * @param persistKey
-     * @param clearChar
-     * @throws CertificateException
-     * @throws InvalidKeyException
-     * @throws NoSuchAlgorithmException
-     * @throws KeyStoreException
-     * @throws NoSuchPaddingException
-     * @throws UnrecoverableEntryException
-     * @throws IOException
-     */
-    public static void putEncrypt(Context ctx, String persistKey, char[] clearChar)
-            throws CertificateException, InvalidKeyException, NoSuchAlgorithmException,
-            KeyStoreException, NoSuchPaddingException, UnrecoverableEntryException, IOException,
-            NoSuchProviderException, InvalidAlgorithmParameterException {
-
-        byte[] clearBytes = Passphrase.toBytes( clearChar);
-        byte[] cryptBytes = KeystoreUtil.encrypt( ctx, CConst.APP_KEY_ALIAS, clearBytes);
-        String cryptString = Base64.encodeToString( cryptBytes, Base64.NO_WRAP);
-
-        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME,  Context.MODE_PRIVATE);
-        pref.edit().putString( persistKey, cryptString).commit();
-
-        Passphrase.cleanArray( clearBytes);
-    }
-
-
-    /**
-     * Read encrypted data, decrypt it with an app wide private key and return clear results.
-     * If the persisted key does not exist it returns CConst.NO_SUCH_KEY.
-     *
-     * @param ctx
-     * @return
-     * @throws CertificateException
-     * @throws InvalidKeyException
-     * @throws NoSuchAlgorithmException
-     * @throws KeyStoreException
-     * @throws NoSuchPaddingException
-     * @throws UnrecoverableEntryException
-     * @throws IOException
-     */
-    public static char[] getDecrypt(Context ctx, String persistKey)
-            throws CertificateException, InvalidKeyException, NoSuchAlgorithmException,
-            KeyStoreException, NoSuchPaddingException, UnrecoverableEntryException, IOException {
-
-        final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
-
-        if( pref.contains( persistKey)){
-
-            String encryptString = pref.getString( persistKey, CConst.NO_SUCH_KEY);
-            byte[] encryptBytes = Base64.decode( encryptString, Base64.DEFAULT);
-            byte[] clearBytes = KeystoreUtil.decrypt( CConst.APP_KEY_ALIAS, encryptBytes);
-            char[] clearChars = Passphrase.toChars( clearBytes);
-
-            Passphrase.cleanArray( clearBytes);
-
-            return clearChars;
-        }
-        else
-            return CConst.NO_SUCH_KEY.toCharArray();
-    }
-
     public static void setCurrentTip(Context ctx, int tipIndex){
         final SharedPreferences pref = ctx.getSharedPreferences( PERSIST_NAME, Context.MODE_PRIVATE);
-        pref.edit().putInt(SHOW_TIP_CURRENT, tipIndex).commit();
+        pref.edit().putInt( SHOW_TIP_CURRENT, tipIndex).commit();
     }
     public static int getCurrentTip(Context ctx){
         final SharedPreferences pref = ctx.getSharedPreferences( PERSIST_NAME, Context.MODE_PRIVATE);
         return pref.getInt(SHOW_TIP_CURRENT, -1);
+    }
+
+    public static void putPort(Context ctx, int port) {
+
+        byte[] crypBytes = new byte[0];
+        try {
+            crypBytes = CrypUtil.encryptInt( port);
+            String crypString = Base64.encodeToString(crypBytes, Base64.DEFAULT);
+
+            put( ctx, PORT_NUMBER, crypString);
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.PERSIST, e);
+        }
+    }
+
+    public static int getPort(Context ctx, int default_port) {
+
+        if( ! keyExists( ctx, PORT_NUMBER))
+            return default_port;
+
+        try {
+            String crypString = get( ctx, PORT_NUMBER);
+            final byte[] crypBytes = CrypUtil.toBytesUTF8( crypString);
+
+            return CrypUtil.decryptInt( crypBytes);
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.PERSIST, e);
+        }
+        return default_port;
+    }
+
+    public static void putDbPassword(Context ctx, byte[] clearBytes) {
+
+        try {
+            // Encrypt the byte array, creating a new byte array
+            byte[] crypBytes = CrypUtil.encrypt( clearBytes);
+
+            // Encode the array for storage
+            String crypEncodedString = CrypUtil.encodeToB64( crypBytes);
+
+            // Store it as a string
+            put( ctx, CConst.DB_PASSWORD, crypEncodedString);
+
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.PERSIST, e);
+        }
+    }
+
+    public static byte[] getDbPassword(Context ctx) {
+
+        // Get the encoded and encrypted string
+        String crypEncodedString = get( ctx, CConst.DB_PASSWORD);
+
+        // Decode the string back into a byte array using Base64 decode
+        byte[] crypBytes = CrypUtil.decodeFromB64( crypEncodedString);
+
+        // Decrypt the byte array, creating a new byte array
+        byte[] clearBytes = new byte[0];
+        try {
+            clearBytes = CrypUtil.decrypt( crypBytes);
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.PERSIST, e);
+        }
+
+        return clearBytes;
+    }
+
+    public static void putSecTok(Context ctx, String clearString) {
+
+        try {
+            // Convert it to bytes, no encoding yet
+            byte[] clearBytes = CrypUtil.getBytes(clearString);
+
+            // Encrypt the byte array, creating a new byte array
+            byte[] encryptedBytes = CrypUtil.encrypt(clearBytes);
+
+            // Prepare for storage by converting the byte array to a Base64 encoded string
+            String encryptedEncodedString = CrypUtil.encodeToB64( encryptedBytes );
+
+            // Store it as a string
+            put( ctx, CConst.SEC_TOK, encryptedEncodedString );
+
+            // Clean up
+            clearBytes = CrypUtil.cleanArray( clearBytes);
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.PERSIST, e);
+        }
+    }
+
+    public static String getSecTok(Context ctx) {
+
+        // Get the encoded and encrypted string
+        String crypString = get( ctx, CConst.SEC_TOK);
+
+        // Decode the string back into a byte array using Base64 decode
+        byte[] crypBytes = CrypUtil.decodeFromB64( crypString);
+
+        // Decrypt the byte array, creating a new byte array
+        byte[] clearBytes = new byte[0];
+        try {
+            clearBytes = CrypUtil.decrypt( crypBytes);
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.PERSIST, e);
+        }
+
+        // Decode the byte array creating a new String using UTF-8 encoding
+        String clearString = CrypUtil.toStringUTF8( clearBytes);
+
+        // Clean up
+        clearBytes = CrypUtil.cleanArray( clearBytes);
+
+        return clearString;
+    }
+
+    public static void putSelfsignedKsKey(Context ctx, char[] clearChars) {
+
+        // Convert it to bytes, no encoding yet
+        byte[] clearBytes = CrypUtil.toBytesUTF8( clearChars);
+        String encryptedEncodedString = null;
+
+        try {
+            // Encrypt the byte array, creating a new byte array
+            byte[] encryptedBytes = CrypUtil.encrypt(clearBytes);
+
+            // Prepare for storage by converting the byte array to a Base64 encoded string
+            encryptedEncodedString = CrypUtil.encodeToB64( encryptedBytes );
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.PERSIST, e);
+        }
+
+        // Store it as a string
+        put( ctx, CConst.SELFSIGNED_KS_KEY, encryptedEncodedString);
+
+        // Clean up
+        clearBytes = CrypUtil.cleanArray( clearBytes);
+    }
+
+    public static char[] getSelfsignedKsKey(Context ctx) {
+
+        // Get the encoded and encrypted string
+        String cryptedEncodedString = get( ctx, CConst.SELFSIGNED_KS_KEY);
+
+        // Decode the string back into a byte array using Base64 decode
+        byte[] crypBytes = CrypUtil.decodeFromB64(cryptedEncodedString);
+
+        // Decrypt the byte array, creating a new byte array
+        byte[] clearBytes = new byte[0];
+        try {
+            clearBytes = CrypUtil.decrypt( crypBytes);
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.PERSIST, e);
+        }
+
+        // Decode the byte array creating a new String using UTF-8 encoding
+        char[] clearChars = CrypUtil.toChar( clearBytes);
+
+        // Clean up
+        clearBytes = CrypUtil.cleanArray( clearBytes);
+
+        return clearChars;
+    }
+
+    public static void putUsers(Context ctx, String clearString) {
+
+        try {
+            // Convert it to bytes, no encoding yet
+            byte[] clearBytes = CrypUtil.getBytes(clearString);
+
+            // Encrypt the byte array, creating a new byte array
+            byte[] encryptedBytes = CrypUtil.encrypt(clearBytes);
+
+            // Prepare for storage by converting the byte array to a Base64 encoded string
+            String encryptedEncodedString = CrypUtil.encodeToB64( encryptedBytes );
+
+            // Store it as a string
+            put( ctx, CConst.USERS, encryptedEncodedString );
+
+            // Clean up
+            clearBytes = CrypUtil.cleanArray( clearBytes);
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.PERSIST, e);
+        }
+    }
+
+    public static String getUsers(Context ctx, String emptyArray) {
+
+        if( ! keyExists( ctx, CConst.USERS)){
+
+            putUsers( ctx, emptyArray);
+            return emptyArray;
+        }
+        // Get the encoded and encrypted string
+        String crypString = get( ctx, CConst.USERS);
+
+        // Decode the string back into a byte array using Base64 decode
+        byte[] crypBytes = CrypUtil.decodeFromB64( crypString);
+
+        // Decrypt the byte array, creating a new byte array
+        byte[] clearBytes = new byte[0];
+        try {
+            clearBytes = CrypUtil.decrypt( crypBytes);
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.PERSIST, e);
+        }
+
+        // Decode the byte array creating a new String using UTF-8 encoding
+        String clearString = CrypUtil.toStringUTF8( clearBytes);
+
+        // Clean up
+        clearBytes = CrypUtil.cleanArray( clearBytes);
+
+        return clearString;
     }
 }

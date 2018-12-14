@@ -9,8 +9,7 @@ package com.nuvolect.deepdive.webserver;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.main.CConst;
-import com.nuvolect.deepdive.util.OmniFile;
+import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Passphrase;
 import com.nuvolect.deepdive.util.Persist;
 
@@ -28,30 +27,19 @@ import org.spongycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.spongycastle.cert.jcajce.JcaX509v3CertificateBuilder;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.operator.ContentSigner;
-import org.spongycastle.operator.OperatorCreationException;
 import org.spongycastle.operator.jcajce.JcaContentSignerBuilder;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigInteger;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.Provider;
 import java.security.SecureRandom;
 import java.security.Security;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
-
-import javax.crypto.NoSuchPaddingException;
 
 /**
  * Generate a self-signed certificate and store it in a keystore.
@@ -79,8 +67,8 @@ public class KeystoreVazen {
         try {
 
             // Generate a random password, encrypt it with Android keystore then persist encrypted value
-            char[] storePassword = Passphrase.generateRandomPassword( 32, Passphrase.SYSTEM_MODE);
-            Persist.putEncrypt( ctx, CConst.SELFSIGNED_KS_KEY, storePassword);
+            char[] storePassword = Passphrase.generateRandomPasswordChars( 32, Passphrase.SYSTEM_MODE);
+            Persist.putSelfsignedKsKey( ctx, storePassword);
 
             SecureRandom random = new SecureRandom();
             Provider bcProvider = new BouncyCastleProvider();
@@ -164,35 +152,8 @@ public class KeystoreVazen {
             keyStore.store( fos, storePassword);
             fos.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            success = false;
-        } catch (OperatorCreationException e) {
-            e.printStackTrace();
-            success = false;
-        } catch (CertificateException e) {
-            e.printStackTrace();
-            success = false;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            success = false;
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-            success = false;
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-            success = false;
-        } catch (UnrecoverableEntryException e) {
-            e.printStackTrace();
-            success = false;
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-            success = false;
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-            success = false;
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.CERTIFICATE, e);
             success = false;
         }
         return success;

@@ -61,7 +61,7 @@ public class SSLUtil {
             // Android does not have the default jks but uses bks
             KeyStore keystore = KeyStore.getInstance("BKS");
 
-            char[] passphrase = Persist.getDecrypt( ctx, CConst.SELFSIGNED_KS_KEY);
+            char[] passphrase = Persist.getSelfsignedKsKey( ctx);
 
             File loadFile = new File(absolutePath);
             InputStream keystoreStream = new java.io.FileInputStream( loadFile );
@@ -88,10 +88,6 @@ public class SSLUtil {
         } catch (CertificateException e) {
             e.printStackTrace();
         } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         }
 

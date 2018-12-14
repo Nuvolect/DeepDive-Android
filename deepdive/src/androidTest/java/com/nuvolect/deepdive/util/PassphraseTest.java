@@ -8,17 +8,8 @@
 package com.nuvolect.deepdive.util;
 
 
-import android.content.Context;
-
-import com.nuvolect.deepdive.main.CConst;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
-
-import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
@@ -33,7 +24,7 @@ public class PassphraseTest {
 
         int testLength = 100;
 
-        char[] chars = Passphrase.generateRandomPassword( testLength, Passphrase.SYSTEM_MODE);
+        char[] chars = Passphrase.generateRandomPasswordChars( testLength, Passphrase.SYSTEM_MODE);
         int lenChars = chars.length;
         assertThat( lenChars, is(testLength));
         byte[] bytes = Passphrase.toBytes( chars );

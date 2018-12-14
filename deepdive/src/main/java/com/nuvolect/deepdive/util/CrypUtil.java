@@ -5,157 +5,194 @@
  * without the GPLv3 restrictions.
  */
 
-package com.nuvolect.deepdive.util;//
+package com.nuvolect.deepdive.util;
 
-import android.content.Context;
+import android.util.Base64;
+
+import com.nuvolect.deepdive.main.CConst;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+
+import static android.util.Base64.decode;
 
 /**
- * Utilities to persist encrypted data.
+ * Encryption utilities for various data types using Android's Keystore.
+ * Methods use a single key that is assumed already created.
+ * These methods do not do any storage.
+ * Methods attempt to cleanup any intermediate cleartext.
  */
 public class CrypUtil {
 
-    public static final String APP_VERSION = "app_version";
-
     /**
-     * Return the value of a related key, or return an empty string
-     * if the key is not found.
-     * @param key
+     * Encrypt a four byte int and return it as a byte array.
+     *
+     * @param clearInt
      * @return
+     * @throws Exception
      */
-    public static String get(Context ctx, String key){
+    public static byte[] encryptInt(int clearInt) throws Exception {
 
-        String crypValue = Persist.get(ctx, key);
+        byte[] clearBytes = ByteBuffer.allocate(4).putInt(clearInt).array();
+        byte[] cryptBytes = encrypt( clearBytes);
 
-        if( crypValue.isEmpty())
-            return "";
+        Passphrase.cleanArray( clearBytes);
 
-        return SymmetricCrypto.decrypt(ctx, crypValue);
+        return cryptBytes;
     }
 
     /**
-     * Return the value of a related key, or return the default value
-     * if the key is not found.
-     * @param key
-     * @param defValue
+     * Decrypt a four byte array into an int.
+     *
+     * @param encryptBytes
      * @return
+     * @throws Exception
      */
-    public static String get(Context ctx, String key, String defValue) {
+    public static int decryptInt( byte[] encryptBytes) throws Exception {
 
-        String crypValue = Persist.get(ctx, key);
+        byte[] clearBytes = decrypt(encryptBytes);
+        ByteBuffer byteBuffer = ByteBuffer.wrap( clearBytes);
+        int clearInt = byteBuffer.getInt();
 
-        if( crypValue.isEmpty())
-            return defValue;
+        cleanArray( clearBytes);
 
-        return SymmetricCrypto.decrypt(ctx, crypValue);
+        return clearInt;
     }
 
     /**
-     * Persist the value referenced by a key.  Return the number of
-     * records updated: 0, first time update, 1, value updated, 2+ error.
-     * @param key
-     * @param value
+     * Encrypt a character array and return it as a byte array.
+     * @param clearChars
+     * @return
+     * @throws Exception
+     */
+    public static byte[] encrypt(char[] clearChars) throws  Exception {
+
+        return CrypUtil.encrypt( CrypUtil.toBytesUTF8(clearChars));
+    }
+
+    /**
+     * Encrypt a byte array and return it as a byte array.
+     * @param clearBytes
+     * @return
+     * @throws Exception
+     */
+    public static byte[] encrypt( byte[] clearBytes) throws Exception {
+
+        return KeystoreUtil.encrypt( CConst.APP_KEY_ALIAS, clearBytes);
+    }
+
+    /**
+     * Decrypt a byte array and return it as a byte array.
+     * @param encryptBytes
+     * @return
+     * @throws Exception
+     */
+    public static byte[] decrypt( byte[] encryptBytes) throws Exception {
+
+        return KeystoreUtil.decrypt( CConst.APP_KEY_ALIAS, encryptBytes);
+    }
+
+    /**
+     * Clear an array changing the contents to zero then changing the
+     * array size to zero.
+     *
+     * It is recommended that the calling method should use the returned value.
+     * Although the calling array values are set to zero, it is still possible
+     * to detect the length of the array.
+     *
+     * Example:
+     * dirtyArray  = CrypUtil.cleanArray( dirtyArray );
+     *
+     * There will be a zeroed array in the heap but it will no longer be associated
+     * with the parameter array.
+     *
+     * @param dirtyArray
      * @return
      */
-    public static int put(Context ctx, String key, String value){
+    public static byte[] cleanArray(byte[] dirtyArray) {
 
-        String crypValue = SymmetricCrypto.encrypt(ctx, value);
+        for(int i = 0; i< dirtyArray.length; i++){
 
-        int firstTime = 0;
-        try {
-            firstTime = Persist.get(ctx, key).isEmpty() ? 0 : 1;
-            Persist.put(ctx, key, crypValue);
-        } catch (Exception e) {
-            LogUtil.logException(ctx, LogUtil.LogType.BETTER_CRYPTO, e);
-            return 2;
+            dirtyArray[i] = 0;//Clear contents.
         }
-        return firstTime;
+        dirtyArray = new byte[0];//Don't save the size
+
+        return dirtyArray;
     }
 
     /**
-     * Return the integer value referenced by a key.
-     * Return 0 if the key does not exist.
-     * @param key
+     * Copy a char array into a byte array using UTF-8 encoding.
+     * @param chars
      * @return
      */
-    public static int getInt(Context ctx, String key) {
-
-        String v = get(ctx, key);
-        if( v.isEmpty())
-            return 0;
-        else
-            return Integer.valueOf( v );
+    public static byte[] toBytesUTF8(char[] chars) {
+        CharBuffer charBuffer = CharBuffer.wrap(chars);
+        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
+        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
+                byteBuffer.position(), byteBuffer.limit());
+        Arrays.fill(byteBuffer.array(), (byte) 0); // clear sensitive data
+        return bytes;
     }
 
     /**
-     * Return the integer value referenced by a key.
-     * If the key does not exist, save the default as the key and
-     * return it.
-     * @param key
-     * @param defInt
+     * Convert a String into a byte array using UTF-8 encoding.
+     * @param stringUTF8
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public static byte[] toBytesUTF8(String stringUTF8) throws UnsupportedEncodingException {
+
+        return stringUTF8.getBytes( "UTF-8");
+    }
+
+    /**
+     * Copy a byte array into a new char array.
+     * @param bytes
      * @return
      */
-    public static int getInt(Context ctx, String key, int defInt) {
+    public static char[] toChar(byte[] bytes) {
 
-        String v = get( ctx, key);
-        if( v.isEmpty()) {
-            putInt( ctx, key, defInt);
-            return defInt;
+        char[] charBuffer = new char[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            charBuffer[i] = (char) (bytes[i] & 0xff);
         }
-        else
-            return Integer.valueOf( v );
-    }
-    /**
-     * Persist the long value referenced by a key.  Return the number of
-     * records updated: 0, first time update, 1, value updated, 2+ error.
-     * @param key
-     * @param val
-     */
-    /**
-     * Persist the value referenced by a key.  Return the number of
-     * records updated: 0, first time update, 1, value updated, 2+ error.
-     * @param key
-     * @param val
-     */
-    public static int putInt(Context ctx, String key, int val) {
-
-        return put( ctx, key, String.valueOf(val));
+        return charBuffer;
     }
 
-    public static int putLong(Context ctx, String key, long val) {
+    public static String toStringUTF8(byte[] bytesUTF8) {
 
-        return put( ctx, key, String.valueOf(val));
-    }
-    /**
-     * Return the integer value referenced by a key.
-     * Return 0 if the key does not exist.
-     * @param key
-     * @return
-     */
-    public static long getLong(Context ctx, String key) {
-
-        String v = get(ctx, key);
-        if( v.isEmpty())
-            return 0;
-        else
-            return Long.valueOf( v );
+        char[] chars = toChar(bytesUTF8);
+        return new String( chars);
     }
 
-    /**
-     * Return the integer value referenced by a key.
-     * If the key does not exist, save the default as the key and
-     * return it.
-     * @param key
-     * @param defLong
-     * @return
-     */
-    public static long getLong(Context ctx, String key, long defLong) {
+    public static String decodeFromB64(byte[] bytes) {
 
-        String v = get( ctx, key);
-        if( v.isEmpty()) {
-            putLong( ctx, key, defLong);
-            return defLong;
-        }
-        else
-            return Long.valueOf( v );
+//        return Base64.encodeToString( bytes, Base64.DEFAULT);
+        byte[] decodedBytes = Base64.decode( bytes, Base64.DEFAULT);
+        return new String( decodedBytes);
+    }
+
+    public static byte[] encodeToB64(String clearString) throws UnsupportedEncodingException {
+
+//        return Base64.decode( string, Base64.DEFAULT);
+        return Base64.encode( clearString.getBytes("UTF-8"), Base64.DEFAULT);
+    }
+
+    public static String encodeToB64( byte[] bytes) throws UnsupportedEncodingException {
+
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+
+    public static byte[] getBytes(String string) throws UnsupportedEncodingException {
+
+        return string.getBytes( "UTF-8");
+    }
+
+    public static byte[] decodeFromB64(String encodedString) {
+
+        return Base64.decode( encodedString, Base64.DEFAULT);
     }
 }

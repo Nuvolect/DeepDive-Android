@@ -17,7 +17,6 @@ public class CConst {
     public static final String ASSET_DATA_FOLDER    = "data/";
     public static final String AUTHENTICATED        = "authenticated";
     public static final String CHUNK                = "/chunk/";
-    public static final String COMPANION_IP_PORT    = "companion_ip_port";//Match settings.xml
     public static final String DB_PASSWORD          = "db_password";
     public static final String DEFAULT_IP_PORT      = "0.0.0.0:0000";
     public static final String DEFAULT_PASSPHRASE   = "WhenAllElseFails";
@@ -35,7 +34,6 @@ public class CConst {
     public static final String NAME                 = "name";
     public static final String NO_SUCH_KEY          = "no_such_key";
     public static final String OK                   = "ok";
-    public static final String PORT                 = "port";
     public static final String PORT_NUMBER          = "port_number";
     public static final String RESPONSE_CODE        = "response_code";
     public static final String ROOT                 = "/";
@@ -53,6 +51,7 @@ public class CConst {
     public static final String USER_FOLDER_PATH     = "/DeepDive/";
     public static final String USER_MANAGER         = "user_manager";
     public static final String USERS                = "users";
+    public static final String WHENALLELSEFAILS     = "whenallelsefails";
 
     public final static int SMALL_ICON              = R.drawable.icon_64;
     public static final int IP_TEST_TIMEOUT_MS      = 8000;// Time for testing for companion device IP

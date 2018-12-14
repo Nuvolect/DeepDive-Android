@@ -30,7 +30,7 @@ public class Passphrase {
      * @param mode
      * @return
      */
-    public static char[] generateRandomPassword(int length, int mode) {
+    public static char[] generateRandomPasswordChars(int length, int mode) {
 
         StringBuffer sourceBuffer = new StringBuffer( 0 );
 
@@ -62,11 +62,27 @@ public class Passphrase {
     }
 
     /**
+     * Generate a random password of the specific length using a variety of character types.
+     * Does not guarantee each variety of character types is used.
+     *
+     * @param length
+     * @param mode
+     * @return
+     */
+    public static byte[] generateRandomPasswordBytes(int length, int mode) {
+
+        char[] chars = generateRandomPasswordChars( length, mode);
+        byte[] bytes = toBytes( chars);
+        chars = cleanArray( chars);
+        return bytes;
+    }
+
+    /**
      * Convert a char array to a byte array.
      * @param chars
      * @return
      */
-    public static byte[] toBytes(char[] chars) {
+    public static byte[] toBytes(char[] chars) {//FIXME remove duplicate methods into new class
         CharBuffer charBuffer = CharBuffer.wrap(chars);
         ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
         byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),

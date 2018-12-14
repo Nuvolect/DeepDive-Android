@@ -14,8 +14,8 @@ import android.net.wifi.WifiManager;
 
 import com.nuvolect.deepdive.R;
 import com.nuvolect.deepdive.main.CConst;
-import com.nuvolect.deepdive.util.CrypUtil;
 import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.Persist;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,14 +83,7 @@ public class WebUtil {
 
                 LogUtil.log(LogUtil.LogType.WEB_SERVER, "Host verifier disabled, Certificate approved for " + hostname);
                 return true;
-            }else
-            if( hostname.contentEquals( getCompanionServerIp(ctx))
-                    || hostname.contentEquals( m_ip_address )){
-
-                LogUtil.log(LogUtil.LogType.WEB_SERVER, "Certificate approved for " + hostname);
-                return true;
-            }
-            else{
+            }else{
 
                 LogUtil.log(LogUtil.LogType.WEB_SERVER, "Certificate denied for " + hostname);
                 return false;
@@ -175,7 +168,7 @@ public class WebUtil {
         return false;
     }
 
-    public static String getServerIpPort(Context ctx){
+    public static String getServerIpPort(Context ctx) {
 
         return getServerIp(ctx)+":"+ getPort(ctx );
     }
@@ -184,20 +177,25 @@ public class WebUtil {
      * @param ctx
      * @return
      */
-    public static String getServerUrl(Context ctx){
+    public static String getServerUrl(Context ctx) {
 
-        if( m_ipPortCache == null)
-            m_ipPortCache = WebService.HTTP_PROTOCOL+ getServerIpPort(ctx);
+        if( m_ipPortCache == null) {
+            try {
+                m_ipPortCache = WebService.HTTP_PROTOCOL+ getServerIpPort(ctx);
+            } catch (Exception e) {
+                LogUtil.logException( LogUtil.LogType.WEB_SERVER, e);
+            }
+        }
 
         return m_ipPortCache;
     }
 
-    public static void resetIpPortCache( Context ctx){
+    public static void resetIpPortCache( Context ctx) {
 
         m_ipPortCache = WebService.HTTP_PROTOCOL+ getServerIpPort(ctx);
     }
 
-    public static String getAssetsFileUrl(Context ctx, String filename){
+    public static String getAssetsFileUrl(Context ctx, String filename) {
 
         return getServerUrl(ctx)+filename;
     }
@@ -211,47 +209,6 @@ public class WebUtil {
     public static String getServerUrl(Context ctx, String page) {
 
         return getServerUrl(ctx)+"/"+ page;
-    }
-
-    /**
-     * Return the full ip and port number in 0.0.0.0:0000 format.
-     * @return
-     */
-    public static String getCompanionServerIpPort(Context ctx) {
-
-        return CrypUtil.get(ctx, CConst.COMPANION_IP_PORT, CConst.DEFAULT_IP_PORT);
-    }
-
-    /**
-     * Return just the IP in the form 0.0.0.0
-     * @return
-     */
-    public static String getCompanionServerIp(Context ctx) {
-
-        String ipAndPort = CrypUtil.get(ctx, CConst.COMPANION_IP_PORT, CConst.DEFAULT_IP_PORT);
-
-        String[] parts = ipAndPort.split("\\:");
-
-        return parts[0];
-    }
-
-    public static void setCompanionServerIpPort(Context ctx, String companion_ip_port) {
-
-        CrypUtil.put(ctx, CConst.COMPANION_IP_PORT, companion_ip_port);
-    }
-
-    public static boolean companionServerAssigned(Context ctx) {
-        return ! getCompanionServerIpPort(ctx).contains(CConst.DEFAULT_IP_PORT);
-    }
-
-    public static String getCompanionServerUrl(Context ctx){
-
-        return "https://"+ CrypUtil.get(ctx, CConst.COMPANION_IP_PORT, CConst.DEFAULT_IP_PORT);
-    }
-
-    public static String getCompanionServerUrl(Context ctx, String page) {
-
-        return getCompanionServerUrl( ctx )+"/"+ page;
     }
 
     public static String buildUrl(String endPoint, Map<String, String> params) {
@@ -303,65 +260,19 @@ public class WebUtil {
     }
 
     /**
-     * Test for a specific response code
-     * @param response
-     * @return
-     */
-    public static boolean responseMatch(JSONObject response, int matchCode) {
-
-        try {
-            return response.getInt(CConst.RESPONSE_CODE) == matchCode;
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    /**
-     * Test for a specific response code
-     * @param stringResponse
-     * @return
-     */
-    public static boolean responseMatch(String stringResponse, int matchCode) {
-
-        try {
-            if( stringResponse.isEmpty())
-                return false;
-
-            JSONObject response = new JSONObject( stringResponse );
-            return response.getInt(CConst.RESPONSE_CODE) == matchCode;
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
      * Return the current port number and if undefined return default port number
      * dependent on the build type.
      * @return int port number
      */
-    public static int getPort(Context ctx){
+    public static int getPort(Context ctx) {
 
         String s = ctx.getString(R.string.default_port);
         int default_port = Integer.valueOf( s );
-        return CrypUtil.getInt(ctx, CConst.PORT, default_port);
+        return Persist.getPort(ctx, default_port);
     }
 
-    public static void setPort(Context ctx, int port){
+    public static void setPort(Context ctx, int port) {
 
-        CrypUtil.putInt(ctx, CConst.PORT, port);
-    }
-
-    /**
-     * Generate a random 4 digit port number.
-     * @return int port number.
-     */
-    public static int getRandomPort(){
-
-        int port = (int)(Math.random() * (9999 - 1025) + 1025);
-
-        return port;
+        Persist.putPort(ctx, port);
     }
 }

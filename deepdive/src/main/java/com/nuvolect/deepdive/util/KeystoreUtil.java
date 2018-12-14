@@ -291,7 +291,6 @@ public class KeystoreUtil {
                 KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
                 RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
 
-//                Cipher rsaCipher = Cipher.getInstance( CIPHER_ALGORITHM, "AndroidOpenSSL"); //AndroidOpenSSL is deprecated
                 Cipher rsaCipher = Cipher.getInstance( CIPHER_ALGORITHM );
                 rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
@@ -377,6 +376,46 @@ public class KeystoreUtil {
     }
 
     /**
+     * Basic KeyStore encryption. Assumes key has already been created.
+     *
+     * @param key_alias
+     * @param clearBytes
+     * @return
+     * @throws KeyStoreException
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     * @throws UnrecoverableEntryException
+     * @throws NoSuchPaddingException
+     * @throws InvalidKeyException
+     */
+    public static byte[] encrypt(String key_alias, byte[] clearBytes)
+            throws KeyStoreException, CertificateException, NoSuchAlgorithmException,
+            IOException, UnrecoverableEntryException, NoSuchPaddingException,
+            InvalidKeyException {
+
+        byte[] cipherBytes = new byte[0];
+
+        KeyStore ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
+        ks.load(null);
+
+        KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
+        RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
+
+        Cipher rsaCipher = Cipher.getInstance( CIPHER_ALGORITHM );
+        rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        CipherOutputStream cipherOutputStream = new CipherOutputStream( outputStream, rsaCipher);
+        cipherOutputStream.write(clearBytes);
+        cipherOutputStream.close();
+
+        cipherBytes = outputStream.toByteArray();
+
+        return cipherBytes;
+    }
+
+    /**
      *
      * @param key_alias
      * @param cipherBytes
@@ -426,6 +465,7 @@ public class KeystoreUtil {
 
         return decryptedResult;
     }
+
 
     /**
      * Use a private key indexed by an alias to decrypt text.

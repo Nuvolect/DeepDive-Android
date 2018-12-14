@@ -18,8 +18,8 @@ import android.webkit.WebView;
 import android.widget.EditText;
 
 import com.nuvolect.deepdive.R;
-import com.nuvolect.deepdive.util.Cryp;
 import com.nuvolect.deepdive.util.LogUtil;
+import com.nuvolect.deepdive.util.Persist;
 import com.nuvolect.deepdive.util.Safe;
 import com.nuvolect.deepdive.webserver.Comm;
 import com.nuvolect.deepdive.webserver.WebUtil;
@@ -55,7 +55,8 @@ public class UserManager {
     private UserManager() {
 
         try {
-            users = new JSONArray(Cryp.get(m_ctx, CConst.USERS, emptyArray.toString()));
+            String userString = Persist.getUsers( m_ctx, emptyArray.toString());
+            users = new JSONArray( userString );
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -63,9 +64,6 @@ public class UserManager {
     }
 
     public boolean validateUser(String username, String password){
-
-//        if( username.contentEquals("matt") && password.contentEquals("password"))
-//            return true;
 
         for(int i = 0; i < users.length(); i++){
 
@@ -128,7 +126,7 @@ public class UserManager {
             }
             users.put(user);
         }
-        Cryp.put(m_ctx, CConst.USERS, users.toString());
+        Persist.putUsers( m_ctx, users.toString());
     }
 
     public Dialog showDialog(Activity act){

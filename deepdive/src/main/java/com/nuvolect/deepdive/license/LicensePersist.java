@@ -11,7 +11,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.nuvolect.deepdive.util.CrypUtil;
 import com.nuvolect.deepdive.util.TimeUtil;
 
 @SuppressLint("CommitPrefEdits")
@@ -20,6 +19,7 @@ public class LicensePersist {
     private static final String PERSIST_NAME           = "license_persist";
 
     // Persist keys
+    private static final String APP_VERSION            = "app_version";
     private static final String LEGAL_AGREE            = "legal_agree";
     private static final String LEGAL_AGREE_TIME       = "legal_agree_time";
     private static final String LICENSE_RESULT         = "license_result";
@@ -90,18 +90,13 @@ public class LicensePersist {
         return LicenseManager.LicenseResult.values()[pref.getInt(LICENSE_RESULT, 0)];
     }
 
-    /**
-     * Returns the current app version or zero when the app version has never been set.
-     * @param ctx
-     * @return
-     */
+
     public static int getAppVersion(Context ctx) {
-
-        return CrypUtil.getInt(ctx, CrypUtil.APP_VERSION);
+        final SharedPreferences pref = ctx.getSharedPreferences( PERSIST_NAME, Context.MODE_PRIVATE);
+        return pref.getInt(APP_VERSION, 0);
     }
-
-    public static void setAppVersion(Context ctx, int appVersion) {
-
-        CrypUtil.putInt(ctx, CrypUtil.APP_VERSION, appVersion);
+    public static void setAppVersion(Context ctx, int version){
+        final SharedPreferences pref = ctx.getSharedPreferences( PERSIST_NAME, Context.MODE_PRIVATE);
+        pref.edit().putInt(APP_VERSION, version).commit();
     }
 }
