@@ -17,7 +17,6 @@ public class CConst {
     public static final String ASSET_DATA_FOLDER    = "data/";
     public static final String AUTHENTICATED        = "authenticated";
     public static final String CHUNK                = "/chunk/";
-    public static final String DB_PASSWORD          = "db_password";
     public static final String DEFAULT_IP_PORT      = "0.0.0.0:0000";
     public static final String DEFAULT_PASSPHRASE   = "WhenAllElseFails";
     public static final String DEVICE_PAGE          = "/device.htm";
@@ -32,14 +31,12 @@ public class CConst {
     public static final String FILE_PATH            = "file_path";
     public static final String LICENSE_CRYP         = "license_cryp";
     public static final String NAME                 = "name";
-    public static final String NO_SUCH_KEY          = "no_such_key";
     public static final String OK                   = "ok";
     public static final String PORT_NUMBER          = "port_number";
     public static final String RESPONSE_CODE        = "response_code";
     public static final String ROOT                 = "/";
     public static final String SEARCH_MANAGER_PAGE  = "/search_manager.htm";
     public static final String SEC_TOK              = "sec_tok";
-    public static final String SELFSIGNED_KS_KEY    = "selfsigned_ks_key";
     public static final String SHOW_TIPS            = "show_tips";
     public static final String SLASH                = "/";
     public static final String STRING32             = "01234567890123456789012345678901";
@@ -50,8 +47,6 @@ public class CConst {
     public static final String URL                  = "url";
     public static final String USER_FOLDER_PATH     = "/DeepDive/";
     public static final String USER_MANAGER         = "user_manager";
-    public static final String USERS                = "users";
-    public static final String WHENALLELSEFAILS     = "whenallelsefails";
 
     public final static int SMALL_ICON              = R.drawable.icon_64;
     public static final int IP_TEST_TIMEOUT_MS      = 8000;// Time for testing for companion device IP

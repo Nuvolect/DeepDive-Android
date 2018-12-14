@@ -65,7 +65,7 @@ public class Search {//FIXME add warning: Cannot parse '*': '*' or '?' not allow
         try {
             m_directory = FSDirectory.open( Paths.get( luceneDir.getCanonicalPath()));
         } catch (IOException e) {
-            LogUtil.logException( Search.class, e);
+            LogUtil.logException( LogUtil.LogType.SEARCH, e);
         }
 
         if( ! cacheDirExists)
@@ -94,7 +94,7 @@ public class Search {//FIXME add warning: Cannot parse '*': '*' or '?' not allow
         try {
             ireader = DirectoryReader.open(m_directory);
         } catch (IOException e) {
-            LogUtil.logException( Search.class, e);
+            LogUtil.logException( LogUtil.LogType.SEARCH, e);
             error += e.toString();
         }
         IndexSearcher isearcher = new IndexSearcher(ireader);
@@ -102,7 +102,7 @@ public class Search {//FIXME add warning: Cannot parse '*': '*' or '?' not allow
 
         try {
 
-            LogUtil.log(Search.class, "query: "+searchQuery+", vid: "+volumeId+", path: "+searchPath);
+            LogUtil.log(LogUtil.LogType.SEARCH, "query: "+searchQuery+", vid: "+volumeId+", path: "+searchPath);
 
             // Parse a simple query that searches for "text":
             QueryParser parser = new QueryParser( CConst.FIELD_CONTENT, m_analyzer);
@@ -112,7 +112,7 @@ public class Search {//FIXME add warning: Cannot parse '*': '*' or '?' not allow
             scoreDocs = collector.topDocs().scoreDocs;
 
         } catch ( ParseException | IOException e) {
-            LogUtil.logException( Search.class, e);
+            LogUtil.logException( LogUtil.LogType.SEARCH, e);
             error += e.toString();
         }
         // Iterate through the results creating an object for each file
@@ -147,7 +147,7 @@ public class Search {//FIXME add warning: Cannot parse '*': '*' or '?' not allow
                 }
 
             } catch (IOException e) {
-                LogUtil.logException( Search.class, e);
+                LogUtil.logException( LogUtil.LogType.SEARCH, e);
                 error += e.toString();
             }
             String filePath = hitDoc.get(( CConst.FIELD_PATH));
@@ -171,7 +171,7 @@ public class Search {//FIXME add warning: Cannot parse '*': '*' or '?' not allow
             try {
                 hitDoc = isearcher.doc(scoreDocs[ uniqueHit.getValue() ].doc);
             } catch (IOException e) {
-                LogUtil.logException( Search.class, e);
+                LogUtil.logException( LogUtil.LogType.SEARCH, e);
                 error += e.toString();
             }
             String file_name = hitDoc.get(( CConst.FIELD_FILENAME));
@@ -189,7 +189,7 @@ public class Search {//FIXME add warning: Cannot parse '*': '*' or '?' not allow
                 jsonArray.put(hitObj);
 
             } catch (Exception e) {
-                LogUtil.logException( Search.class, e);
+                LogUtil.logException( LogUtil.LogType.SEARCH, e);
             }
         }
         int num_hits = scoreDocs!=null?scoreDocs.length:0;
@@ -201,7 +201,7 @@ public class Search {//FIXME add warning: Cannot parse '*': '*' or '?' not allow
 
         Analytics.send( ctx, category, action, label, value);
 
-//            LogUtil.log(Search.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+num_hits);
+//            LogUtil.log(LogUtil.LogType.SEARCH, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+num_hits);
 
         try {
             result.put("hits", jsonArray!=null?jsonArray:new JSONArray());
@@ -212,7 +212,7 @@ public class Search {//FIXME add warning: Cannot parse '*': '*' or '?' not allow
             m_directory.close();
 
         } catch (JSONException | IOException e) {
-            LogUtil.logException( Search.class, e);
+            LogUtil.logException( LogUtil.LogType.SEARCH, e);
         }
 
         return result;

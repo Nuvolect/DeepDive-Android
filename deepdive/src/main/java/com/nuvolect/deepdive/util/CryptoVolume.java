@@ -11,15 +11,12 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
-import com.nuvolect.deepdive.main.CConst;
-
 import java.io.File;
 import java.io.IOException;
 
 import info.guardianproject.iocipher.VirtualFileSystem;
 
 import static com.nuvolect.deepdive.util.Passphrase.generateRandomPasswordBytes;
-import static com.nuvolect.deepdive.util.Passphrase.generateRandomPasswordChars;
 
 /**
  * Manage IOCipher storage volume.
@@ -44,10 +41,10 @@ public class CryptoVolume {
         String path = ctx.getDir("vfs", Context.MODE_PRIVATE).getAbsolutePath() + FILESYSTEM_NAME;
         File dbFile = new java.io.File(path);
         dbFile.getParentFile().mkdirs();
-        byte[] passwordBytes = new byte[0];
+        byte[] passwordBytes;
 
         // Recreate the database if it has not been created yet or there is no key to unlock it
-        boolean createNewDb = !dbFile.exists() || ! Persist.keyExists(ctx, CConst.DB_PASSWORD);
+        boolean createNewDb = !dbFile.exists() || ! Persist.keyExists(ctx, Persist.DB_PASSWORD);
         if ( createNewDb) {
 
             passwordBytes = generateRandomPasswordBytes(32, Passphrase.SYSTEM_MODE);

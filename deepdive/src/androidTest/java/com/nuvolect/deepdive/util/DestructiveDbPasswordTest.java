@@ -26,16 +26,16 @@ public class DestructiveDbPasswordTest {
 
         Context ctx = getTargetContext();
 
-        Persist.deleteKey(ctx, CConst.DB_PASSWORD);
+        Persist.deleteKey(ctx, Persist.DB_PASSWORD);
 
         byte[] clearBytes = CConst.STRING32.getBytes();
         Persist.putDbPassword(ctx, clearBytes);
-        assertThat( Persist.keyExists( ctx, CConst.DB_PASSWORD), is(true));
+        assertThat( Persist.keyExists( ctx, Persist.DB_PASSWORD), is(true));
 
         byte[] clearBytes2 = Persist.getDbPassword(ctx);
         assertThat(Arrays.equals(clearBytes, clearBytes2), is( true));
 
-        boolean keyDeleted = Persist.deleteKey(ctx, CConst.DB_PASSWORD);
+        boolean keyDeleted = Persist.deleteKey(ctx, Persist.DB_PASSWORD);
         assertThat( keyDeleted, is( true ));
     }
 }

@@ -11,8 +11,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
-import com.nuvolect.deepdive.main.CConst;
-
 import java.util.Map;
 
 public class Persist {
@@ -37,9 +35,12 @@ public class Persist {
     private static final String PERSIST_NAME           = "dd_persist";
 
     // Persist keys, some calling methods pass their own keys
-    private static final String PEST_TIME              = "pest_time";
-    private static final String PORT_NUMBER            = "port_number";
-    private static final String SHOW_TIP_CURRENT       = "show_tip_current";
+    public static final String PORT_NUMBER          = "port_number";
+    public static final String DB_PASSWORD          = "db_password";
+    public static final String SEC_TOK              = "sec_tok";
+    public static final String SHOW_TIP_CURRENT     = "show_tip_current";
+    public static final String SELFSIGNED_KS_KEY    = "selfsigned_ks_key";
+    public static final String USERS                = "users";
 
     /**
      * Remove all persistent data.
@@ -67,10 +68,20 @@ public class Persist {
         Map<String, ?> map = pref.getAll();
         LogUtil.log(LogUtil.LogType.PERSIST, "key count: "+map.keySet().size());
 
-        for( String key : map.keySet()){
+        try {
+            for( String key : map.keySet()){
 
-            LogUtil.log(LogUtil.LogType.PERSIST, "key: "+key);
-            LogUtil.log(LogUtil.LogType.PERSIST, "value: "+get(ctx, key));
+                LogUtil.log(LogUtil.LogType.PERSIST, "key: "+key);
+                if( key.contentEquals(SHOW_TIP_CURRENT))
+                    LogUtil.log(LogUtil.LogType.PERSIST, "value: "+pref.getInt( key, 0));
+                else{
+                    byte[] crypBytes = CrypUtil.decodeFromB64( pref.getString( key, ""));
+                    byte[] clearBytes = CrypUtil.decrypt( crypBytes);
+                    LogUtil.log(LogUtil.LogType.PERSIST, "value: "+CrypUtil.toStringUTF8( clearBytes));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return map.keySet().size() > 0;
@@ -172,7 +183,7 @@ public class Persist {
             String crypEncodedString = CrypUtil.encodeToB64( crypBytes);
 
             // Store it as a string
-            put( ctx, CConst.DB_PASSWORD, crypEncodedString);
+            put( ctx, DB_PASSWORD, crypEncodedString);
 
         } catch (Exception e) {
             LogUtil.logException(LogUtil.LogType.PERSIST, e);
@@ -182,7 +193,7 @@ public class Persist {
     public static byte[] getDbPassword(Context ctx) {
 
         // Get the encoded and encrypted string
-        String crypEncodedString = get( ctx, CConst.DB_PASSWORD);
+        String crypEncodedString = get( ctx, DB_PASSWORD);
 
         // Decode the string back into a byte array using Base64 decode
         byte[] crypBytes = CrypUtil.decodeFromB64( crypEncodedString);
@@ -211,7 +222,7 @@ public class Persist {
             String encryptedEncodedString = CrypUtil.encodeToB64( encryptedBytes );
 
             // Store it as a string
-            put( ctx, CConst.SEC_TOK, encryptedEncodedString );
+            put( ctx, SEC_TOK, encryptedEncodedString );
 
             // Clean up
             clearBytes = CrypUtil.cleanArray( clearBytes);
@@ -223,7 +234,7 @@ public class Persist {
     public static String getSecTok(Context ctx) {
 
         // Get the encoded and encrypted string
-        String crypString = get( ctx, CConst.SEC_TOK);
+        String crypString = get( ctx, SEC_TOK);
 
         // Decode the string back into a byte array using Base64 decode
         byte[] crypBytes = CrypUtil.decodeFromB64( crypString);
@@ -262,7 +273,7 @@ public class Persist {
         }
 
         // Store it as a string
-        put( ctx, CConst.SELFSIGNED_KS_KEY, encryptedEncodedString);
+        put( ctx, SELFSIGNED_KS_KEY, encryptedEncodedString);
 
         // Clean up
         clearBytes = CrypUtil.cleanArray( clearBytes);
@@ -271,7 +282,7 @@ public class Persist {
     public static char[] getSelfsignedKsKey(Context ctx) {
 
         // Get the encoded and encrypted string
-        String cryptedEncodedString = get( ctx, CConst.SELFSIGNED_KS_KEY);
+        String cryptedEncodedString = get( ctx, SELFSIGNED_KS_KEY);
 
         // Decode the string back into a byte array using Base64 decode
         byte[] crypBytes = CrypUtil.decodeFromB64(cryptedEncodedString);
@@ -306,7 +317,7 @@ public class Persist {
             String encryptedEncodedString = CrypUtil.encodeToB64( encryptedBytes );
 
             // Store it as a string
-            put( ctx, CConst.USERS, encryptedEncodedString );
+            put( ctx, USERS, encryptedEncodedString );
 
             // Clean up
             clearBytes = CrypUtil.cleanArray( clearBytes);
@@ -317,13 +328,13 @@ public class Persist {
 
     public static String getUsers(Context ctx, String emptyArray) {
 
-        if( ! keyExists( ctx, CConst.USERS)){
+        if( ! keyExists( ctx, USERS)){
 
             putUsers( ctx, emptyArray);
             return emptyArray;
         }
         // Get the encoded and encrypted string
-        String crypString = get( ctx, CConst.USERS);
+        String crypString = get( ctx, USERS);
 
         // Decode the string back into a byte array using Base64 decode
         byte[] crypBytes = CrypUtil.decodeFromB64( crypString);

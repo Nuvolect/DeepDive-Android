@@ -91,16 +91,16 @@ public class PersistTest {
 
         Context ctx = getTargetContext();
 
-        Persist.deleteKey(ctx, CConst.SELFSIGNED_KS_KEY);
+        Persist.deleteKey(ctx, Persist.SELFSIGNED_KS_KEY);
 
         char[] clearChars= CConst.STRING32.toCharArray();
         Persist.putSelfsignedKsKey(ctx, clearChars);
-        assertThat( Persist.keyExists( ctx, CConst.SELFSIGNED_KS_KEY), is(true));
+        assertThat( Persist.keyExists( ctx, Persist.SELFSIGNED_KS_KEY), is(true));
 
         char[] clearChars2 = Persist.getSelfsignedKsKey(ctx);
         assertThat(Arrays.equals( clearChars, clearChars2), is( true));
 
-        boolean keyDeleted = Persist.deleteKey(ctx, CConst.SELFSIGNED_KS_KEY);
+        boolean keyDeleted = Persist.deleteKey(ctx, Persist.SELFSIGNED_KS_KEY);
         assertThat( keyDeleted, is( true ));
     }
 }

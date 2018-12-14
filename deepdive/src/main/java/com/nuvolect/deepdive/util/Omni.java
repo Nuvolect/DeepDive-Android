@@ -92,16 +92,15 @@ public class Omni {
         KeystoreUtil.createKeyNotExists( ctx, CConst.APP_KEY_ALIAS);
 
         activeVolumeIds = new ArrayList<String>();
-        activeVolumeIds.add( cryptoVolumeId);
 
-        if( App.hasPermission( WRITE_EXTERNAL_STORAGE)) {
+        if( App.hasPermission( WRITE_EXTERNAL_STORAGE)) {//FIXME race condition, fails until user approves permission
 
             activeVolumeIds.add( localVolumeId);
         }else{
             String s = "Access to local storage denied";
             if( ! LogUtil.DEBUG)
                 Toast.makeText(ctx, s, Toast.LENGTH_SHORT).show();
-            LogUtil.log( LogUtil.LogType.OMNI, s);
+            LogUtil.log( LogUtil.LogType.OMNI, s + " : "+localVolumeId);
         }
         activeVolumeIds.add( userVolumeId_0);
 
@@ -143,6 +142,7 @@ public class Omni {
                 volRoot.put( cryptoVolumeId, crypRoot);
                 volName.put( cryptoVolumeId, "crypto");
                 volHash.put( cryptoVolumeId + "_" + OmniHash.encode( CConst.ROOT), cryptoVolumeId);
+                activeVolumeIds.add( cryptoVolumeId);
             }
 
             JSONArray privateStorage = StoragePrivate.getStoragePrivate(ctx);
