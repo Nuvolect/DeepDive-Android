@@ -37,7 +37,6 @@ public class Persist {
     // Persist keys, some calling methods pass their own keys
     public static final String PORT_NUMBER          = "port_number";
     public static final String DB_PASSWORD          = "db_password";
-    public static final String SEC_TOK              = "sec_tok";
     public static final String SHOW_TIP_CURRENT     = "show_tip_current";
     public static final String SELFSIGNED_KS_KEY    = "selfsigned_ks_key";
     public static final String USERS                = "users";
@@ -209,53 +208,6 @@ public class Persist {
         return clearBytes;
     }
 
-    public static void putSecTok(Context ctx, String clearString) {
-
-        try {
-            // Convert it to bytes, no encoding yet
-            byte[] clearBytes = CrypUtil.getBytes(clearString);
-
-            // Encrypt the byte array, creating a new byte array
-            byte[] encryptedBytes = CrypUtil.encrypt(clearBytes);
-
-            // Prepare for storage by converting the byte array to a Base64 encoded string
-            String encryptedEncodedString = CrypUtil.encodeToB64( encryptedBytes );
-
-            // Store it as a string
-            put( ctx, SEC_TOK, encryptedEncodedString );
-
-            // Clean up
-            clearBytes = CrypUtil.cleanArray( clearBytes);
-        } catch (Exception e) {
-            LogUtil.logException(LogUtil.LogType.PERSIST, e);
-        }
-    }
-
-    public static String getSecTok(Context ctx) {
-
-        // Get the encoded and encrypted string
-        String crypString = get( ctx, SEC_TOK);
-
-        // Decode the string back into a byte array using Base64 decode
-        byte[] crypBytes = CrypUtil.decodeFromB64( crypString);
-
-        // Decrypt the byte array, creating a new byte array
-        byte[] clearBytes = new byte[0];
-        try {
-            clearBytes = CrypUtil.decrypt( crypBytes);
-        } catch (Exception e) {
-            LogUtil.logException(LogUtil.LogType.PERSIST, e);
-        }
-
-        // Decode the byte array creating a new String using UTF-8 encoding
-        String clearString = CrypUtil.toStringUTF8( clearBytes);
-
-        // Clean up
-        clearBytes = CrypUtil.cleanArray( clearBytes);
-
-        return clearString;
-    }
-
     public static void putSelfsignedKsKey(Context ctx, char[] clearChars) {
 
         // Convert it to bytes, no encoding yet
@@ -345,6 +297,7 @@ public class Persist {
             clearBytes = CrypUtil.decrypt( crypBytes);
         } catch (Exception e) {
             LogUtil.logException(LogUtil.LogType.PERSIST, e);
+            clearBytes = emptyArray.getBytes();
         }
 
         // Decode the byte array creating a new String using UTF-8 encoding

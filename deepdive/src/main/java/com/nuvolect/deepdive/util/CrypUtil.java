@@ -11,13 +11,19 @@ import android.util.Base64;
 
 import com.nuvolect.deepdive.main.CConst;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
 import java.util.Arrays;
 
-import static android.util.Base64.decode;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * Encryption utilities for various data types using Android's Keystore.
@@ -90,7 +96,9 @@ public class CrypUtil {
      * @return
      * @throws Exception
      */
-    public static byte[] decrypt( byte[] encryptBytes) throws Exception {
+    public static byte[] decrypt( byte[] encryptBytes) throws
+            CertificateException, InvalidKeyException, NoSuchAlgorithmException, KeyStoreException,
+            NoSuchPaddingException, UnrecoverableEntryException, IOException {
 
         return KeystoreUtil.decrypt( CConst.APP_KEY_ALIAS, encryptBytes);
     }

@@ -53,6 +53,7 @@ public class DeveloperDialog {
         Test_RateThisApp,
         Test_MakeDonation,
         Print_BUILD_TIMESTAMP,
+        Dump_keystore_to_log,
     };
 
     public static void start(Activity act) {
@@ -135,6 +136,11 @@ public class DeveloperDialog {
                                 Date buildDate = new Date(BuildConfig.BUILD_TIMESTAMP);
                                 LogUtil.log(LogUtil.LogType.DEVELOPER_DIALOG, "BUILD_TIMESTAMP: "
                                         + TimeUtil.friendlyTimeString(buildDate.getTime()));
+                                break;
+                            }
+                            case Dump_keystore_to_log:{
+
+                                Persist.dumpKeysToLog( m_act);
                                 break;
                             }
                             default:

@@ -18,9 +18,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -93,7 +95,7 @@ public class Omni {
 
         activeVolumeIds = new ArrayList<String>();
 
-        if( App.hasPermission( WRITE_EXTERNAL_STORAGE)) {//FIXME race condition, fails until user approves permission
+        if( App.hasPermission( WRITE_EXTERNAL_STORAGE)) {
 
             activeVolumeIds.add( localVolumeId);
         }else{
@@ -115,6 +117,60 @@ public class Omni {
         } catch (Exception e) {
             LogUtil.logException( LogUtil.LogType.OMNI, e);
         }
+
+        try {
+            String[] paths = OmniStorage.getStorageDirectories(ctx);
+            for( String path : paths ){
+
+                File f = new File( path );
+
+                LogUtil.log( LogUtil.LogType.OMNI, " OmniStorage name: "+f.getName());
+                LogUtil.log( LogUtil.LogType.OMNI, " OmniStorage path: "+f.getAbsolutePath());
+                String formatted_count = String.format(Locale.US, "%,d", f.getTotalSpace())+" bytes";
+                LogUtil.log( LogUtil.LogType.OMNI, " OmniStorage space: "+formatted_count);
+                LogUtil.log( LogUtil.LogType.OMNI, " OmniStorage canRead: "+f.canRead());
+                LogUtil.log( LogUtil.LogType.OMNI, " OmniStorage canWrite: "+f.canWrite());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        {
+
+            ArrayList<File> storage = OmniStorage.getWritableRemovableStorage(ctx);
+
+            for( File f : storage){
+
+                LogUtil.log( LogUtil.LogType.OMNI, " extStoPubDir name: "+f.getName());
+                LogUtil.log( LogUtil.LogType.OMNI, " extStoPubDir path: "+f.getAbsolutePath());
+                String formatted_count = String.format(Locale.US, "%,d", f.getTotalSpace())+" bytes";
+                LogUtil.log( LogUtil.LogType.OMNI, " extStoPubDir space: "+formatted_count);
+                LogUtil.log( LogUtil.LogType.OMNI, " extStoPubDir canRead: "+f.canRead());
+                LogUtil.log( LogUtil.LogType.OMNI, " extStoPubDir canWrite: "+f.canWrite());
+            }
+        }
+
+        File[] mediaDirs = ctx.getExternalFilesDirs( null);
+        for( File f : mediaDirs){
+
+            LogUtil.log( LogUtil.LogType.OMNI, " getExternalFilesDirs name: "+f.getName());
+            LogUtil.log( LogUtil.LogType.OMNI, " getExternalFilesDirs path: "+f.getAbsolutePath());
+            String formatted_count = String.format(Locale.US, "%,d", f.getTotalSpace())+" bytes";
+            LogUtil.log( LogUtil.LogType.OMNI, " getExternalFilesDirs space: "+formatted_count);
+            LogUtil.log( LogUtil.LogType.OMNI, " getExternalFilesDirs canRead: "+f.canRead());
+            LogUtil.log( LogUtil.LogType.OMNI, " getExternalFilesDirs canWrite: "+f.canWrite());
+        }
+
+//        // User primary device storage
+//        File extStorage = Environment.getExternalStorageDirectory();
+//        LogUtil.log( LogUtil.LogType.OMNI, " external dir name: "+extStorage.getName());
+//        LogUtil.log( LogUtil.LogType.OMNI, " external dir path: "+extStorage.getAbsolutePath());
+//        LogUtil.log( LogUtil.LogType.OMNI, " external dir space: "+extStorage.getTotalSpace());
+//
+//        File extStorage2 = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES);
+//        LogUtil.log( LogUtil.LogType.OMNI, " external2 name: "+extStorage2.getName());
+//        LogUtil.log( LogUtil.LogType.OMNI, " external2 path: "+extStorage2.getAbsolutePath());
+//        LogUtil.log( LogUtil.LogType.OMNI, " external2 space: "+extStorage2.getTotalSpace());
+
         /**
          * Each root starts and ends with SLASH
          */

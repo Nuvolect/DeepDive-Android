@@ -59,7 +59,7 @@ public class UserManager {
             users = new JSONArray( userString );
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            LogUtil.logException(LogUtil.LogType.USER_MANAGER, e);
         }
     }
 
@@ -76,7 +76,7 @@ public class UserManager {
                     return true;
 
             } catch (JSONException e) {
-                e.printStackTrace();
+                LogUtil.logException(LogUtil.LogType.USER_MANAGER, e);
             }
         }
 
@@ -99,7 +99,7 @@ public class UserManager {
                 delimiter = ", ";
 
             } catch (JSONException e) {
-                e.printStackTrace();
+                LogUtil.logException(LogUtil.LogType.USER_MANAGER, e);
             }
         }
         return summary.isEmpty()?"Select to add web app user":summary;
@@ -122,7 +122,7 @@ public class UserManager {
                 user.put("username", username);
                 user.put("password", password);
             } catch (JSONException e) {
-                e.printStackTrace();
+                LogUtil.logException(LogUtil.LogType.USER_MANAGER, e);
             }
             users.put(user);
         }
@@ -148,7 +148,7 @@ public class UserManager {
                 usernameEt.setText( user.getString( "username"));
                 passwordEt.setText(user.getString("password"));
             } catch (JSONException e) {
-                e.printStackTrace();
+                LogUtil.logException(LogUtil.LogType.USER_MANAGER, e);
             }
         }
 
@@ -198,7 +198,7 @@ public class UserManager {
             params.put(CConst.UNIQUE_ID, CConst.EMBEDDED_USER);
             params.put("cmd", "login");
         } catch (JSONException e) {
-            e.printStackTrace();
+            LogUtil.logException(LogUtil.LogType.USER_MANAGER, e);
         }
         Comm.sendPostUi(m_ctx, thisDeviceUrl, params, new Comm.CommPostCallbacks() {
             @Override
@@ -244,7 +244,7 @@ public class UserManager {
             JSONObject user = users.getJSONObject(0);
             postData += user.getString("username")+"&password=" + user.getString("password");
         } catch (JSONException e) {
-            e.printStackTrace();
+            LogUtil.logException(LogUtil.LogType.USER_MANAGER, e);
         }
         return postData;
     }

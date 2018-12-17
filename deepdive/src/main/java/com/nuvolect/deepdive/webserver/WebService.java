@@ -21,16 +21,8 @@ import com.squareup.okhttp.OkHttpClient;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
 import java.util.concurrent.Semaphore;
 
-import javax.crypto.NoSuchPaddingException;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -53,6 +45,7 @@ public class WebService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        LogUtil.log(LogUtil.LogType.WEB_SERVICE, "Starting web service");
         m_ctx = getApplicationContext();
 
         /**

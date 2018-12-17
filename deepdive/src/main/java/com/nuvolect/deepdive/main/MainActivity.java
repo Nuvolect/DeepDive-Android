@@ -228,6 +228,19 @@ public class MainActivity extends FragmentActivity {
         return(ContextCompat.checkSelfPermission(this, perm)== PackageManager.PERMISSION_GRANTED);
     }
 
+    /**
+     * Based on user preference, the service may be restarted to mount external storage.
+     * @param anInt
+     * @param strs
+     * @param ints
+     */
+    @Override
+    public void onRequestPermissionsResult(int anInt, String[] strs, int[] ints){
+
+        Intent serverIntent = new Intent(m_ctx, WebService.class);
+        m_ctx.stopService(serverIntent);
+        m_ctx.startService(serverIntent);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

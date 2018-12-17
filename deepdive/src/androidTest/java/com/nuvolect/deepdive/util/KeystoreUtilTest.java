@@ -28,11 +28,11 @@ import static org.hamcrest.core.IsNot.not;
 public class KeystoreUtilTest {
 
     private String testKeyAlias = "testKeyAlias";
-    private byte[] clearTextToEncrypt;
+    private byte[] clearBytesToEncrypt;
 
     {
         try {
-            clearTextToEncrypt = "clear text to encrypt".getBytes("UTF-8");
+            clearBytesToEncrypt = "clear text to encrypt".getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -53,17 +53,17 @@ public class KeystoreUtilTest {
 
         KeystoreUtil.createKeyNotExists( getTargetContext(), this.testKeyAlias);
 
-        JSONObject cipherObj = KeystoreUtil.encrypt( this.testKeyAlias, this.clearTextToEncrypt, true);
+        JSONObject cipherObj = KeystoreUtil.encrypt( this.testKeyAlias, this.clearBytesToEncrypt, true);
         assertThat( cipherObj.getString("error"), is(""));
         assertThat( cipherObj.getString("success"), is("true"));
         assertThat( cipherObj.getString("ciphertext"), not(""));
-        assertThat( cipherObj.getString("ciphertext"), not(this.clearTextToEncrypt.toString()));
+        assertThat( cipherObj.getString("ciphertext"), not(this.clearBytesToEncrypt.toString()));
         assertThat( cipherObj.getString("ciphertext"), not(this.testKeyAlias));
 
         JSONObject clearTextObj = KeystoreUtil.decrypt( this.testKeyAlias, cipherObj.getString("ciphertext"), true);
         assertThat( clearTextObj.getString("error"), is(""));
         assertThat( clearTextObj.getString("success"), is("true"));
-        assertThat( clearTextObj.getString("cleartext"), is( new String(this.clearTextToEncrypt)));
+        assertThat( clearTextObj.getString("cleartext"), is( new String(this.clearBytesToEncrypt)));
 
         KeystoreUtil.deleteKey( getTargetContext(), this.testKeyAlias, true);
     }
@@ -72,6 +72,7 @@ public class KeystoreUtilTest {
     public void deleteKey() throws Exception {
 
         Context ctx = getTargetContext();
+        KeystoreUtil.deleteKey( this.testKeyAlias);
         boolean keyCreated = KeystoreUtil.createKeyNotExists( ctx, this.testKeyAlias);
         assertThat( keyCreated, is( true ));
 

@@ -18,7 +18,6 @@ import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniUtil;
 import com.nuvolect.deepdive.util.Passphrase;
-import com.nuvolect.deepdive.util.Persist;
 import com.nuvolect.deepdive.webserver.admin.AdminCmd;
 import com.nuvolect.deepdive.webserver.connector.CmdZipdl;
 import com.nuvolect.deepdive.webserver.connector.ServeCmd;
@@ -570,7 +569,6 @@ public class CrypServer extends NanoHTTPD{
     public static void setSecTok(Context ctx, String sec_tok) {
 
         m_sec_tok = sec_tok;
-        Persist.putSecTok( ctx, sec_tok);
     }
 
     /**

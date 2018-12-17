@@ -414,6 +414,7 @@ public class DecompileApk {
                         success = ApkZipUtil.unzipAllExceptXML(m_apkFile, m_appFolder, m_progressStream);
 
                         ApkParser apkParser = ApkParser.create( m_apkFile.getStdFile());
+                        ArrayList<OmniFile> dexFiles = new ArrayList<>();
 
                         // Get a list of all files in the APK and iterate and extract by type
                         List<String> paths = OmniZip.getFilesList( m_apkFile);
@@ -429,6 +430,9 @@ public class DecompileApk {
                                 String xml = apkParser.transBinaryXml(path);
                                 OmniUtil.writeFile( file, xml);
                                 m_progressStream.putStream( "Translated: "+path);
+                            }
+                            if( extension.contentEquals("dex")){
+                                dexFiles.add( file);
                             }
                         }
                         paths = null; // Release memory
@@ -448,6 +452,13 @@ public class DecompileApk {
 //                            m_progressStream.putStream("Sign algorithm OID: "+cm.getSignAlgorithmOID());
 //                            m_progressStream.putStream("Sign algorithm: "+cm.getSignAlgorithm());
 //                        }
+
+                        for( OmniFile f : dexFiles){
+
+                            String formatted_count = String.format(Locale.US, "%,d", f.length())+" bytes";
+                            m_progressStream.putStream("DEX extracted: "+f.getName()+": "+formatted_count);
+                        }
+                        dexFiles = new ArrayList<>();// Release memory
 
                         CertificateMeta cm = null;
                         try {
@@ -570,11 +581,15 @@ public class DecompileApk {
                 if( s != null)
                     s.close();
 
+                ArrayList<OmniFile> dexFiles = new ArrayList<>();
+
                 for( String fileName : m_dexFileNames) {
 
                     OmniFile dexFile = new OmniFile(m_volumeId, m_appFolderPath + fileName + ".dex");
 
                     if (dexFile.exists() && dexFile.isFile()) {
+
+                        dexFiles.add( dexFile);// Keep track for summary
 
                         List<ClassDef> classes = new ArrayList<>();
                         m_progressStream.putStream("Processing: "+fileName+".dex");
@@ -642,6 +657,18 @@ public class DecompileApk {
                         }
                     }
                 }
+                for( OmniFile f : dexFiles){
+
+                    if( f.exists()){
+
+                    String formatted_count = String.format(Locale.US, "%,d", f.length())+" bytes";
+                    m_progressStream.putStream("DEX optimized: "+f.getName()+": "+formatted_count);
+                    }else{
+                        m_progressStream.putStream("DEX deleted: "+f.getName()+", all classes excluded");
+                    }
+                }
+                dexFiles = new ArrayList<>();// Release memory
+
                 m_progressStream.putStream("Optimize DEX complete: "
                         +TimeUtil.deltaTimeHrMinSec(m_optimize_dex_time));
                 m_progressStream.close();
