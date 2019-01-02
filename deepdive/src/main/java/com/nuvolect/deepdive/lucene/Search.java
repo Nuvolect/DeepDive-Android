@@ -11,7 +11,6 @@ import android.content.Context;
 
 import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.main.CConst;
-import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniHash;
@@ -193,15 +192,6 @@ public class Search {//FIXME add warning: Cannot parse '*': '*' or '?' not allow
             }
         }
         int num_hits = scoreDocs!=null?scoreDocs.length:0;
-
-        String category = Analytics.SEARCH;
-        String action = searchQuery;
-        String label = searchPath.replaceFirst(CConst.USER_FOLDER_PATH, "");
-        long value = num_hits;
-
-        Analytics.send( ctx, category, action, label, value);
-
-//            LogUtil.log(LogUtil.LogType.SEARCH, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+num_hits);
 
         try {
             result.put("hits", jsonArray!=null?jsonArray:new JSONArray());

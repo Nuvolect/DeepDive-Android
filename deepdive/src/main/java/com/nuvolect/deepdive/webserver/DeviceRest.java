@@ -11,7 +11,6 @@ import android.content.Context;
 
 import com.nuvolect.deepdive.survey.DeviceSurvey;
 import com.nuvolect.deepdive.survey.SurveyExec;
-import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.KeystoreUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 
@@ -90,15 +89,6 @@ public class DeviceRest {
             }
             if( ! error.isEmpty())
                 LogUtil.log( DeviceRest.class, "Error: "+error);
-
-            String category = Analytics.DEVICE;
-            String action = cmd_id.toString();
-            String label = extra;
-            long value = 1;
-
-            Analytics.send( ctx, category, action, label, value);
-
-            LogUtil.log(DeviceRest.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
 
             wrapper.put("error", error);
             wrapper.put("cmd_id", cmd_id.toString());

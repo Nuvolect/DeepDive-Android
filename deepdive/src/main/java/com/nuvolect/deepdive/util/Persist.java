@@ -11,7 +11,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Persist {
 
@@ -32,14 +35,20 @@ public class Persist {
      * 4. Decode the byte[] into a string with UTF-8.
      * 5. Clean up any clear text data
      */
-    private static final String PERSIST_NAME           = "dd_persist";
+    private static final String PERSIST_NAME        = "dd_persist";
 
     // Persist keys, some calling methods pass their own keys
-    public static final String PORT_NUMBER          = "port_number";
-    public static final String DB_PASSWORD          = "db_password";
-    public static final String SHOW_TIP_CURRENT     = "show_tip_current";
-    public static final String SELFSIGNED_KS_KEY    = "selfsigned_ks_key";
-    public static final String USERS                = "users";
+    public static final String CURRENT_SET          = "current_set";        // Clear, string
+    public static final String DB_PASSWORD          = "db_password";        // Encrypted, string
+    public static final String PORT_NUMBER          = "port_number";        // Encrypted, int
+    public static final String SELFSIGNED_KS_KEY    = "selfsigned_ks_key";  // Encrypted, string
+    public static final String SHOW_TIP_CURRENT     = "show_tip_current";   // Clear, int
+    public static final String USERS                = "users";              // Encrypted, string
+
+    private static final String[] crypStringKeys = { DB_PASSWORD, SELFSIGNED_KS_KEY, USERS };
+    private static final Set<String> crypString = new HashSet<>(Arrays.asList(crypStringKeys));
+    private static final String[] crypIntKeys = { PORT_NUMBER, SHOW_TIP_CURRENT };
+    private static final Set<String> crypInt = new HashSet<>(Arrays.asList(crypIntKeys));
 
     /**
      * Remove all persistent data.
@@ -64,6 +73,7 @@ public class Persist {
     public static boolean dumpKeysToLog(Context ctx) {
 
         final SharedPreferences pref = ctx.getSharedPreferences(PERSIST_NAME, Context.MODE_PRIVATE);
+
         Map<String, ?> map = pref.getAll();
         LogUtil.log(LogUtil.LogType.PERSIST, "key count: "+map.keySet().size());
 
@@ -71,16 +81,21 @@ public class Persist {
             for( String key : map.keySet()){
 
                 LogUtil.log(LogUtil.LogType.PERSIST, "key: "+key);
-                if( key.contentEquals(SHOW_TIP_CURRENT))
-                    LogUtil.log(LogUtil.LogType.PERSIST, "value: "+pref.getInt( key, 0));
-                else{
+                if( crypString.contains( key )){
+
                     byte[] crypBytes = CrypUtil.decodeFromB64( pref.getString( key, ""));
                     byte[] clearBytes = CrypUtil.decrypt( crypBytes);
                     LogUtil.log(LogUtil.LogType.PERSIST, "value: "+CrypUtil.toStringUTF8( clearBytes));
                 }
+                else if( crypInt.contains( key )) {
+                        LogUtil.log(LogUtil.LogType.PERSIST, "value: " + pref.getInt(key, 0));
+                }
+                    else {
+                    LogUtil.log(LogUtil.LogType.PERSIST, "value: " + pref.getString(key, "error missing string"));
+                }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.logException(LogUtil.LogType.PERSIST, e);
         }
 
         return map.keySet().size() > 0;

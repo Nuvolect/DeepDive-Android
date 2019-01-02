@@ -14,7 +14,6 @@ import android.content.Context;
 
 import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.probe.ProbeUtil;
-import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.util.OmniFile;
@@ -155,15 +154,6 @@ public class OmniRest {
             }
             if( ! error.isEmpty())
                 LogUtil.log( OmniRest.class, "Error: "+error);
-
-            String category = Analytics.OMNI_REST;
-            String action = cmd_id.toString();
-            String label = extra;
-            long value = 1;
-
-            Analytics.send( ctx, category, action, label, value);
-
-//                LogUtil.log(OmniRest.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
 
             wrapper.put("error", error);
             wrapper.put("cmd_id", cmd_id.toString());

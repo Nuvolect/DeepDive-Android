@@ -274,30 +274,16 @@ public class ShowTips {
 
         showTip(getTip(bumpTip(1)));
 
-        Analytics.send(m_act,
-                Analytics.SHOW_TIP,
-                Analytics.NEXT_TIP,
-                Analytics.COUNT, 1);
     }
 
     public void previousTipButtonOnClick(View view) {
 
         showTip(getTip(bumpTip(-1)));
-
-        Analytics.send(m_act,
-                Analytics.SHOW_TIP,
-                Analytics.PREVIOUS_TIP,
-                Analytics.COUNT, 1);
     }
 
     public void closeTipsButtonOnClick(View view) {
 
         hideTips();
-
-        Analytics.send(m_act,
-                Analytics.SHOW_TIP,
-                Analytics.CLOSE_TIPS,
-                Analytics.COUNT, 1);
     }
 
     public void hideTips(){
@@ -310,11 +296,6 @@ public class ShowTips {
             m_dialog.dismiss();
             m_dialog = null;
         }
-
-        Analytics.send(m_act,
-                Analytics.SHOW_TIP,
-                Analytics.HIDE_TIPS,
-                Analytics.COUNT, 1);
     }
 
     public void showTipsCbOnClick(View view) {

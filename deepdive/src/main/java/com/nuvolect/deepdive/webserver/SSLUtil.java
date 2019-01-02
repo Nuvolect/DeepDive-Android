@@ -9,7 +9,7 @@ package com.nuvolect.deepdive.webserver;
 
 import android.content.Context;
 
-import com.nuvolect.deepdive.main.CConst;
+import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniUtil;
 import com.nuvolect.deepdive.util.Persist;
@@ -19,23 +19,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidKeyException;
 import java.security.Key;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.PublicKey;
-import java.security.UnrecoverableEntryException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
-import javax.crypto.NoSuchPaddingException;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -54,7 +49,7 @@ public class SSLUtil {
      * @return
      * @throws IOException
      */
-    public static SSLServerSocketFactory configureSSLPath(Context ctx, String absolutePath) throws IOException {
+    public static SSLServerSocketFactory configureSSLPath(Context ctx, String absolutePath) {
 
         SSLServerSocketFactory sslServerSocketFactory = null;
         try {
@@ -64,8 +59,16 @@ public class SSLUtil {
             char[] passphrase = Persist.getSelfsignedKsKey( ctx);
 
             File loadFile = new File(absolutePath);
+            assert loadFile != null;
+            assert loadFile.exists();
+            assert loadFile.canRead();
+            assert loadFile.length() > 0;
+
+            LogUtil.log( SSLUtil.class, "Certificate length: "+loadFile.length());
+
             InputStream keystoreStream = new java.io.FileInputStream( loadFile );
             keystore.load(keystoreStream, passphrase);
+            keystoreStream.close();
 
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(keystore);
@@ -76,19 +79,10 @@ public class SSLUtil {
             sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
             sslServerSocketFactory = sslContext.getServerSocketFactory();
 
-            //TODO add requirements to imspect SSL certificates
 //            InspectCert.inspectSocketFactory( sslContext, sslServerSocketFactory, absolutePath, trustManagerFactory, loadFile);
 
-        } catch (UnrecoverableEntryException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.SSL_UTIL, e);
         }
 
         return sslServerSocketFactory;
@@ -106,6 +100,7 @@ public class SSLUtil {
             KeyStore keystore = KeyStore.getInstance("BKS");
             InputStream keystoreStream = WebService.class.getResourceAsStream(assetCertPath);
             keystore.load(keystoreStream, passphrase);
+            keystoreStream.close();
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(keystore);
 
@@ -116,6 +111,7 @@ public class SSLUtil {
             sslServerSocketFactory = sslContext.getServerSocketFactory();
 
         } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.SSL_UTIL, e);
             throw new IOException(e.getMessage());
         }
 
@@ -150,7 +146,7 @@ public class SSLUtil {
             return true;
 
         } catch(Exception e) {
-            e.printStackTrace();
+            LogUtil.logException(LogUtil.LogType.SSL_UTIL, e);
         }
         return false;
     }
@@ -182,6 +178,7 @@ public class SSLUtil {
             OmniUtil.writeFile( new OmniFile("u0", certFile.getName()+"_probe.txt"), log);
 
         } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.SSL_UTIL, e);
             throw new IOException(e.getMessage());
         }
     }
@@ -206,12 +203,15 @@ public class SSLUtil {
                 log += "\nKey  is null";
 
         } catch (KeyStoreException e) {
+            LogUtil.logException(LogUtil.LogType.SSL_UTIL, e);
             e.printStackTrace();
             log += e.toString();
         } catch (NoSuchAlgorithmException e) {
+            LogUtil.logException(LogUtil.LogType.SSL_UTIL, e);
             e.printStackTrace();
             log += e.toString();
         } catch (UnrecoverableKeyException e) {
+            LogUtil.logException(LogUtil.LogType.SSL_UTIL, e);
             e.printStackTrace();
             log += e.toString();
         }
@@ -235,6 +235,7 @@ public class SSLUtil {
             log += "\ncert hashcode: " + String.valueOf(cert.hashCode());
             log += "\ncert toString: " + cert.toString();
         } catch (Exception e) {
+            LogUtil.logException(LogUtil.LogType.SSL_UTIL, e);
             e.printStackTrace();
             log += e.toString();
         }

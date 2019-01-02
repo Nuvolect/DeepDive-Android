@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 

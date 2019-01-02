@@ -10,7 +10,6 @@ package com.nuvolect.deepdive.lucene;
 import android.content.Context;
 
 import com.nuvolect.deepdive.main.CConst;
-import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.FileUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
@@ -34,7 +33,6 @@ public class SearchSet {//NEXTSPRINT expand wiki search set docs to include basi
     static String SEARCH_SET_FOLDER_PATH = "/.search_set/";
     static String DEFAULT_SEARCH_SET_FILENAME = "default_search_set.json";
     static String DEFAULT_SET_PATH = SEARCH_SET_FOLDER_PATH + DEFAULT_SEARCH_SET_FILENAME;
-    static String CURRENT_SET = "current_set";
 
     static String[] m_search_sets = new String[]{
             "analytics.json",
@@ -142,14 +140,6 @@ public class SearchSet {//NEXTSPRINT expand wiki search set docs to include basi
             LogUtil.logException(SearchSet.class, e);
             success = false;
         }
-        String category = Analytics.SEARCH_SET;
-        String action = fileName;
-        String label = set.toString();
-        long value = set.length();
-
-        Analytics.send( ctx, category, action, label, value);
-
-//            LogUtil.log(Search.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
 
         JSONObject result = successResult( success);
         try {
@@ -188,9 +178,9 @@ public class SearchSet {//NEXTSPRINT expand wiki search set docs to include basi
         boolean success = omniFile.delete();
 
         // Set the current set to default if the current set was just deleted
-        String current_filename = Persist.get(ctx, CURRENT_SET, DEFAULT_SEARCH_SET_FILENAME);
+        String current_filename = Persist.get(ctx, Persist.CURRENT_SET, DEFAULT_SEARCH_SET_FILENAME);
         if( current_filename.contentEquals(filename_to_delete))
-            Persist.put( ctx, CURRENT_SET, DEFAULT_SEARCH_SET_FILENAME);
+            Persist.put( ctx, Persist.CURRENT_SET, DEFAULT_SEARCH_SET_FILENAME);
 
         return successResult( success);
     }
@@ -204,7 +194,7 @@ public class SearchSet {//NEXTSPRINT expand wiki search set docs to include basi
      */
     public static JSONObject setCurrentSetFileName(Context ctx, String volumeId, String set_filename) {
 
-        return successResult( Persist.put(ctx, CURRENT_SET, set_filename));
+        return successResult( Persist.put(ctx, Persist.CURRENT_SET, set_filename));
     }
 
     /**
@@ -225,7 +215,7 @@ public class SearchSet {//NEXTSPRINT expand wiki search set docs to include basi
 
             if( ! setFile.exists()) {
                 setFile = new OmniFile(volumeId, DEFAULT_SET_PATH);
-                Persist.put( ctx, CURRENT_SET, DEFAULT_SEARCH_SET_FILENAME);
+                Persist.put( ctx, Persist.CURRENT_SET, DEFAULT_SEARCH_SET_FILENAME);
             }
 
             String content = FileUtil.readFile( ctx, setFile.getStdFile()).replace("\n","");
@@ -242,13 +232,13 @@ public class SearchSet {//NEXTSPRINT expand wiki search set docs to include basi
     }
     public static JSONObject getCurrentSet(Context ctx, String volumeId) {
 
-        String currentSetName = Persist.get(ctx, CURRENT_SET, DEFAULT_SEARCH_SET_FILENAME);
+        String currentSetName = Persist.get(ctx, Persist.CURRENT_SET, DEFAULT_SEARCH_SET_FILENAME);
         JSONObject currentSet = getSet(ctx, volumeId, currentSetName);
 
         return currentSet;
     }
     public static String getCurrentSetName(Context ctx, String volumeId){
 
-        return Persist.get(ctx, CURRENT_SET, DEFAULT_SEARCH_SET_FILENAME);
+        return Persist.get(ctx, Persist.CURRENT_SET, DEFAULT_SEARCH_SET_FILENAME);
     }
 }

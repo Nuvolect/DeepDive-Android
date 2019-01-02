@@ -14,7 +14,6 @@ import com.nuvolect.deepdive.lucene.IndexUtil;
 import com.nuvolect.deepdive.lucene.Search;
 import com.nuvolect.deepdive.lucene.SearchSet;
 import com.nuvolect.deepdive.main.App;
-import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Safe;
 
@@ -165,15 +164,6 @@ public class SearchRest {
             }
             if( ! error.isEmpty())
                 LogUtil.log( SearchRest.class, "Error: "+error);
-
-            String category = Analytics.SEARCH_REST;
-            String action = cmd_id.toString();
-            String label = extra;
-            long value = 1;
-
-            Analytics.send( ctx, category, action, label, value);
-
-//                LogUtil.log(SearchRest.class, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
 
             wrapper.put("error", error);
             wrapper.put("cmd_id", cmd_id.toString());

@@ -11,17 +11,17 @@ import android.content.Context;
 
 import org.junit.Test;
 
-import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-public class DumpKeysToLog {
+public class DumpKeystoreToLog {
 
     @Test
     public void dump(){
 
         Context ctx = getTargetContext();
-        Persist.dumpKeysToLog(ctx);
+        KeystoreUtil.dumpToLog(ctx);
 
         assertThat( true, is( true));
     }

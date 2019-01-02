@@ -7,24 +7,31 @@
 
 package com.nuvolect.deepdive.webserver;//
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 
+import com.nuvolect.deepdive.license.AppSpecific;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.webserver.connector.ServerInit;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocketFactory;
+
+import androidx.core.app.NotificationCompat;
 
 
 /**
@@ -44,6 +51,11 @@ public class WebService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            startMyOwnForeground();
+        else
+            startForeground(1,new Notification());
 
         LogUtil.log(LogUtil.LogType.WEB_SERVICE, "Starting web service");
         m_ctx = getApplicationContext();
@@ -69,12 +81,12 @@ public class WebService extends Service {
             okHttpClient = null;
 
             // Create a self signed certificate and put it in a BKS keystore
-            String keystoreFilename = "VazanKeystore.bks";
+            String keystoreFilename = "SelfSigned.bks";
 
             File file = new File( m_ctx.getFilesDir(), keystoreFilename);
             String absolutePath = file.getAbsolutePath();
 
-            KeystoreVazen.makeKeystore( m_ctx, absolutePath, false);
+            SelfSignedCertificate.makeKeystore( m_ctx, absolutePath, true);
 
             sslServerSocketFactory = SSLUtil.configureSSLPath( m_ctx, absolutePath);
 
@@ -82,10 +94,34 @@ public class WebService extends Service {
                 server.makeSecure( sslServerSocketFactory, null);
             server.start();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LogUtil.logException(m_ctx, LogUtil.LogType.WEB_SERVICE, e);
         }
         LogUtil.log(LogUtil.LogType.WEB_SERVICE, "Server started: " + WebUtil.getServerUrl(m_ctx));
+    }
+
+    private void startMyOwnForeground(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+
+            String NOTIFICATION_CHANNEL_ID = "com.nuvolect.deepdive";
+            String channelName = "My Background Service";
+            NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+            chan.setLightColor(Color.BLUE);
+            chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            assert manager != null;
+            manager.createNotificationChannel(chan);
+
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+            Notification notification = notificationBuilder.setOngoing(true)
+                    .setSmallIcon(AppSpecific.SMALL_ICON)
+                    .setContentTitle("App is running in background")
+                    .setPriority(NotificationManager.IMPORTANCE_MIN)
+                    .setCategory(Notification.CATEGORY_SERVICE)
+                    .build();
+            startForeground(2, notification);
+        }
     }
 
     public static Context getContext(){

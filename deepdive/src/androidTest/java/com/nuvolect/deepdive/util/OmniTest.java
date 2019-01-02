@@ -14,7 +14,7 @@ import com.nuvolect.deepdive.main.CConst;
 import org.junit.Test;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 

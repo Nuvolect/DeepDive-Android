@@ -43,7 +43,7 @@ import android.widget.Scroller;
  * -------------------
  * Extends Android ImageView to include pinch zooming, panning, fling and double tap zoom.
  */
-public class TouchImageView extends android.support.v7.widget.AppCompatImageView {
+public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView {
 
     private static final String DEBUG = "DEBUG";
 

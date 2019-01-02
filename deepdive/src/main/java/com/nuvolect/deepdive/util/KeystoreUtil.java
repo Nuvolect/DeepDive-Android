@@ -27,10 +27,11 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
-import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -152,12 +153,15 @@ public class KeystoreUtil {
 
                 lockscreenEnabled = "disabled";
             }else
-            if( result.getString("success").contentEquals("true"))
+            if( result.getString("success").contentEquals("true")){
+
                 lockscreenEnabled = "enabled";
+                deleteKey( LOCKSCREEN_TEST);
+            }
 
             result.put(LOCKSCREEN_TEST,lockscreenEnabled);
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
             LogUtil.logException( KeystoreUtil.class, e);
         }
         return result;
@@ -288,8 +292,11 @@ public class KeystoreUtil {
             ks.load(null);
             if( ks.containsAlias( key_alias)){
 
-                KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
-                RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
+//                KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
+//                RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
+
+                PrivateKey privateKey = (PrivateKey) ks.getKey(key_alias, null);
+                PublicKey publicKey = ks.getCertificate(key_alias).getPublicKey();
 
                 Cipher rsaCipher = Cipher.getInstance( CIPHER_ALGORITHM );
                 rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -300,6 +307,7 @@ public class KeystoreUtil {
                 cipherOutputStream.close();
 
                 byte [] cipherBytes = outputStream.toByteArray();
+                outputStream.close();
                 cipherTextB64 = Base64.encodeToString(cipherBytes, BASE64);
 
             }else{
@@ -359,8 +367,11 @@ public class KeystoreUtil {
             createKey( ctx, key_alias);
         }
 
-        KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
-        RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
+//        KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
+//        RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
+
+        PrivateKey privateKey = (PrivateKey) ks.getKey(key_alias, null);
+        PublicKey publicKey = ks.getCertificate(key_alias).getPublicKey();
 
         Cipher rsaCipher = Cipher.getInstance( CIPHER_ALGORITHM );
         rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -371,6 +382,7 @@ public class KeystoreUtil {
         cipherOutputStream.close();
 
         cipherBytes = outputStream.toByteArray();
+        outputStream.close();
 
         return cipherBytes;
     }
@@ -399,8 +411,8 @@ public class KeystoreUtil {
         KeyStore ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
         ks.load(null);
 
-        KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
-        RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
+        PrivateKey privateKey = (PrivateKey) ks.getKey(key_alias, null);
+        PublicKey publicKey = ks.getCertificate(key_alias).getPublicKey();
 
         Cipher rsaCipher = Cipher.getInstance( CIPHER_ALGORITHM );
         rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -411,6 +423,7 @@ public class KeystoreUtil {
         cipherOutputStream.close();
 
         cipherBytes = outputStream.toByteArray();
+        outputStream.close();
 
         return cipherBytes;
     }
@@ -435,15 +448,23 @@ public class KeystoreUtil {
         byte[] decryptBuffer = new byte[2048];
         byte[] decryptedResult = new byte[0];
 
+        if( key_alias == null || key_alias.length() == 0)
+            throw new IllegalArgumentException("key alias null or length zero");
+
+        if( cipherBytes == null || cipherBytes.length == 0)
+            throw new IllegalArgumentException("cipher bytes null or length zero");
+
         KeyStore ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
         ks.load(null);
 
         if( ks.containsAlias( key_alias)){
 
-            KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
+            PrivateKey privateKey = (PrivateKey) ks.getKey(key_alias, null);
+            PublicKey publicKey = ks.getCertificate(key_alias).getPublicKey();
+
 
             Cipher cipher = Cipher.getInstance( CIPHER_ALGORITHM);
-            cipher.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
+            cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
             CipherInputStream cipherInputStream = new CipherInputStream(
                     new ByteArrayInputStream(cipherBytes), cipher);
@@ -458,6 +479,9 @@ public class KeystoreUtil {
             if( bytesRead != -1)
                 outputStream.write(decryptBuffer, 0, bytesRead);
             decryptedResult = outputStream.toByteArray();
+
+            cipherInputStream.close();
+            outputStream.close();
         }
         else{
             throw new IllegalArgumentException("key not found");
@@ -485,11 +509,15 @@ public class KeystoreUtil {
             ks.load(null);
             if( ks.containsAlias( key_alias)){
 
-                KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
-                privateKeyEntryString = privateKeyEntry.toString();
+//                KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
+//                privateKeyEntryString = privateKeyEntry.toString();
+
+                PrivateKey privateKey = (PrivateKey) ks.getKey(key_alias, null);
+                PublicKey publicKey = ks.getCertificate(key_alias).getPublicKey();
 
                 Cipher cipher = Cipher.getInstance( CIPHER_ALGORITHM);
-                cipher.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
+//                cipher.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
+                cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
                 CipherInputStream cipherInputStream = new CipherInputStream(
                         new ByteArrayInputStream(Base64.decode( cipherTextB64, BASE64)), cipher);
@@ -500,6 +528,7 @@ public class KeystoreUtil {
                 while ((nextByte = cipherInputStream.read()) != -1) {
                     values.add((byte)nextByte);
                 }
+                cipherInputStream.close();
 
                 byte[] bytes = new byte[values.size()];
                 for(int i = 0; i < bytes.length; i++) {
@@ -625,11 +654,13 @@ public class KeystoreUtil {
 
                 JSONObject obj = new JSONObject();
                 String key_alias = ksEnumeration.nextElement();
+                LogUtil.log(KeystoreUtil.class, "keystore key: "+key_alias);
                 obj.put("alias", key_alias);
 
-                KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry( key_alias, null);
+                PrivateKey privateKey = (PrivateKey) ks.getKey(key_alias, null);
+                PublicKey publicKey = ks.getCertificate(key_alias).getPublicKey();
 
-                String s = privateKeyEntry.getCertificate().toString();
+                String s = privateKey.toString();
 
                 obj.put("certificate", s);
 
@@ -677,4 +708,26 @@ public class KeystoreUtil {
 
         return keyCreated;
     }
+
+    public static void dumpToLog(Context ctx) {
+
+        JSONArray keys = getKeys();
+
+        for( int i = 0; i < keys.length(); i++){
+
+            try {
+                JSONObject object = keys.getJSONObject( i );
+
+                String alias = object.getString("alias");
+                String certificate = object.getString("certificate");
+
+                LogUtil.log(KeystoreUtil.class, "alias: "+alias);
+                LogUtil.log(KeystoreUtil.class, "certificate: "+certificate);
+            } catch (JSONException e) {
+                LogUtil.logException(KeystoreUtil.class, e);
+            }
+
+        }
+    }
+
 }

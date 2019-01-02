@@ -100,6 +100,7 @@ public class LogUtil {
         SETTINGS_ACTIVITY,
         SHOW_TIPS,
         SIZE,
+        SSL_UTIL,
         SYSTEM,
         USER,
         USER_MANAGER,

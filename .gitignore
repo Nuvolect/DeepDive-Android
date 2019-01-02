@@ -7,3 +7,9 @@
 /captures
 /local.properties
 deepdive/build/
+src/androidTest/java/org/
+src/debug/docs/
+src/main/java/jadx/org/
+src/main/java/org/
+src/release/
+/docs/personal_todo.md

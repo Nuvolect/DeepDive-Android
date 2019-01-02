@@ -23,9 +23,8 @@ import android.widget.Toast;
 import com.nuvolect.deepdive.R;
 import com.nuvolect.deepdive.license.AppSpecific;
 import com.nuvolect.deepdive.license.AppUpgrade;
-import com.nuvolect.deepdive.util.ActionBarUtil;
-import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.main.CConst;
+import com.nuvolect.deepdive.util.ActionBarUtil;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.ShowTips;
 
@@ -50,20 +49,6 @@ public class LobbySettingsActivity extends PreferenceActivity
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        Analytics.start(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        Analytics.stop(this);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         // Inflate the menu items for use in the action bar
@@ -74,8 +59,6 @@ public class LobbySettingsActivity extends PreferenceActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        Analytics.sendMenuItem(m_act, "LobbySettings", item);
 
         switch (item.getItemId()) {
 

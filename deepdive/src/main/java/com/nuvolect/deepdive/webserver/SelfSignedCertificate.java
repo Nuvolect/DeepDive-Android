@@ -52,7 +52,7 @@ import java.util.Date;
  * https://stackoverflow.com/questions/29852290/self-signed-x509-certificate-with-bouncy-castle-in-java
  * Robert Vazan, https://stackoverflow.com/users/1981276/robert-va%C5%BEan
  */
-public class KeystoreVazen {
+public class SelfSignedCertificate {
 
     public static boolean makeKeystore(Context ctx, String keystoreFilepath, boolean recreate){
 
@@ -60,9 +60,12 @@ public class KeystoreVazen {
         File keystoreFile = new File( keystoreFilepath );
 
         // If the keystore already exists and recreate not requested, nothing to do.
-        boolean skipOut = keystoreFile.exists();
-        if( skipOut && ! recreate)
+        boolean skipOut = keystoreFile.exists() && Persist.keyExists( ctx, Persist.SELFSIGNED_KS_KEY);
+        if( skipOut && ! recreate){
+
+            LogUtil.log(LogUtil.LogType.CERTIFICATE, "Certificate exists, recreate: "+recreate);
             return success;
+        }
 
         try {
 
@@ -151,6 +154,7 @@ public class KeystoreVazen {
             FileOutputStream fos = new FileOutputStream( keystoreFile);
             keyStore.store( fos, storePassword);
             fos.close();
+            LogUtil.log(LogUtil.LogType.CERTIFICATE, "Certificate created");
 
         } catch (Exception e) {
             LogUtil.logException(LogUtil.LogType.CERTIFICATE, e);

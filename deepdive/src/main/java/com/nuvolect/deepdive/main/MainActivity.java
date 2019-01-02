@@ -17,9 +17,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,11 +30,14 @@ import com.nuvolect.deepdive.license.LicensePersist;
 import com.nuvolect.deepdive.license.LicenseUtil;
 import com.nuvolect.deepdive.settings.LobbySettingsActivity;
 import com.nuvolect.deepdive.util.ActionBarUtil;
-import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Util;
 import com.nuvolect.deepdive.webserver.WebService;
 import com.nuvolect.deepdive.webserver.WebUtil;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -97,19 +97,6 @@ public class MainActivity extends FragmentActivity {
          */
         ActionBarUtil.show(m_act);
     }
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        Analytics.start(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        Analytics.stop(this);
-    }
 
     LicenseManager.LicenseCallbacks mLicenseManagerListener = new LicenseManager.LicenseCallbacks(){
 
@@ -129,8 +116,15 @@ public class MainActivity extends FragmentActivity {
             case WHITELIST_USER:
             case PRO_USER: {
 
-                Intent serverIntent = new Intent(m_ctx, WebService.class);
-                m_ctx.startService(serverIntent);
+//                Intent serverIntent = new Intent(m_ctx, WebService.class);
+//                ContextCompat.startForegroundService( m_ctx, serverIntent);
+//                m_ctx.startService(serverIntent);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    m_ctx.startForegroundService(new Intent(m_ctx, WebService.class));
+                } else {
+                    m_ctx.startService(new Intent(m_ctx, WebService.class));
+                }
 
                 startGui();
                 break;
@@ -278,20 +272,10 @@ public class MainActivity extends FragmentActivity {
 
             case android.R.id.home:{
 
-                Analytics.send(getApplicationContext(),
-                        Analytics.MAIN_MENU,
-                        Analytics.UP_BUTTON_EXIT,
-                        Analytics.COUNT, 1);
-
                 quitApp();
                 break;
             }
             case R.id.menu_help:{
-
-                Analytics.send(getApplicationContext(),
-                        Analytics.MAIN_MENU,
-                        Analytics.HELP,
-                        Analytics.COUNT, 1);
 
                 String url = AppSpecific.APP_WIKI_URL;
                 Intent i = new Intent(Intent.ACTION_VIEW);
@@ -300,11 +284,6 @@ public class MainActivity extends FragmentActivity {
                 break;
             }
             case R.id.menu_settings:{
-
-                Analytics.send(getApplicationContext(),
-                        Analytics.MAIN_MENU,
-                        Analytics.SETTINGS,
-                        Analytics.COUNT, 1);
 
                 Intent i = new Intent(m_act, LobbySettingsActivity.class);
                 startActivity(i);

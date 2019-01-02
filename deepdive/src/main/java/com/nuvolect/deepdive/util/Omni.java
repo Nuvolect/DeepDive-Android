@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -77,6 +76,8 @@ public class Omni {
     public static String userVolumeId_0 = "u0"; // User Volume 0, restricted to user file
     public static String userVolumeId_1 = "u1"; // User Volume 1, restricted to user file
     public static String cryptoVolumeId = "c0"; // Encrypted Volume 0
+    public static String externalVolumeId = "x0"; // Removable volume 0
+    public static String APP_STORAGE_NAME_PREFIX = "app_";
     private static List<String> activeVolumeIds;
     public static String localRoot;
     public static String userRoot_0;
@@ -118,59 +119,6 @@ public class Omni {
             LogUtil.logException( LogUtil.LogType.OMNI, e);
         }
 
-        try {
-            String[] paths = OmniStorage.getStorageDirectories(ctx);
-            for( String path : paths ){
-
-                File f = new File( path );
-
-                LogUtil.log( LogUtil.LogType.OMNI, " OmniStorage name: "+f.getName());
-                LogUtil.log( LogUtil.LogType.OMNI, " OmniStorage path: "+f.getAbsolutePath());
-                String formatted_count = String.format(Locale.US, "%,d", f.getTotalSpace())+" bytes";
-                LogUtil.log( LogUtil.LogType.OMNI, " OmniStorage space: "+formatted_count);
-                LogUtil.log( LogUtil.LogType.OMNI, " OmniStorage canRead: "+f.canRead());
-                LogUtil.log( LogUtil.LogType.OMNI, " OmniStorage canWrite: "+f.canWrite());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        {
-
-            ArrayList<File> storage = OmniStorage.getWritableRemovableStorage(ctx);
-
-            for( File f : storage){
-
-                LogUtil.log( LogUtil.LogType.OMNI, " extStoPubDir name: "+f.getName());
-                LogUtil.log( LogUtil.LogType.OMNI, " extStoPubDir path: "+f.getAbsolutePath());
-                String formatted_count = String.format(Locale.US, "%,d", f.getTotalSpace())+" bytes";
-                LogUtil.log( LogUtil.LogType.OMNI, " extStoPubDir space: "+formatted_count);
-                LogUtil.log( LogUtil.LogType.OMNI, " extStoPubDir canRead: "+f.canRead());
-                LogUtil.log( LogUtil.LogType.OMNI, " extStoPubDir canWrite: "+f.canWrite());
-            }
-        }
-
-        File[] mediaDirs = ctx.getExternalFilesDirs( null);
-        for( File f : mediaDirs){
-
-            LogUtil.log( LogUtil.LogType.OMNI, " getExternalFilesDirs name: "+f.getName());
-            LogUtil.log( LogUtil.LogType.OMNI, " getExternalFilesDirs path: "+f.getAbsolutePath());
-            String formatted_count = String.format(Locale.US, "%,d", f.getTotalSpace())+" bytes";
-            LogUtil.log( LogUtil.LogType.OMNI, " getExternalFilesDirs space: "+formatted_count);
-            LogUtil.log( LogUtil.LogType.OMNI, " getExternalFilesDirs canRead: "+f.canRead());
-            LogUtil.log( LogUtil.LogType.OMNI, " getExternalFilesDirs canWrite: "+f.canWrite());
-        }
-
-//        // User primary device storage
-//        File extStorage = Environment.getExternalStorageDirectory();
-//        LogUtil.log( LogUtil.LogType.OMNI, " external dir name: "+extStorage.getName());
-//        LogUtil.log( LogUtil.LogType.OMNI, " external dir path: "+extStorage.getAbsolutePath());
-//        LogUtil.log( LogUtil.LogType.OMNI, " external dir space: "+extStorage.getTotalSpace());
-//
-//        File extStorage2 = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES);
-//        LogUtil.log( LogUtil.LogType.OMNI, " external2 name: "+extStorage2.getName());
-//        LogUtil.log( LogUtil.LogType.OMNI, " external2 path: "+extStorage2.getAbsolutePath());
-//        LogUtil.log( LogUtil.LogType.OMNI, " external2 space: "+extStorage2.getTotalSpace());
-
         /**
          * Each root starts and ends with SLASH
          */
@@ -188,7 +136,7 @@ public class Omni {
             volRoot.put( userVolumeId_0, userRoot_0);
 
             volName.put( localVolumeId,  "sdcard");
-            volName.put( userVolumeId_0, "private_0");
+            volName.put( userVolumeId_0, APP_STORAGE_NAME_PREFIX +"0");
 
             volHash.put( localVolumeId  + "_" + OmniHash.encode( CConst.ROOT), localVolumeId);
             volHash.put( userVolumeId_0 + "_" + OmniHash.encode( CConst.ROOT), userVolumeId_0);
@@ -201,17 +149,25 @@ public class Omni {
                 activeVolumeIds.add( cryptoVolumeId);
             }
 
-            JSONArray privateStorage = StoragePrivate.getStoragePrivate(ctx);
-            if( privateStorage.length() > 1){//FIXME looks odd, only works with 2 or more?
-                //FIXME look for ExFAT removable storage, you can see it from Device Details
+            JSONArray privateStorage = AppStorage.getAppStorage(ctx);
+            if( privateStorage.length() > 1){
 
                 JSONObject priv_1 = privateStorage.getJSONObject(1);
                 String userRoot_1 = priv_1.getString( "path")+"/omni/";
                 volRoot.put( userVolumeId_1, userRoot_1);
-                volName.put( userVolumeId_1, "private_1");
+                volName.put( userVolumeId_1, APP_STORAGE_NAME_PREFIX+"1");
                 volHash.put( userVolumeId_1 + "_" + OmniHash.encode( CConst.ROOT), userVolumeId_1);
 
                 activeVolumeIds.add( userVolumeId_1);
+            }
+
+            File removableStorage = StorageUtil.getRemovableStorage( ctx);
+            if( removableStorage != null) {
+
+                volRoot.put( externalVolumeId, removableStorage.getAbsolutePath()+"/");
+                volName.put( externalVolumeId, "ext");
+                volHash.put( externalVolumeId + "_" + OmniHash.encode( CConst.ROOT), externalVolumeId);
+                activeVolumeIds.add( externalVolumeId);
             }
 
         } catch (JSONException e) {
@@ -219,9 +175,14 @@ public class Omni {
             success = false;
         }
 
+        /**
+         * Iterate over writable volumes and create thumbnail folders
+         */
         for( String volumeId : activeVolumeIds){
 
             OmniFile f = new OmniFile( volumeId, THUMBNAIL_FOLDER_PATH);
+            if( ! f.canWrite())
+                continue;
 
             boolean folderCreated = f.mkdirs();
             if( folderCreated)

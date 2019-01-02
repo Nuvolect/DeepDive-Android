@@ -15,7 +15,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.provider.Settings;
 
-import com.nuvolect.deepdive.util.StoragePrivate;
+import com.nuvolect.deepdive.util.AppStorage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -108,7 +108,7 @@ public class DeviceSurvey {
             object.put("ssl", getSslDetails());
             object.put("uniqueInstallId", getUniqueInstallId(ctx));
             object.put("wifiList", getWifiConfigured(ctx));
-            object.put("storagePrivate", StoragePrivate.getStoragePrivate(ctx));
+            object.put("storagePrivate", AppStorage.getAppStorage(ctx));
 
         } catch (JSONException e) {
             e.printStackTrace();

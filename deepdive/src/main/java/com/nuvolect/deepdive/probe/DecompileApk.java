@@ -25,7 +25,6 @@ import com.jaredrummler.apkparser.ApkParser;
 import com.jaredrummler.apkparser.model.CertificateMeta;
 import com.nuvolect.deepdive.main.App;
 import com.nuvolect.deepdive.main.CConst;
-import com.nuvolect.deepdive.util.Analytics;
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.util.OmniHash;
@@ -367,13 +366,6 @@ public class DecompileApk {
 
             m_progressStream.putStream("Extract APK complete, "+formatted_count+" bytes");
 
-            String category = Analytics.DECOMPILE;
-            String action = "extract_apk";
-            String label = m_packageName;
-            long value = bytes_copied;
-
-            Analytics.send( m_ctx, category, action, label, value);
-
             wrapper.put("extract_apk_status", 1); // Change to success if we get here
             wrapper.put("extract_apk_url", m_appFolderUrl);
 
@@ -515,13 +507,6 @@ public class DecompileApk {
                     m_progressStream.putStream("Unpack APK failed: "+time);
                 }
                 m_progressStream.close();
-
-                String category = Analytics.DECOMPILE;
-                String action = "unpack_apk";
-                String label = m_packageName;
-                long value = m_unpack_apk_time;
-
-                Analytics.send( m_ctx, category, action, label, value);
 
             }
         }, UNZIP_APK_THREAD, STACK_SIZE);
@@ -672,15 +657,6 @@ public class DecompileApk {
                 m_progressStream.putStream("Optimize DEX complete: "
                         +TimeUtil.deltaTimeHrMinSec(m_optimize_dex_time));
                 m_progressStream.close();
-
-                String category = Analytics.DECOMPILE;
-                String action = "optimize_apk";
-                String label = m_packageName;
-                long value = m_optimize_dex_time;
-
-                Analytics.send( m_ctx, category, action, label, value);
-
-//                LogUtil.log(LogUtil.LogType.DECOMPILE, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
                 m_optimize_dex_time = 0;
 
             }
@@ -785,16 +761,8 @@ public class DecompileApk {
 
                 m_progressStream.putStream("DEX to JAR complete: "
                         +TimeUtil.deltaTimeHrMinSec(m_dex2jar_time));
-
-                String category = Analytics.DECOMPILE;
-                String action = "dex2jar";
-                String label = m_packageName;
-                long value = m_dex2jar_time;
-
-                Analytics.send( m_ctx, category, action, label, value);
-
-//                LogUtil.log(LogUtil.LogType.DECOMPILE, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
                 m_dex2jar_time = 0;
+
             }
 
         }, DEX2JAR_THREAD, STACK_SIZE);
@@ -865,15 +833,8 @@ public class DecompileApk {
                 }
                 m_progressStream.putStream("CFR complete: "+TimeUtil.deltaTimeHrMinSec(m_cfr_time));
                 m_progressStream.close();
-
-                String category = Analytics.DECOMPILE;
-                String action = "cfr";
-                String label = m_packageName;
-                long value = m_cfr_time;
-
-                Analytics.send( m_ctx, category, action, label, value);
-
                 m_cfr_time = 0;
+
             }
         }, DEEPDIVE_THREAD_GROUP, STACK_SIZE);
 
@@ -952,17 +913,8 @@ public class DecompileApk {
                 }
 
                 m_progressStream.putStream("Jadx complete: "+TimeUtil.deltaTimeHrMinSec(m_jadx_time));
-
-                String category = Analytics.DECOMPILE;
-                String action = "jadx";
-                String label = m_packageName;
-                long value = m_jadx_time;
-
-                Analytics.send( m_ctx, category, action, label, value);
-
-//                LogUtil.log(LogUtil.LogType.DECOMPILE, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
-
                 m_jadx_time = 0;
+
             }
         }, JADX_THREAD, STACK_SIZE);
 
@@ -1067,17 +1019,8 @@ public class DecompileApk {
                     }
                 }
                 m_progressStream.putStream( "Fernflower complete: "+TimeUtil.deltaTimeHrMinSec(m_fern_time));
-
-                String category = Analytics.DECOMPILE;
-                String action = "fernflower";
-                String label = m_packageName;
-                long value = m_fern_time;
-
-                Analytics.send( m_ctx, category, action, label, value);
-
-//                LogUtil.log(LogUtil.LogType.DECOMPILE, "cat: "+category+", act: "+action+", lab: "+label+", hits: "+value);
-
                 m_fern_time = 0;
+
             }
         }, FERN_THREAD, STACK_SIZE);
 
@@ -1156,13 +1099,6 @@ public class DecompileApk {
         System.exit(0);
 
         Runtime.getRuntime().exit(0);
-
-        String category = Analytics.DECOMPILE;
-        String action = "stop_thread";
-        String label = threadId;
-        long value = 1;
-
-        Analytics.send( m_ctx, category, action, label, value);
 
         return getStatus();
     }

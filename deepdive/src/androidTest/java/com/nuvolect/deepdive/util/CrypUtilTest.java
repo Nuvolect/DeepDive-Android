@@ -14,7 +14,7 @@ import org.junit.Test;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
-import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -96,15 +96,29 @@ public class CrypUtilTest {
     @Test
     public void decrypt() throws Exception {
 
+        LogUtil.log( CrypUtilTest.class, CrypUtilTest.class.getCanonicalName()+" test starting");
         Context ctx = getTargetContext();
         KeystoreUtil.createKeyNotExists( ctx, this.testKeyAlias);
 
-        byte[] crypBytes = KeystoreUtil.encrypt( testKeyAlias, clearTextToEncrypt);
-        byte[] clearBytes = KeystoreUtil.decrypt( testKeyAlias, crypBytes);
+        byte[] crypBytes = new byte[0];
+        byte[] clearBytes = new byte[0];
+
+        try {
+            crypBytes = KeystoreUtil.encrypt( testKeyAlias, clearTextToEncrypt);
+        } catch (Exception e) {
+            LogUtil.logException(CrypUtilTest.class, e);
+        }
+        try {
+            clearBytes = KeystoreUtil.decrypt( testKeyAlias, crypBytes);
+        } catch (Exception e) {
+            LogUtil.logException(CrypUtilTest.class, e);
+        }
 
         assertThat( Arrays.equals( clearBytes, clearTextToEncrypt), is(true));
 
         KeystoreUtil.deleteKey( getTargetContext(), this.testKeyAlias, true);
+        
+        LogUtil.log( CrypUtilTest.class, CrypUtilTest.class.getCanonicalName()+" test ending");
     }
 
     @Test

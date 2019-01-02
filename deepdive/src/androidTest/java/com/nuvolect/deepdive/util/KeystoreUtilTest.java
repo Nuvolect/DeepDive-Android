@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 
-import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
@@ -49,7 +49,9 @@ public class KeystoreUtilTest {
     }
 
     @Test
-    public void encrypt() throws Exception {
+    public void encryptDecrypt() throws Exception {
+
+        LogUtil.log( KeystoreUtilTest.class, "encryptDecrypt test starting");
 
         KeystoreUtil.createKeyNotExists( getTargetContext(), this.testKeyAlias);
 
@@ -66,6 +68,8 @@ public class KeystoreUtilTest {
         assertThat( clearTextObj.getString("cleartext"), is( new String(this.clearBytesToEncrypt)));
 
         KeystoreUtil.deleteKey( getTargetContext(), this.testKeyAlias, true);
+
+        LogUtil.log( KeystoreUtilTest.class, "encryptDecrypt test ending");
     }
 
     @Test

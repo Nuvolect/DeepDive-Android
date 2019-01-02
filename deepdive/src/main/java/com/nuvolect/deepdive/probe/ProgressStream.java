@@ -7,7 +7,7 @@
 
 package com.nuvolect.deepdive.probe;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;

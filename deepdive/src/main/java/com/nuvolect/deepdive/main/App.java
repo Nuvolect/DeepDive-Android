@@ -10,7 +10,7 @@ package com.nuvolect.deepdive.main;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 
 import com.nuvolect.deepdive.R;
 import com.nuvolect.deepdive.util.LogUtil;
