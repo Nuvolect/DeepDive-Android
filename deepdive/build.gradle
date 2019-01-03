@@ -19,7 +19,7 @@ repositories {
 
 def versionMajor = 0
 def versionMinor = 9
-def versionPatch = 7
+def versionPatch = 8
 def versionBuild = 1
 
 // Load keystore
@@ -107,12 +107,10 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'com.google.android.material:material:1.1.0-alpha02'
-    //    compile files('libs/libGoogleAnalyticsServices.jar')
     implementation 'com.squareup.okio:okio:1.6.0'
     implementation 'com.squareup.okhttp:okhttp:2.6.0'
     implementation 'com.squareup.okhttp:okhttp-urlconnection:2.6.0'
     implementation 'com.github.clans:fab:1.6.4'
-    //    compile 'info.guardianproject.iocipher:IOCipherStandalone:0.4'
     implementation 'net.zetetic:android-database-sqlcipher:3.5.4'
     implementation 'info.guardianproject.iocipher:IOCipher:0.4'
     // APACHE COMMONS LIBRARIES

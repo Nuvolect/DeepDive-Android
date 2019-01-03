@@ -3,6 +3,7 @@
 .gradle
 /.idea/libraries
 /.idea/workspace.xml
+/.idea/caches/
 /build
 /captures
 /local.properties
