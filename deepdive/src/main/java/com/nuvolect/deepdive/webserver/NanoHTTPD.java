@@ -1202,21 +1202,11 @@ public abstract class NanoHTTPD {
      */
     public static class Response implements Closeable {
 
-        /**
-         * mkk
-         */
         private String contentType = "application/json; charset=UTF-8";
         private String characterEncoding = "UTF-8";
 
-        /**
-         * mkk
-         * @return
-         */
         public PrintWriter getWriter() {
 
-//            PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream, new ContentType(this.mimeType).getEncoding())), false);
-//            pw.append("HTTP/1.1 ").append(this.status.getDescription()).append(" \r\n");
-//            return pw;
             return this.getWriter();//FIXME hack until proper printWriter can be found
         }
 
@@ -1228,26 +1218,6 @@ public abstract class NanoHTTPD {
         public void setCharacterEncoding(String s) {
 
             this.characterEncoding = s;
-        }
-
-        /**
-         * mkk
-         * Duplicate of addHeader
-         * @param name
-         * @param value
-         */
-        public void setHeader(String name, String value) {
-
-            addHeader(name, value);
-        }
-
-        /**
-         * mkk
-         * @param length
-         */
-        public void setContentLength(int length) {
-            this.contentLength = length;
-            this.chunkedTransfer = this.contentLength < 0;
         }
 
         public interface IStatus {

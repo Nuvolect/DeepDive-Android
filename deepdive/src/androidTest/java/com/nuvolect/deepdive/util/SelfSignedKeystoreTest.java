@@ -22,10 +22,11 @@ import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-//
-//TODO create class description
-//
-public class KeystoreVazenTest {
+/**
+ * Test lifecycle of a selfsigned certificate and password
+ * NOTE THIS IS A DESTRUCTIVE TEST. It will delete the existing certificate and password.
+ */
+public class SelfSignedKeystoreTest {
 
     @Test
     public void createCertTest(){
@@ -34,7 +35,7 @@ public class KeystoreVazenTest {
         Context ctx = getTargetContext();
 
         // Create a self signed certificate and put it in a BKS keystore
-        String keystoreFilename = "VazanKeystore.bks";
+        String keystoreFilename = "SelfSignedKeystore.bks";
 
         File file = new File( ctx.getFilesDir(), keystoreFilename);
         file.delete();

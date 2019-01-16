@@ -13,6 +13,7 @@ import com.nuvolect.deepdive.main.CConst;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -30,9 +31,15 @@ public class KeystoreUtilTest {
     private String testKeyAlias = "testKeyAlias";
     private byte[] clearBytesToEncrypt;
 
-    {
+    @Before
+    public void getReady() {
+
         try {
+            Context ctx = getTargetContext();
+            KeystoreUtil.init( ctx );
+
             clearBytesToEncrypt = "clear text to encrypt".getBytes("UTF-8");
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

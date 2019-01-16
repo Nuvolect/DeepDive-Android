@@ -11,6 +11,8 @@ import android.content.Context;
 import android.security.KeyPairGeneratorSpec;
 import android.util.Base64;
 
+import com.nuvolect.deepdive.main.CConst;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,6 +65,31 @@ public class KeystoreUtil {
     private static final String KEYSTORE_PROVIDER_ANDROID_KEYSTORE = "AndroidKeyStore";
     private static final int BASE64 = Base64.URL_SAFE;
     private static SecureRandom random = new SecureRandom();
+
+    /**
+     * Initaliaze the Android keystore. Return false if there are issues otherwise true;
+     *
+     * @param ctx
+     * @return
+     */
+    public static boolean init( Context ctx){
+
+        boolean success = false;
+
+        if( ! keyExists(CConst.APP_KEY_ALIAS)){
+
+            try {
+                createKey( ctx, CConst.APP_KEY_ALIAS);
+                success = true;
+            } catch (Exception e) {
+                LogUtil.logException( KeystoreUtil.class, e);
+            }
+        }
+        else
+            success = true;
+
+        return  success;
+    }
 
     private enum TEST_ID {
         NIL,
@@ -462,7 +489,6 @@ public class KeystoreUtil {
             PrivateKey privateKey = (PrivateKey) ks.getKey(key_alias, null);
             PublicKey publicKey = ks.getCertificate(key_alias).getPublicKey();
 
-
             Cipher cipher = Cipher.getInstance( CIPHER_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
@@ -673,6 +699,26 @@ public class KeystoreUtil {
         }
 
         return keys;
+    }
+
+    /**
+     * Test of android keystore key exists.
+     * @param keyAlias
+     * @return
+     */
+    public static boolean keyExists( String keyAlias) {
+
+        KeyStore ks = null;
+        try {
+            ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
+            ks.load(null);
+
+            return ks.containsAlias( keyAlias);
+
+        } catch (Exception e) {
+            LogUtil.logException(KeystoreUtil.class, e);
+        }
+        return false;
     }
 
     /**

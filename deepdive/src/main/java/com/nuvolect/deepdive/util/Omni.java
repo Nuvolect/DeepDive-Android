@@ -113,8 +113,7 @@ public class Omni {
         boolean cryptoMounted = false;
 
         try {
-            CryptoVolume.mountStorage( ctx);
-            cryptoMounted = true;
+            cryptoMounted = CryptoVolume.mountStorage( ctx);
         } catch (Exception e) {
             LogUtil.logException( LogUtil.LogType.OMNI, e);
         }
@@ -180,10 +179,11 @@ public class Omni {
          */
         for( String volumeId : activeVolumeIds){
 
-            OmniFile f = new OmniFile( volumeId, THUMBNAIL_FOLDER_PATH);
-            if( ! f.canWrite())
+            OmniFile root = new OmniFile( volumeId, CConst.ROOT);
+            if( ! root.canWrite())
                 continue;
 
+            OmniFile f = new OmniFile( volumeId, THUMBNAIL_FOLDER_PATH);
             boolean folderCreated = f.mkdirs();
             if( folderCreated)
                 LogUtil.log( LogUtil.LogType.OMNI, "Thumbnail folder created: "+volumeId + f.getPath());

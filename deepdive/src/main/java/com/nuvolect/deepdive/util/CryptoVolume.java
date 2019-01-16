@@ -16,8 +16,6 @@ import java.io.IOException;
 
 import info.guardianproject.iocipher.VirtualFileSystem;
 
-import static com.nuvolect.deepdive.util.Passphrase.generateRandomPasswordBytes;
-
 /**
  * Manage IOCipher storage volume.
  *
@@ -37,33 +35,36 @@ public class CryptoVolume {
 
     public static boolean mountStorage(Context ctx) {
 
+        boolean success = false;
         String FILESYSTEM_NAME = "/cryp_filesystem";
         String path = ctx.getDir("vfs", Context.MODE_PRIVATE).getAbsolutePath() + FILESYSTEM_NAME;
         File dbFile = new java.io.File(path);
         dbFile.getParentFile().mkdirs();
-        byte[] passwordBytes;
+        byte[] passwordBytes = Persist.getCipherVfsPassword( ctx);
 
-        // Recreate the database if it has not been created yet or there is no key to unlock it
-        boolean createNewDb = !dbFile.exists() || ! Persist.keyExists(ctx, Persist.DB_PASSWORD);
-        if ( createNewDb) {
+        try {
+            // If the database does not exist yet, create it.
+            if ( ! dbFile.exists()) {
 
-            passwordBytes = generateRandomPasswordBytes(32, Passphrase.SYSTEM_MODE);
-            Persist.putDbPassword(ctx, passwordBytes);
+                VirtualFileSystem vfs = VirtualFileSystem.get();
+                vfs.createNewContainer(dbFile.getAbsolutePath(), passwordBytes);
+            }
 
-            VirtualFileSystem vfs = VirtualFileSystem.get();
-            vfs.createNewContainer(dbFile.getAbsolutePath(), passwordBytes);
+            if (!VirtualFileSystem.get().isMounted()) {
+
+                VirtualFileSystem vfs = VirtualFileSystem.get();
+                vfs.mount(dbFile.getAbsolutePath(), passwordBytes);
+                success = vfs.isMounted();
+            }
+            else
+                success = true;
+        } catch (Exception e) {
+
+            LogUtil.log(CryptoVolume.class, "Invalid database password?");
+            LogUtil.logException(CryptoVolume.class, e);
         }
-        else {
-            passwordBytes = Persist.getDbPassword(ctx);
-        }
 
-        if (!VirtualFileSystem.get().isMounted()) {
-
-            VirtualFileSystem vfs = VirtualFileSystem.get();
-            vfs.mount(dbFile.getAbsolutePath(), passwordBytes);
-        }
-
-        return true;
+        return success;
     }
 
     public static boolean unmountStorage() {
@@ -77,11 +78,11 @@ public class CryptoVolume {
     }
 
 
-    public static java.io.File exportToDisk(info.guardianproject.iocipher.File fileIn) throws IOException {
+    public static File exportToDisk(info.guardianproject.iocipher.File fileIn) throws IOException {
 
-        java.io.File fileOut = null;
+        File fileOut = null;
 
-        fileOut = new java.io.File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileIn.getName());
+        fileOut = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileIn.getName());
         info.guardianproject.iocipher.FileInputStream fis = new info.guardianproject.iocipher.FileInputStream(fileIn);
         java.io.FileOutputStream fos = new java.io.FileOutputStream(fileOut);
 

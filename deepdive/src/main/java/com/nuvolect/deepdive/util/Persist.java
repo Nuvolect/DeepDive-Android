@@ -37,15 +37,15 @@ public class Persist {
      */
     private static final String PERSIST_NAME        = "dd_persist";
 
-    // Persist keys, some calling methods pass their own keys
+    // Persist keys, some calling methods pass their own keys, be sure to avoid conflicts
     public static final String CURRENT_SET          = "current_set";        // Clear, string
-    public static final String DB_PASSWORD          = "db_password";        // Encrypted, string
+    public static final String CIPHER_VFS_PASSWORD  = "cipher_vfs_password";// Encrypted, string
     public static final String PORT_NUMBER          = "port_number";        // Encrypted, int
     public static final String SELFSIGNED_KS_KEY    = "selfsigned_ks_key";  // Encrypted, string
     public static final String SHOW_TIP_CURRENT     = "show_tip_current";   // Clear, int
     public static final String USERS                = "users";              // Encrypted, string
 
-    private static final String[] crypStringKeys = { DB_PASSWORD, SELFSIGNED_KS_KEY, USERS };
+    private static final String[] crypStringKeys = {CIPHER_VFS_PASSWORD, SELFSIGNED_KS_KEY, USERS };
     private static final Set<String> crypString = new HashSet<>(Arrays.asList(crypStringKeys));
     private static final String[] crypIntKeys = { PORT_NUMBER, SHOW_TIP_CURRENT };
     private static final Set<String> crypInt = new HashSet<>(Arrays.asList(crypIntKeys));
@@ -187,7 +187,7 @@ public class Persist {
         return default_port;
     }
 
-    public static void putDbPassword(Context ctx, byte[] clearBytes) {
+    public static void putCipherVfsPassword(Context ctx, byte[] clearBytes) {
 
         try {
             // Encrypt the byte array, creating a new byte array
@@ -197,29 +197,44 @@ public class Persist {
             String crypEncodedString = CrypUtil.encodeToB64( crypBytes);
 
             // Store it as a string
-            put( ctx, DB_PASSWORD, crypEncodedString);
+            put( ctx, CIPHER_VFS_PASSWORD, crypEncodedString);
 
         } catch (Exception e) {
             LogUtil.logException(LogUtil.LogType.PERSIST, e);
         }
     }
 
-    public static byte[] getDbPassword(Context ctx) {
+    /**
+     * Get the cipher virtual file system password.
+     * If the password does not exist, create it and save it.
+     *
+     * @param ctx
+     * @return
+     */
+    public static byte[] getCipherVfsPassword(Context ctx) {
 
-        // Get the encoded and encrypted string
-        String crypEncodedString = get( ctx, DB_PASSWORD);
-
-        // Decode the string back into a byte array using Base64 decode
-        byte[] crypBytes = CrypUtil.decodeFromB64( crypEncodedString);
-
-        // Decrypt the byte array, creating a new byte array
         byte[] clearBytes = new byte[0];
-        try {
-            clearBytes = CrypUtil.decrypt( crypBytes);
-        } catch (Exception e) {
-            LogUtil.logException(LogUtil.LogType.PERSIST, e);
-        }
 
+        if (!keyExists(ctx, CIPHER_VFS_PASSWORD)) {
+
+            clearBytes = Passphrase.generateRandomPasswordBytes(32, Passphrase.SYSTEM_MODE);
+            putCipherVfsPassword(ctx, clearBytes);
+
+        } else {
+
+            // Get the encoded and encrypted string
+            String crypEncodedString = get(ctx, CIPHER_VFS_PASSWORD);
+
+            // Decode the string back into a byte array using Base64 decode
+            byte[] crypBytes = CrypUtil.decodeFromB64(crypEncodedString);
+
+            // Decrypt the byte array, creating a new byte array
+            try {
+                clearBytes = CrypUtil.decrypt(crypBytes);
+            } catch (Exception e) {
+                LogUtil.logException(LogUtil.LogType.PERSIST, e);
+            }
+        }
         return clearBytes;
     }
 

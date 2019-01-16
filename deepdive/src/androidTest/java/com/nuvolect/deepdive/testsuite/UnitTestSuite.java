@@ -13,7 +13,7 @@ import com.nuvolect.deepdive.connector.CmdRmFileTest;
 import com.nuvolect.deepdive.util.CrypUtilTest;
 import com.nuvolect.deepdive.util.JsonReaderTest;
 import com.nuvolect.deepdive.util.KeystoreUtilTest;
-import com.nuvolect.deepdive.util.KeystoreVazenTest;
+import com.nuvolect.deepdive.util.SelfSignedKeystoreTest;
 import com.nuvolect.deepdive.util.OmniTest;
 import com.nuvolect.deepdive.util.PersistTest;
 
@@ -33,7 +33,7 @@ import org.junit.runners.Suite;
         CmdMkfileTest.class,
         CmdRmFileTest.class,
         JsonReaderTest.class,
-        KeystoreVazenTest.class,
+        SelfSignedKeystoreTest.class,
 }
 )
 

@@ -116,10 +116,6 @@ public class MainActivity extends FragmentActivity {
             case WHITELIST_USER:
             case PRO_USER: {
 
-//                Intent serverIntent = new Intent(m_ctx, WebService.class);
-//                ContextCompat.startForegroundService( m_ctx, serverIntent);
-//                m_ctx.startService(serverIntent);
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     m_ctx.startForegroundService(new Intent(m_ctx, WebService.class));
                 } else {

@@ -95,7 +95,7 @@ function getCtrlScope() {
     return myScope;
 }
 
-function saveCtrlScope( ctrlScope ) {// mkk
+function saveCtrlScope( ctrlScope ) {
 
     myScope = ctrlScope;
 }
@@ -190,7 +190,7 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
                 return $sce.trustAsHtml(cachedLine);
             }
 
-            var file_name_modal = // mkk
+            var file_name_modal =
                 "<a data-toggle=\"modal\" data-target=\"#viewFileModal\" onclick=\"getCtrlScope().addModalContent(\'"
                 +line.file_name+'\',\''+line.file_path+"\')\">"
                 +line.file_name+"</a>";
@@ -330,7 +330,7 @@ app.controller('myController', function($scope, $http, $parse, $sce, $timeout) {
             // Returned data is currently a string, convert it to JSON
             var result = $.parseJSON( response.data.result );
 
-            //FIXME mkk display user friendly result of the interrupt request
+            //FIXME display user friendly result of the interrupt request
             putLogTop( result );
         });
     };

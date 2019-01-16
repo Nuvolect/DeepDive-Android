@@ -10,10 +10,12 @@ package com.nuvolect.deepdive.connector;
 import android.content.Context;
 
 import com.nuvolect.deepdive.main.CConst;
+import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.Omni;
 import com.nuvolect.deepdive.util.OmniFile;
 import com.nuvolect.deepdive.webserver.WebUtil;
 import com.nuvolect.deepdive.webserver.connector.CmdMkfile;
+import com.nuvolect.deepdive.webserver.connector.ServerInit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,8 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static androidx.test.InstrumentationRegistry.getTargetContext;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 /**
  * Exercise the connector "mkfile" command, {@link CmdMkfile}
@@ -38,15 +40,14 @@ public class CmdMkfileTest {
 
         Context ctx = getTargetContext();
 
-        assertThat ( Omni.init( ctx), is( true ));
+        assertThat ( ServerInit.init( ctx ), is( true ));
 
         String volumeId = Omni.userVolumeId_0;
         String rootPath = "/";
         String uniqueFilename = ".filenameNeverGuessZez";
 
         OmniFile targetFile = new OmniFile( volumeId, rootPath + uniqueFilename);
-        if( targetFile.exists())
-            targetFile.delete();
+        boolean deleted = targetFile.delete();
 
         Map<String, String> params = new HashMap<String, String>();
         params.put(CConst.TARGET, targetFile.getParentFile().getHash());// root hash
@@ -57,12 +58,13 @@ public class CmdMkfileTest {
 
         try {
 
-            byte[] b = new byte[4096];
-            int bytes = inputStream.read( b );
-            assertThat( bytes > 0, is( true));
+            byte[] bytes = new byte[4096];
+            int numBytes = inputStream.read(bytes);
+            assertThat( numBytes > 0, is( true));
 
-            JSONObject jsonWrapper = new JSONObject( new String( b ));
+            JSONObject jsonWrapper = new JSONObject( new String(bytes));
             JSONArray jsonArray = jsonWrapper.getJSONArray("added");
+            assertThat( jsonArray.length() > 0, is( true ));
             JSONObject jsonObject = jsonArray.getJSONObject( 0 );
 
             boolean hasName = jsonObject.has("name");
@@ -75,7 +77,7 @@ public class CmdMkfileTest {
             assertThat( targetFile.exists(), is( false ));
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.logException(CmdMkfileTest.class, e);
         }
     }
 }

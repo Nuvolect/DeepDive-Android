@@ -7,8 +7,6 @@
 
 package com.nuvolect.deepdive.probe;
 
-import androidx.annotation.NonNull;
-
 import com.nuvolect.deepdive.util.LogUtil;
 import com.nuvolect.deepdive.util.OmniFile;
 
@@ -20,6 +18,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+
+import androidx.annotation.NonNull;
 
 public class ProgressStream extends OutputStream {
 
@@ -119,9 +119,6 @@ public class ProgressStream extends OutputStream {
             LogUtil.log(LogUtil.LogType.DECOMPILE, str);
 
             putStream( str);
-
-//                Log.i("PS",str);
-//                broadcastStatus("progress_stream", str);mkk
         }
     }
 
