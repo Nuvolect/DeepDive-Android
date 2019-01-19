@@ -19,13 +19,13 @@ Android is the server. Access the details of reverse engineering from your handh
 ## Notes On Security
 Configure a user login from app Settings. All communications are encrypted with a self signed security certificate. All communications are AES encrypted via TLS 1.2 HTTPS however your browser is unable to associate the certificate with a domain name or static IP address,  consequently you will see a security warning or error message.
 
-## Lucene — Ultra-fast search
+## Lucene, Ultra-fast search
 A decompiled app can have hundreds of thousands of files and millions of lines of code.
 That's why DeepDive has Lucene, a near-instant search capability, the search engine behind Amazon, AOL, LinkedIn, and Twitter.
 You can index the source code from a single app or index the entire virtual filesystem and search across hundreds of apps.
 
-#### Search for hundreds of keywords at a time
-Search Sets are collections of Lucene Searches. Search for up to a 100 keywords at a time. The app comes with default Search Sets and you can create your own.
+#### Search dozens of keywords at a time
+Search Sets are collections of Lucene Searches. Search for dozens of keywords at a time. The app comes with default Search Sets and you can create your own.
 
 ## Features
 * The source code is at your fingertips using the elFinder "Mac-like" file manager.
@@ -53,11 +53,6 @@ Search Sets are collections of Lucene Searches. Search for up to a 100 keywords 
 * <a href="https://github.com/NanoHttpd/nanohttpd">Nanohttpd web server</a>
 * <a href="https://github.com/Studio-42/elFinder">elFinder file manager</a>
 * <a href="https://lucene.apache.org/">Apache Lucene</a>
-
-## We Use Analytics
-The purpose is for engineering and user experience. 
-Analytics provide anonymous eyes into use of the application that can help with 
-unserstanding user intent and how to improve the application.
 
 ## Licensing
 * DeepDive is offered for free under conditions of the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPLv3</a> open source software license.
