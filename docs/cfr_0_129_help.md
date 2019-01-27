@@ -3,7 +3,7 @@ java -jar cfr_0_129.jar classes.jar --outputdir countercloud
 
 java -jar cfr_0_129.jar --help
 CFR 0_129
-
+~~~
    --aexagg                         (boolean) 
    --aggressivesizethreshold        (int >= 0) default: 15000
    --allowcorrecting                (boolean)  default: true
@@ -69,6 +69,6 @@ CFR 0_129
    --tryresources                   (boolean)  default: true if class file from version 51.0 (Java 7) or greater
    --usenametable                   (boolean)  default: true
    --help                           (string) 
-
+~~~
 Please specify '--help optionname' for specifics, eg
    --help pullcodecase
