@@ -1,26 +1,12 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.27.0'
-    }
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'idea' //Add to see source code instead of decompiled jar code
-apply plugin: 'io.fabric'
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
 }
 
-def versionMajor = 0
-def versionMinor = 9
-def versionPatch = 8
-def versionBuild = 1
+def versionCode = 10101     // major * 10000 + minor * 1000 + patch * 100 + build
+def versionName = "1.0.1"
 
 // Load keystore
 def keystorePropertiesPath = System.getProperty("user.home")+"/.gradle/keystore.properties"
@@ -43,8 +29,6 @@ android {
             keyPassword keystoreProperties['DD_keyPassword']
         }
         debug {
-            // Disable fabric build ID generation for debug builds
-            ext.enableCrashlytics = false
         }
     }
     compileSdkVersion 28
@@ -55,9 +39,6 @@ android {
         minSdkVersion 24
         targetSdkVersion 28
         multiDexEnabled true
-
-        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
 
